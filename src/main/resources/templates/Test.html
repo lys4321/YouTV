@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+    </head>
+    <body>
+    	<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="ScreenBody">
+    		<div class="LeftSide">
+    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    		</div>
+    		<div class="RightSide">
+    			<div class="userFollow">
+    				<h2>팔로우한 스트리머</h2>	
+    				<ul class="followlive">
+    				
+    				</ul>
+    				<a href="">더 보기</a>
+    			</div>
+    			<div class="liveStreaming">
+    				<h2>생방송 중인 스트리머</h2>	
+    				<ul class="streamLive">
+    				
+    				</ul>
+    				<a href="">더 보기</a>
+    			</div>
+    			<div class="rePlay">
+    				<h2>다시보기</h2>	
+    				<ul class="rePlayList">
+    				
+    				</ul>
+    				<a href="">더 보기</a>
+    			</div>
+    			<div class="latestClip">
+    				<h2>최신 클립</h2>	
+    				<ul class="latestClipList">
+    				
+    				</ul>
+    				<a href="">더 보기</a>
+    			</div>
+    		</div>
+    	</div>
+        <div class="Foot">
+        	<th:block th:replace="parts/underBar :: UnderBar"></th:block>
+        </div>
+    </body>
+</html>

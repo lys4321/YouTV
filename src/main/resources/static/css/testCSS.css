@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+body{
+	background-color: #E1E1E1;
+	width: 100%;
+	height: 100%;
+}
+
+.HeadLine{
+	margin-bottom: 10px;
+}
+
+.Borderline{
+	width: 100%;
+	height: 100px;
+	background-color: orange;
+	border-radius: 5px;
+}
+
+.ScreenBody{
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 20px;
+}
+
+.followList{
+	width: 25%;
+	position: fixed;
+}
+
+.LSide{
+	border: solid 5px orange;
+	border-radius: 15px;
+	background-color: #fbceb1;
+}
+
+.List{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	padding-top: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.listitems{
+	padding: 5px 0px 5px 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gray;
+    font-size: 12px;
+}
+
+.listitems:last-child{
+	border-bottom: 0px;
+}
+
+.RightSide{
+	position: relative;
+	left: 27%;
+	width: 70%;
+	height: 500px;
+	background-color: orange;
+	margin-bottom: 20px;
+	border-radius: 15px;
+	padding: 10px;
+}
+
+.RightSide h2{}
+
+.underbar{
+	width: 95%;
+	height: 10px;
+	background-color: orange;
+	border-radius: 5px;
+	position: absolute;
+	left: 2.5%;
+}
