@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+        
     </head>
     <body>
     	<div class="Head">
@@ -15,38 +16,79 @@
     			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
     		</div>
     		<div class="RightSide">
-    			<div class="userFollow">
-    				<h2>팔로우한 스트리머</h2>	
-    				<ul class="followlive">
+    			<h2>팔로우한 스트리머</h2>	
+    				<div class="listBoard">
+    					<div class="followlive">
     				
-    				</ul>
+    					</div>
+    				</div>
     				<a href="">더 보기</a>
-    			</div>
-    			<div class="liveStreaming">
-    				<h2>생방송 중인 스트리머</h2>	
-    				<ul class="streamLive">
+    			<h2>생방송 중인 스트리머</h2>	
+    				<div class="listBoard">
+    					<div class="livePlayList" id="LiveList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>다시보기</h2>	
+    				<div class="listBoard">
+    					<div class="rePlayList" id="RecordList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>최신 클립</h2>	
+    				<div class="listBoard">
+    					<div class="latestClipList">
     				
-    				</ul>
+    					</div>
+    				</div>
     				<a href="">더 보기</a>
-    			</div>
-    			<div class="rePlay">
-    				<h2>다시보기</h2>	
-    				<ul class="rePlayList">
-    				
-    				</ul>
-    				<a href="">더 보기</a>
-    			</div>
-    			<div class="latestClip">
-    				<h2>최신 클립</h2>	
-    				<ul class="latestClipList">
-    				
-    				</ul>
-    				<a href="">더 보기</a>
-    			</div>
     		</div>
     	</div>
-        <div class="Foot">
-        	<th:block th:replace="parts/underBar :: UnderBar"></th:block>
-        </div>
+        <script th:inline="javascript">
+        	/*<![CDATA[*/
+        		// 방송 기본 정보 받아오기
+        		var a = /*[[${livelist}]]*/ "live";
+        		var b = /*[[${recordlist}]]*/ "record";
+        		
+        		//AJAX를 이용하여 썸네일 가져오기
+        		$.ajax({
+        			url: "",
+        			contentType: JSON,
+        			success: function(data){
+        				
+        			}
+        		});
+        		
+        		
+        		/* 생방송 목록 */
+        		var target = document.getElementById("LiveList");
+        		for(var i=0;i<a.length;i++){
+        			var livelist = document.createElement("div");
+        			livelist.setAttribute('class', 'video')
+    				livelist.innerHTML=
+    					'<a href=""><div class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["video_code"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
+            		target.appendChild(livelist);
+        		}
+        		
+        		/* 다시보기 목록 */
+        		var target = document.getElementById("RecordList");
+        		for(var i=0;i<b.length;i++){
+        			var recordlist = document.createElement("div");
+        			recordlist.setAttribute('class', 'video')
+    				recordlist.innerHTML=
+    					'<a href=""><div class="Thumnail">'+''+'</div><div class="STitle">' + b[i]["video_code"] + '</div><div class="SuserId">' + b[i]["streamer_id"] + '</div></a>';
+            		target.appendChild(recordlist);
+        		}
+        		
+        		
+        		
+        		
+        	
+        		
+        		
+        	/*]]*/
+        </script>
     </body>
 </html>
