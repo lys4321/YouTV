@@ -6,11 +6,11 @@
 		from web_user
 	</select>
 	<select id="SearchUser" resultType="com.example.demo.DTO.web_userDTO">
-		select * 
+		select user_id
 		from web_user
 		where user_id = #{_uuid}
 	</select>
-	<select id="UserLogin">
+	<select id="UserLogin" resultType="com.example.demo.DTO.web_userDTO">
 		select * 
 		from web_user
 		where user_id = #{_uuid} and user_pw = #{_uupw}

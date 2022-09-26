@@ -38,14 +38,12 @@
     			url: '/ajax/ajax',
     			type: 'GET',
     			dataType: 'text',
-    			contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     			success: function(data){
     				var obj = JSON.parse(data);
     				var div = document.getElementById("testimage");
     				for (var i=0; i<obj.length; i++) {
     					var img = document.createElement('img');
-    					console.log(obj[i].save_url);
-    					img.setAttribute('src', obj[i].save_url);
+    					img.setAttribute('src', "data:image/png;base64,"+obj[i]);
     					div.appendChild(img);
     				}
     			},

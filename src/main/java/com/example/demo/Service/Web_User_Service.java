@@ -22,7 +22,7 @@ public class Web_User_Service {
 		return userMapper.SearchUser(uuid);
 	}
 	
-	int UserLogin(@Param("_uuid") String uuid, @Param("_uupw") String uupw) {
+	web_userDTO UserLogin(@Param("_uuid") String uuid, @Param("_uupw") String uupw) {
 		return userMapper.UserLogin(uuid, uupw);
 	}
 	

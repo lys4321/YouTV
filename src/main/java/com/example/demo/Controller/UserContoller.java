@@ -35,8 +35,8 @@ public class UserContoller {
 	
 	@RequestMapping(value="/Login", method = {RequestMethod.POST, RequestMethod.GET})
 	public String Login(web_userDTO user, Model model) {
-		int check = userService.UserLogin(user.getUser_id(), user.getUser_pw());
-		if(check == 1) { model.addAttribute("check", true); }
+		web_userDTO check = userService.UserLogin(user.getUser_id(), user.getUser_pw());
+		if(check != null) { model.addAttribute("check", true); }
 		else { model.addAttribute("check", false); }
 		return "modeltest";
 	}
