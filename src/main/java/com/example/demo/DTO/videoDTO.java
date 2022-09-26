@@ -16,4 +16,5 @@ public class videoDTO {
 	private Date video_date;
 	private boolean live_state;
 	private String save_url;
+	private String thumbnail_url;
 }

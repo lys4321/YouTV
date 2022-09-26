@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="UTF-8">
+    <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+        
+</head>
+<body>
+	<div class="Head">
+    	<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    </div>
+    <div id="createSector">
+    	<form action="" accept-charset="utf-8" id="Create_info" method="POST">
+    		<br><br>
+    		<a id="blank">ID : </a><input type="text" id="id" name="inid" class="inid">
+    		<input id="DupButton" type="button" value="중복확인"><br><br>
+    		<a id="blank">PW : </a><input type="password" id="password" name="inpassword" maxlength="15"><br><br>
+    		<a id="blank">NAME : </a><input type="text" id="name" name="inname"><br><br>
+    		<a id="blank">PNUM : </a><input type="password" id="pnum" name="inpnum" maxlength="11"><br><br>
+    		<input id="submitButton" type="button" value="계정생성">
+    	</form>
+    </div>
+    <div class="Foot">
+        <th:block th:replace="parts/underBar :: UnderBar"></th:block>
+    </div>
+</body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+			document.getElementById("DupButton").onclick = function(){
+				var formData = $(".inid").val();
+				$.ajax({
+					url: '/ajax/AccountDupCheck',
+					type: 'POST',
+					data: {
+						"inid":formData
+					},
+					dataType: 'text',
+					success: function(data){
+						if(data == true){
+							alert("중복아님");
+							console.log(formData);
+						}else{
+							alert(data)
+							console.log(formData);
+						}
+					}
+				});
+			}
+		/*]]*/
+	</script>
+</html>
