@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,12 @@ public class Web_User_Service {
 		return userMapper.AllUserList();
 	}
 	
-	web_userDTO SearchUser(@Param("_uuid") String uuid) {
+	String SearchUser(@Param("_uuid") String uuid) {
 		return userMapper.SearchUser(uuid);
+	}
+	
+	web_userDTO reSearchUser(@Param("name") String name, @Param("pnum") String pnum){
+		return userMapper.reSearchUser(name, pnum);
 	}
 	
 	web_userDTO UserLogin(@Param("_uuid") String uuid, @Param("_uupw") String uupw) {

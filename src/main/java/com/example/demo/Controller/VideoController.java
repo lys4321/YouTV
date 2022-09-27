@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.DTO.videoDTO;
-import com.example.demo.DTO.web_userDTO;
 import com.example.demo.Mapper.video_mapper;
 
 @Controller

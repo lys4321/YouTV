@@ -14,11 +14,11 @@
     <div id="createSector">
     	<form action="" accept-charset="utf-8" id="Create_info" method="POST">
     		<br><br>
-    		<a id="blank">ID : </a><input type="text" id="id" name="inid" class="inid">
+    		<a id="blank">ID  </a><input type="text" id="id" name="inid" class="inid" maxlength="10">
     		<input id="DupButton" type="button" value="중복확인"><br><br>
-    		<a id="blank">PW : </a><input type="password" id="password" name="inpassword" maxlength="15"><br><br>
-    		<a id="blank">NAME : </a><input type="text" id="name" name="inname"><br><br>
-    		<a id="blank">PNUM : </a><input type="password" id="pnum" name="inpnum" maxlength="11"><br><br>
+    		<a id="blank">PW  </a><input type="password" id="password" name="inpassword" maxlength="15" autocomplete="on"><br><br>
+    		<a id="blank">NAME  </a><input type="text" id="name" name="inname"><br><br>
+    		<a id="blank">PNUM  </a><input type="password" id="pnum" name="inpnum" maxlength="11" autocomplete="on"><br><br>
     		<input id="submitButton" type="button" value="계정생성">
     	</form>
     </div>
@@ -29,6 +29,12 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script th:inline="javascript">
 		/*<![CDATA[*/
+			var dupcheck_state = 0;
+		
+			document.getElementById("id").onclick = function(){
+				dupcheck_state = 0;
+			}
+			
 			document.getElementById("DupButton").onclick = function(){
 				var formData = $(".inid").val();
 				$.ajax({
@@ -37,18 +43,43 @@
 					data: {
 						"inid":formData
 					},
-					dataType: 'text',
+					dataType: 'json',
 					success: function(data){
 						if(data == true){
-							alert("중복아님");
-							console.log(formData);
+							alert("사용가능한 ID");
+							dupcheck_state = 1;
 						}else{
-							alert(data)
-							console.log(formData);
+							alert("이미 사용중인 ID")
+							dupcheck_state = 0;
 						}
 					}
 				});
 			}
+			
+			document.getElementById("submitButton").onclick = function(){
+				if(dupcheck_state == 1){
+					$.ajax({
+						url: '/ajax/AccountCreate',
+						type: 'POST',
+						data: $("#Create_info").serialize(),
+						dataType: 'json',
+						success: function(data){
+							if(data == true){
+								console.log(data);
+								alert("생성");
+							}else{
+								alert("실패");
+							}
+						}
+					});
+				}else{
+					alert("ID 중복체크가 필요합니다.");
+				}
+			}
+			
+			document.getElementById("mainButton").onclick = function(){
+    			window.location.href = "/YouTV/MainScreen";
+    		}
 		/*]]*/
 	</script>
 </html>

@@ -5,31 +5,36 @@
 		select *
 		from web_user
 	</select>
-	<select id="SearchUser" resultType="com.example.demo.DTO.web_userDTO">
+	<select id="SearchUser" resultType="String">
 		select user_id
 		from web_user
-		where user_id = #{_uuid}
+		where user_id = #{uuid}
+	</select>
+	<select id="reSearchUser" resultType="com.example.demo.DTO.web_userDTO">
+		select *
+		from web_user
+		where user_name = #{name} and user_pnum = #{pnum}
 	</select>
 	<select id="UserLogin" resultType="com.example.demo.DTO.web_userDTO">
 		select * 
 		from web_user
-		where user_id = #{_uuid} and user_pw = #{_uupw}
+		where user_id = #{uuid} and user_pw = #{uupw}
 	</select>
-	<update id="UserUpdate">
+	<update id="UserUpdate" parameterType="com.example.demo.DTO.web_userDTO">
 		update web_user
-		set user_pw = #{user.user_pw},
-		user_name = #{user.user_name},
-		user_pnum = #{user.user_pnum},
-		image_url = #{user.image_url} 
-		where user_id = #{user.user_id}
+		set user_pw = #{user_pw},
+		user_name = #{user_name},
+		user_pnum = #{user_pnum},
+		image_url = #{image_url} 
+		where user_id = #{user_id}
 	</update>
-	<delete id="UserDelete">
+	<delete id="UserDelete" parameterType="com.example.demo.DTO.web_userDTO">
 		delete 
 		from web_user
-		where user_id = #{user.user_id}
+		where user_id = #{user_id}
 	</delete>
-	<insert id="UserCreate">
+	<insert id="UserCreate" parameterType="com.example.demo.DTO.web_userDTO">
 		insert into web_user 
-		values(#{user.user_id}, #{user.user_pw}, #{user.user_name}, #{user.user_pnum}, #{user.image_url})
+		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, #{image_url})
 	</insert>
 </mapper>

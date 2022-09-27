@@ -24,6 +24,6 @@ public class MainScreenController {
 		model.addAttribute("livelist", livelist);
 		model.addAttribute("recordlist", recordlist);
 		
-        return "MainScreen";
+        return "BootTest";
 	}
 }

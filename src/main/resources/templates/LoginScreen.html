@@ -14,15 +14,15 @@
     <div id="insertSector">
     	<form action="" accept-charset="utf-8" id="login_info" method="POST">
     		<br><br>
-    		<a id="blank">ID : </a><input type="text" id="id" name="inid"><br><br>
-    		<a id="blank">PW : </a><input type="password" id="password" name="inpassword" maxlength="15"><br><br>
+    		<a id="blank">ID  </a><input type="text" id="id" name="inid"><br><br>
+    		<a id="blank">PW  </a><input type="password" id="password" name="inpassword" maxlength="15" autocomplete="on"><br><br>
     		<input id="submitButton" type="button" value="로그인">
     	</form>
     </div>
     <div id="guitar">
-    	<a id="createAccount" href="">계정이 없으신가요?</a>
+    	<a id="createAccount" href="/YouTV/AccountCreateScreen">계정이 없으신가요?</a>
     	<br>
-    	<a id="searchAccount" href="">계정을 잊으셨나요?</a>
+    	<a id="searchAccount" href="/YouTV/AccountSearchScreen">계정을 잊으셨나요?</a>
     </div>
     <div class="Foot">
         <th:block th:replace="parts/underBar :: UnderBar"></th:block>
@@ -44,10 +44,8 @@
 						if(data == true){
 							var id = document.getElementById("id").value;
 							var pw = document.getElementById("password").value;
-							alert(id+" "+pw);
 							sessionStorage.setItem("using_id", id);
 							sessionStorage.setItem("using_pw", pw);
-							console.log(sessionStorage.getItem("using_id")+"  "+sessionStorage.getItem("using_pw"));
 							window.location.href="/YouTV/MainScreen"
 							
 						}else{
@@ -60,6 +58,7 @@
 			document.getElementById("mainButton").onclick = function(){
     			window.location.href = "/YouTV/MainScreen";
     		}
+			
 		/*]]*/
 	</script>
 </html>

@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+.followList{
+	height: 100%;
+	position: fixed;
+	margin-right: 5rem;
+}
+
+.LSide{
+	border: solid 5px #ced4da;
+	border-radius: 15px;
+	background-color: #ced4da;
+}
+
+.List{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	padding-top: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.listitems{
+	padding: 5px 0px 5px 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gray;
+    font-size: 12px;
+}
+
+.listitems:last-child{
+	border-bottom: 0px;
+}

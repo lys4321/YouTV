@@ -19,8 +19,8 @@ public class UserContoller {
 	
 	@RequestMapping(value="/userCheck", method= {RequestMethod.POST, RequestMethod.GET})
 	public String userCheck(String uuid, Model model) {
-		web_userDTO user = userService.SearchUser(uuid);
-		if(user != null) { model.addAttribute("check", false); }
+		String user_id = userService.SearchUser(uuid);
+		if(user_id != null) { model.addAttribute("check", false); }
 		else { model.addAttribute("check", true); }
 		return "modeltest";
 	}
