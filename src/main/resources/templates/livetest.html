@@ -4,24 +4,15 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <head>
         <meta charset="UTF-8">
-        <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+        <style>
+        	.video{
+        		width: 50%;
+        		height: 50%;
+        	}
+        </style>
     </head>
     <body>
-    	<div class="Head">
-    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
-    	</div>
-    	<div class="ScreenBody">
-    		<div class="LeftSide">
-    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
-    		</div>
-    		<div class="StreamSide">
-    			<th:block th:replace="parts/streamSector :: streamSector"></th:block>
-    			<th:block th:replace="parts/streamChat :: streamChat"></th:block>
-    		</div>
-    	</div>
-        <div class="Foot">
-        	<th:block th:replace="parts/underBar :: UnderBar"></th:block>
-        </div>
+    	<video id="video" class="video" src="http://localhost:8080/YouTV/livetest" autoplay controls>
+    	</video>
     </body>
-    
 </html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/LeftBarCSS.css">
+	<link th:href="@{/css/testCSS.css}" rel="stylesheet">
+</head>
+<body>
+	<th:block th:replace="parts/MenuBar :: MenuBar"></th:block>
+	
+	<div class="MainSector">
+		<main class="">
+			<section class="py-1">
+			<div>
+<!-- 			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block> -->
+			</div>
+            <div>
+<!--             	<div class="Screen">
+					<video id="streamvideo" class="streamVideo" autoplay controls></video>
+					</div> -->
+            	<th:block th:replace="parts/streamSector :: streamSector"></th:block>
+<!--             	<div class="chatScreen">
+						<div class="chatList">
+							<ul	class="listChat">
+								<li>a</li>
+								<li>a</li>
+								<li>a</li>
+								<li>a</li>
+								<li>a</li>
+							</ul>
+						</div>
+						<form class="chatForm">
+							<input type="text" class="textInsert">
+							<input type="submit" class="sendButton" value="Send">
+						</form>
+					</div> -->
+            	<th:block th:replace="parts/streamChat :: streamChat"></th:block>
+            </div>
+        </section>
+		</main>
+	</div>
+</body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:inline="javascript">
+        	/*<![CDATA[*/
+        		var url = [[${video_code}]];
+        		console.log(url);
+        		document.getElementById('streamvideo').setAttribute('src', '/YouTV/Video?video_code='+url);
+        		//영상 스트리밍하기
+//         		$.ajax({
+//         			url: '/YouTV/Video?Save_url='+encodeURI(url),
+//         			type: 'GET',
+//         			dataType: 'text',
+//         			success: function(data){
+//         				var obj = JSON.parse(data);
+//         				var video_src = obj['Video'];
+//         				console.log(video_src);
+//         				$('.streamVideo').append(
+//         					'<source src="'+ video_src +'" type="video/mp4"></source>'		
+//         				);
+//         			},
+//         			error: function(data){
+//         				console.log("실패");
+//         			}
+        			
+//         		});
+        		
+        	/*]]*/
+    </script>
+</html>

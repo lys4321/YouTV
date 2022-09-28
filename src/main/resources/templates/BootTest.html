@@ -10,13 +10,13 @@
 <body>
 	<th:block th:replace="parts/MenuBar :: MenuBar"></th:block>
 	<th:block th:replace="parts/HeaderBar :: HeaderBar"></th:block>
-	<div id="MainSector">
-		<div>
-			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
-		</div>
+	<div class="MainSector">
 		<main class="">
-			<section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5" style = "background-color: #dee2e6">
+			<section class="py-1">
+			<div>
+			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+			</div>
+            <div class="container px-5 px-lg-5 mt-5" style = "background-color: #dee2e6" id="mainS">
             	<h2>생방송 목록</h2>
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center" id="Realtime" style = "background-color: #198754">
                 </div>
@@ -48,12 +48,13 @@
                 			$('#Realtime').append(
                 				'<div class="col mb-5">'+
                         		'<div class="card h-100">'+
-                        		'<a href=#>'+
+                        		'<a href="http://localhost:8080/YouTV/VideoScreen?video_code='+livelist[i]["video_code"] +'">'+
                             	'<img class="card-img-top" src="data:image/png;base64,'+ LiveThumbnail[i] +'" alt="..."></a>'+
                             	'<div class="card-body p-4">'+
                                 '<div class="text-center">'+
                                 '<h5 class="fw-bolder"><a href=#>'+ livelist[i]['title'] +'</a></h5><a href=#>'+ livelist[i]['streamer_id'] +
-                                '</a></div>'+
+                                '</a></div><a href="#">'+
+                                '<img src="data:image/png;base64,'+ LiveThumbnail[i] +'"></a>'+
                             	'</div>'+
                         		'</div>'+
                     			'</div>'
@@ -88,6 +89,7 @@
                 		}
         			}
         		});
+        		//
         		
         	/*]]*/
         </script>

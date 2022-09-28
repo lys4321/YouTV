@@ -27,10 +27,10 @@
 		order by video_date DESC
 		limit 5
 	</select>
-	<select id="selectVideo" resultType="com.example.demo.DTO.videoDTO">
+	<select id="selectVideo" resultType="com.example.demo.DTO.videoDTO" parameterType="String">
 		select *
 		from video
-		where video_code = #{select_video.video_code}
+		where video_code = #{video_code}
 	</select>
 	<insert id="addvideo">
 		insert into video

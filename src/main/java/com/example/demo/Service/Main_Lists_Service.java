@@ -24,7 +24,6 @@ public class Main_Lists_Service {
 	@RequestMapping(value="/ajax/main_livelist", method= {RequestMethod.GET})
 	public HashMap<String, Object> main_livelist() {
 		ArrayList<videoDTO> livelist = vmap.liveList();
-		
 		System.out.println("메인화면의 생방송 리스트 정보");
 		ArrayList<byte[]> arr = new ArrayList<byte[]>();
 		for(int i=0; i<livelist.size(); i++) {
