@@ -41,9 +41,9 @@ public class TController {
 		return "Test";
 	}
 	
-	@RequestMapping(value="/YouTV/test", method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/livetest", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2() {
-		return "";
+		return "livetest";
 	}
 	
 	@RequestMapping(value="/YouTV/VideoScreen", method= {RequestMethod.GET})
@@ -51,10 +51,10 @@ public class TController {
 		model.addAttribute("video_code", video_code);
 		return "VideoScreen";
 	}
-	
+	//YouTV/Video
 	@RequestMapping(value="/YouTV/Video", method= {RequestMethod.GET})
 	public ResponseEntity<ResourceRegion> test3_2(@RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestHeader HttpHeaders headers, Model model) throws UnsupportedEncodingException, IOException 
-	{
+	{	System.out.println("a");
 		videoDTO streaming_video = vm.selectVideo(video_code); 
 		UrlResource video = new UrlResource("file:"+streaming_video.getSave_url());
         ResourceRegion resourceRegion;
