@@ -6,158 +6,202 @@
         <meta charset="UTF-8">
     </head>
     <style>
-    	body{
-    		position: relative;
-    	}
-    	
-    	#canvasdiv{
-    		width: 100%;
-    		height: 100%;
-    	}
-    	
-    	#canvas{
-    		width: 2000px;
-    		height: 800px;
+    	#video_container{
+    		display: block;
     	}
     
-    	#container{
-    		width: 2000px;
-    		height: 800px;
-    		position: absolute;
+    	#button_container{
+    		display: block;
     	}
     
-    	#video, #video2{
+    	#capture_container{
+    		display: block;
+    		margin: 800px;
+    	}
+    
+    	#webcam_video{
+    		width: 320px;
+    		height: 180px;
+    		border: 1px solid orange;
+    		position: absolute;
+    		z-index: 1;
+    	}
+    	
+    	#monitor_video{
+    		width: 1280px;
+    		height: 720px;
+    		border: 1px solid orange;
     		position: absolute;
     	}
     	
-    	#video{
-    		top: 0;
-    		left: 0;
-    		width: 300px;
-    		height: 300px;
+    	#video_container2{
+    		width: 1280px;
+    		height: 720px;
     	}
     	
-    	#video2{
-    		top: 0;
-    		left: 0;
-    		width: 2000px;
-    		height: 800px;
+    	#webcam_capture{
+    		width: 320px;
+    		height: 180px;
+    		border: 1px solid orange;
+    		position: absolute;
+    		z-index: 1;
+    	}
+    	
+    	#monitor_capture{
+    		width: 1280px;
+    		height: 720px;
+    		border: 1px solid orange;
+    		position: absolute;
+    	}
+    	
+    	#container_capture{
+    		width: 1280px;
+    		height: 720px;
+    		margin: 800px;
+    		position: absolute;
+    		border: 1px solid orange;
     	}
     </style>
     <body>
     	<h1>라이브 테스트</h1>
-    	<div id="canvasdiv">
-    		<img src="" id="idid">
-    		<input type="button" id="bbbutton">
-    		 
+    	<div id="video_container">
+    		<div id="video_container2">
+    			<video id="webcam_video" autoplay></video>
+    			<video id="monitor_video" autoplay></video>
+    		</div>
     	</div>
-    	<div id="container">
-    		<video id="video2" class="video" autoplay></video>
-    		<video id="video" class="video" autoplay></video>
-    		<input type="button" id="button" value="Fadsfasd">
+    	<div id="button_container">
+    		<input type="button" id="btn" value="btn">
+    		<input type="button" id="monitorButton" value="monitorButton">
+    		<input type="button" id="divButton" value="divButton">
     	</div>
-    	
+    	<!-- <div id="capture_container">
+    		<img id="webcam_capture"></img>
+    		<img id="monitor_capture"></img>
+    	</div> -->
+    	<!-- <img id="container_capture"></img> -->
+    	<img id="css_capture"></img>
     </body>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script th:inline="javascript">
         	/*<![CDATA[*/
-        		var div = document.getElementById('container')
-        		var video = document.getElementById('video'); // 캠의 화면이 나올 video 변수
-        		var video2 = document.getElementById('video2'); // 모니터의 화면이 나올 video 변수
-        		var canvas = document.getElementById('canvas');
-        		var button = document.getElementById('bbbutton');
-        		var idid = document.getElementById('idid');
-        		var error_test = navigator.mediaDevices;
+        		//html 요소들의 변수 생성
+        		var webcam_video = document.getElementById('webcam_video');
+        		var monitor_video = document.getElementById('monitor_video');
+        		var btn = document.getElementById('btn');
+        		var monitorButton = document.getElementById('monitorButton');
+        		var webcam_capture = document.getElementById('webcam_capture');
+        		var monitor_capture = document.getElementById('monitor_capture');
         		
-        		
-        		button.onclick = function(){
-        			/*
-        			var context = canvas.getContext('2d');
-        			context.drawImage(div, 0, 0, 2000, 800);
-        			img.src = canvas.toDataURL("image/png");
-        			*/
-        			
-        			html2canvas(div,{
-        				allowTaint: true,
-        				useCORS: true,
-        				width: div.offsetWidth,
-        				height: div.offsetHeight,
-        				scale: 1
-        			}).then(function(canvas){
-        				var imageurl = canvas.toDataURL('image/png');
-        				idid.src=imageurl;
-        			})
-        			
-        			
-        		}
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		
-        		navigator.mediaDevices.enumerateDevices()  // 현재 연결되어있는 장치들의 목록을 가져옴
+        		////////////////
+        		/* navigator.mediaDevices.enumerateDevices()  // 현재 연결되어있는 장치들의 목록을 가져옴
     			.then(function(devices){
     				devices.forEach(function(device){
     					console.log(device.kind + ' ' + device.label)
     				})
-    			})
-    		
-        			
-        		document.getElementById("button").onclick = function(){
-        			
-        		}
-        			
+    			}) */
         		if(navigator.mediaDevices.getUserMedia){
         			navigator.mediaDevices.getUserMedia({video: true})
         				.then(function(stream){
-        					video.srcObject = stream;
+        					webcam_video.srcObject = stream;
         				})
         				.catch(function(error){ // 처음부터 연결이 안될 시 실행됨
-        					video.remove();
+        					webcam_video.remove();
         					console.log('캠이 연결이 안되어있음')
         				})
         		}
-        		
         		if(navigator.mediaDevices.getDisplayMedia){
         			navigator.mediaDevices.getDisplayMedia({video: true})
         				.then(function(stream){
-        					video2.srcObject = stream;
+        					monitor_video.srcObject = stream;
         				})
         				.catch(function(error){ // 처음부터 연결이 안될 시 실행됨
-        					video2.remove();
+        					monitor_video.remove();
         					console.log('모니터가 연결이 안되어있음')
         				})
         		}
+        		///////////////////////////////
+        		/* webButton.onclick = function(){
+        			var canvas = document.createElement('canvas')
+        			canvas.width = webcam_capture.width;
+        			canvas.height = webcam_capture.height;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(webcam_video, 0, 0, canvas.width, canvas.height);
+        			var url = canvas.toDataURL('image/png');
+        			webcam_capture.src = url;
+        		}
+        		monitorButton.onclick = function(){
+        			var canvas = document.createElement('canvas')
+        			canvas.width = monitor_capture.width;
+        			canvas.height = monitor_capture.height;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, canvas.width, canvas.height);
+        			var url = canvas.toDataURL('image/png');
+        			monitor_capture.src = url;
+        		} */
+        		
+        		var divButton = document.getElementById('divButton');
+        		/* var capture_container = document.getElementById('capture_container');
+        		var container_capture = document.getElementById('container_capture');
+        		$("#divButton").on("click", function(){
+        			html2canvas(document.querySelector("#video_container2")).then(canvas => {
+        				container_capture.src = canvas.toDataURL('image/png')
+                        });
+        		}) */
+        		
+        		/* var css_capture = document.getElementById('css_capture');
+        		$("#divButton").on("click", function(){
+        			var canvas = document.createElement('canvas')
+        			canvas.width = 1280;
+        			canvas.height = 720;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, 1280, 720);
+        			context.drawImage(webcam_video, 0, 0, 320, 180);
+        			var url = canvas.toDataURL('image/png');
+        			css_capture.src = url;
+        		}) */
+        		var css_capture = document.getElementById('css_capture')
+        		
+        		var btn = document.getElementById('btn')
+        		btn.onclick=function(){
+        			console.log(url);
+        			var canvas = document.createElement('canvas')
+        			canvas.width = 1280;
+        			canvas.height = 720;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, 1280, 720);
+        			context.drawImage(webcam_video, 0, 0, 320, 180);
+        			var url = canvas.toDataURL('image/png');
+        			css_capture.src = url;
+        			$.ajax({
+        				url: '/ajax/frame_send',
+        				type: 'POST',
+        				data: {
+        					'frame_url': url
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					console.log(data);
+        				}
+        			})
+        			}
+        			/* timer = setInterval(function(){
+            			$.ajax({
+            				url: '/ajax/frame_send',
+            				type: 'POST',
+            				data: {
+            					'frame_url': url
+            				},
+            				dataType: 'json',
+            				success: function(data){
+            					console.log(data);
+            				}
+            			})
+            			}
+            		, 5000); */
+        		
         		
         	/*]]*/
     </script>
