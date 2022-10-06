@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class LoginScreenController {
+public class AccountController {
 	//@Autowired
 	
 	@RequestMapping(value="/YouTV/LoginScreen", method= {RequestMethod.POST, RequestMethod.GET})
@@ -19,5 +19,11 @@ public class LoginScreenController {
 	public String AccountCreateScreen(Model model) {
 		
 		return "AccountCreateScreen";
+	}
+	
+	@RequestMapping(value="/YouTV/AccountSearchScreen", method= {RequestMethod.POST, RequestMethod.GET})
+	public String AccountSearchScreen(Model model) {
+		
+		return "AccountSearchScreen";
 	}
 }

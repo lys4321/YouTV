@@ -15,8 +15,8 @@ import com.example.demo.Mapper.video_mapper;
 public class MainScreenController {
 	@Autowired
 	private video_mapper vmap;
-	
-	@RequestMapping(value="/YouTV/MainScreen", method= {RequestMethod.POST, RequestMethod.GET})
+	///YouTV/MainScreen
+	@RequestMapping(value="/", method= {RequestMethod.POST, RequestMethod.GET})
     public String MainScreen(Model model){
 		ArrayList<videoDTO> livelist = vmap.liveList();
 		ArrayList<videoDTO> recordlist = vmap.recordList();
@@ -24,6 +24,6 @@ public class MainScreenController {
 		model.addAttribute("livelist", livelist);
 		model.addAttribute("recordlist", recordlist);
 		
-        return "MainScreen";
+        return "BootTest";
 	}
 }

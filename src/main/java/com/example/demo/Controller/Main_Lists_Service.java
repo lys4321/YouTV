@@ -1,8 +1,9 @@
-package com.example.demo.Service;
+package com.example.demo.Controller;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class Main_Lists_Service {
 	private video_mapper vmap;
 	
 	@RequestMapping(value="/ajax/main_livelist", method= {RequestMethod.GET})
-	public ArrayList<byte[]> main_livelist() {
+	public HashMap<String, Object> main_livelist() {
 		ArrayList<videoDTO> livelist = vmap.liveList();
 		System.out.println("메인화면의 생방송 리스트 정보");
 		ArrayList<byte[]> arr = new ArrayList<byte[]>();
@@ -34,12 +35,18 @@ public class Main_Lists_Service {
 			}
 		}
 		
-		return arr;
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("LiveList", livelist);
+		map.put("LiveThumbnail", arr);
+		
+		return map;
 	}
 	
 	@RequestMapping(value="/ajax/main_recordlist", method= {RequestMethod.GET})
-	public ArrayList<byte[]> main_recordlist() {
+	public HashMap<String, Object> main_recordlist() {
 		ArrayList<videoDTO> recordlist = vmap.recordList();
+		
 		System.out.println("메인화면의 녹화방송 리스트 정보");
 		ArrayList<byte[]> arr = new ArrayList<byte[]>();
 		for(int i=0; i<recordlist.size(); i++) {
@@ -51,6 +58,11 @@ public class Main_Lists_Service {
 			}
 		}
 		
-		return arr;
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("RecordList", recordlist);
+		map.put("RecordThumbnail", arr);
+		
+		return map;
 	}
 }

@@ -37,7 +37,7 @@ public class Video_Service {
 		return vmap.recordList();
 	}
 	
-	videoDTO selectVideo(videoDTO select_video) {
-		return vmap.selectVideo(select_video);
+	videoDTO selectVideo(String video_code) {
+		return vmap.selectVideo(video_code);
 	}
 }

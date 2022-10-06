@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <!-- <link th:href="@{/css/testCSS.css}" rel="stylesheet"> -->
+		<link rel="stylesheet" href="/css/bootstrap.css">
+		<header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">스트리밍 서비스</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">당신의 즐거운 방송생활</p>
+                </div>
+            </div>
+        </header>
+    </head>
+    <body>
+    	<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="ScreenBody">
+    		<div class="LeftSide" id="Flist">
+    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    		</div>
+    		<div class="RightSide">
+    			<h2>팔로우한 스트리머</h2>	
+    			
+    			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id = 'str_list'>
+    				<div id = "srt_button">
+	    				<ul>
+	    					<li><div class="text-center">팔로우 중인 스트리머가 없습니다.</div></li>
+	    					<li><div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">방송중인 스트리머 확인하기</a></div></li>
+	    				</ul>
+    				</div>
+    			
+    				
+    				
+                   <div class="col mb-5">
+                        <div class="card h-100">
+                            Product image
+                            <img class="card-img-top" src="./6c757d.jpg" alt="..." id='idid'>
+                            Product details
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    Product name
+                                    <h5 class="fw-bolder">스트리머 1번</h5>
+                                    Product price
+                                    방송시간 : 1H
+                                </div>
+                            </div>
+                            Product actions
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://startbootstrap.github.io/startbootstrap-shop-homepage/#">방송 보러가기</a></div>
+                            </div>
+                        </div>
+                    </div>
+
+                        </div>
+                    </div>
+                </div>
+    			
+    			
+    				<div class="listBoard">
+    					<div class="followlive">
+    				
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>생방송 중인 스트리머</h2>	
+    				<div class="listBoard">
+    					<div class="livePlayList" id="LiveList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>다시보기</h2>	
+    				<div class="listBoard">
+    					<div class="rePlayList" id="RecordList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>최신 클립</h2>	
+    				<div class="listBoard">
+    					<div class="latestClipList">
+    				
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    		</div>
+    	</div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:inline="javascript">
+        	/*<![CDATA[*/
+        		//로그인 상태에 따라 팔로우 상태창 활성화/비활성화
+        		var Flist = document.getElementById("Flist");
+        		if(sessionStorage.getItem("using_id") != null || sessionStorage.getItem("using_pw") != null){
+            		Flist.style.display = 'block';
+            		var borderline = document.getElementById('borderline');
+            		var logoutBtn = document.createElement("input");
+            		logoutBtn.setAttribute('type', 'button');
+            		logoutBtn.setAttribute('value', '로그아웃');
+            		logoutBtn.setAttribute('id', 'logoutbutton');
+            		borderline.appendChild(logoutBtn);
+        		}else{
+            		Flist.style.display = 'none';
+            		var borderline = document.getElementById('borderline');
+            		var loginBtn = document.createElement("input");
+            		loginBtn.setAttribute('type', 'button');
+            		loginBtn.setAttribute('value', '로그인');
+            		loginBtn.setAttribute('id', 'loginbutton');
+            		borderline.appendChild(loginBtn);
+        		}
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(생방중인 사람의 프로필 사진)
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(생방, 녹방)
+        		$.ajax({
+        			url: '/ajax/main_livelist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("LiveList");
+                		var obj = JSON.parse(data);
+                		var livelist = obj['LiveList'];
+                		var LiveThumbnail = obj['LiveThumbnail'];
+                		
+                		console.log(livelist +" "+LiveThumbnail);
+                		
+                		for(var i=0;i<5;i++){
+                			var list = document.createElement("div");
+                			
+                			list.setAttribute('class', 'video')
+            				list.innerHTML=
+            					'<a href=""><img src=data:image/png;base64,'+ LiveThumbnail[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + livelist[i]["video_code"] + '</div><div class="SuserId">' + livelist[i]["streamer_id"] + '</div></a>';
+                    		target.appendChild(list);
+                		}
+                		document.getElementById('idid').src = 'data:image/png;base64,'+LiveThumbnail[0];
+        			}
+        		});
+        		
+        		$.ajax({
+        			url: '/ajax/main_recordlist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("RecordList");
+                		var obj = JSON.parse(data);
+                		var recordlist = obj['RecordList'];
+                		var RecordThumbnail = obj['RecordThumbnail'];
+                		
+                		console.log(recordlist +" "+RecordThumbnail);
+                		
+                		for(var i=0;i<5;i++){
+                			var list = document.createElement("div");
+                			
+                			list.setAttribute('class', 'video')
+            				list.innerHTML=
+            					'<a href=""><img src=data:image/png;base64,'+ RecordThumbnail[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + recordlist[i]["video_code"] + '</div><div class="SuserId">' + recordlist[i]["streamer_id"] + '</div></a>';
+                    		target.appendChild(list);
+                		}
+        			}
+        		});
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(클립)
+
+        		
+        		document.getElementById("mainButton").onclick = function(){
+        			window.location.href = "/YouTV/MainScreen";
+        		}
+        		
+        		if(document.getElementById("loginbutton") != null){
+        			document.getElementById("loginbutton").onclick = function(){
+            			window.location.href = "/YouTV/LoginScreen";
+            		}
+        		}
+        		
+        		if(document.getElementById("logoutbutton") != null){
+        			document.getElementById("logoutbutton").onclick = function(){
+            			sessionStorage.clear();
+            			window.location.href = "/YouTV/MainScreen";
+            		}
+        		}
+        	/*]]*/
+        </script>
+</html>
