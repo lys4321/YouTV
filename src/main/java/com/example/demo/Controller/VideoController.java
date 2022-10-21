@@ -30,12 +30,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.DTO.videoDTO;
+import com.example.demo.DTO.videoInfoDTO;
+import com.example.demo.Mapper.videoInfoMapper;
 import com.example.demo.Mapper.video_mapper;
 
 @Controller
 public class VideoController {
 	@Autowired
 	private video_mapper vmap;
+	@Autowired
+	private videoInfoMapper vim;
 	
 	
 	public void thumbnail() {
@@ -54,7 +58,7 @@ public class VideoController {
 	
 	@RequestMapping(value="/Test", method = {RequestMethod.POST, RequestMethod.GET})
 	public String broadList(/*web_userDTO user,*/ Model model) {
-		ArrayList<videoDTO> livelist = vmap.liveList();
+		ArrayList<videoInfoDTO> livelist = vim.liveList();
 		ArrayList<videoDTO> recordlist = vmap.recordList();
 		//thumbnail();
 		/*
@@ -70,26 +74,32 @@ public class VideoController {
 	
 	@RequestMapping(value="/ajax/frame_send", method = {RequestMethod.POST})
 	@ResponseBody
-	public void RTSTest(HttpServletRequest request) {
-		int num = 0;
+	public boolean RTSTest(HttpServletRequest request) {
+		int count = Integer.parseInt(request.getParameter("frame_count"));
 		String url = request.getParameter("frame_url");
 		String data = url.split(",")[1];
-		System.out.println(data);
+		System.out.println(count);
 		byte[] imageByte = DatatypeConverter.parseBase64Binary(data);
+		String format = String.format("C:\\YTVrepo\\frame_repo\\%s%05d.png", "test", count);
 		try {
 			BufferedImage bufimg = ImageIO.read(new ByteArrayInputStream(imageByte));
-			ImageIO.write(bufimg, "png", new File("C:\\YTVrepo\\frame_repo\\"+/*방송코드*/"test.png"));			
+			ImageIO.write(bufimg, "png", new File(format));			
+
+			
+			//ImageIO.write(bufimg, "png", new File("C:\\YTVrepo\\frame_repo\\"+/*방송코드*/"test"+ count +".png"));			
+			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		
+		return false;
 	}
 	
 	//YouTV/Video 녹화방송
 		@RequestMapping(value="/YouTV/Video", method= {RequestMethod.GET})
 		public ResponseEntity<ResourceRegion> test3_2(@RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestHeader HttpHeaders headers, Model model) throws UnsupportedEncodingException, IOException 
 		{	videoDTO streaming_video = vmap.selectVideo(video_code); 
-			UrlResource video = new UrlResource("file:"+streaming_video.getSave_url());
+			UrlResource video = new UrlResource("file:"+streaming_video.getSaveUrl());
 	        ResourceRegion resourceRegion;
 	        final long chunkSize = 1000000L;
 	        long contentLength = video.contentLength();

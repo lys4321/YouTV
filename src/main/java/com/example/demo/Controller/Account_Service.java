@@ -74,7 +74,7 @@ public class Account_Service {
 		ArrayList<String> arr = new ArrayList<String>();
 		if(result != null) {
 			String id = result.getUser_id();
-			String num = "197325468";
+			String num = "123456789";
 			String update_pw = ShaS.encrypt(num); 
 			web_userDTO update = new web_userDTO(result.getUser_id(), update_pw, result.getUser_name(), result.getUser_pnum(), result.getImage_url());
 			wum.UserUpdate(update);

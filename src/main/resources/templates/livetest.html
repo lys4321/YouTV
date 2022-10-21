@@ -73,7 +73,10 @@
     	<div id="button_container">
     		<input type="button" id="btn" value="btn">
     		<input type="button" id="monitorButton" value="monitorButton">
-    		<input type="button" id="divButton" value="divButton">
+    		<input type="button" id="divButton" value="divButton" >
+    		<form action="/streaming/live" method="post">
+    			<button>방송시작</button>
+    		</form>
     	</div>
     	<!-- <div id="capture_container">
     		<img id="webcam_capture"></img>
@@ -82,10 +85,11 @@
     	<!-- <img id="container_capture"></img> -->
     	<img id="css_capture"></img>
     </body>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script th:inline="javascript">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script th:inline="javascript">
         	/*<![CDATA[*/
         		//html 요소들의 변수 생성
         		var webcam_video = document.getElementById('webcam_video');
@@ -95,13 +99,7 @@
         		var webcam_capture = document.getElementById('webcam_capture');
         		var monitor_capture = document.getElementById('monitor_capture');
         		
-        		////////////////
-        		/* navigator.mediaDevices.enumerateDevices()  // 현재 연결되어있는 장치들의 목록을 가져옴
-    			.then(function(devices){
-    				devices.forEach(function(device){
-    					console.log(device.kind + ' ' + device.label)
-    				})
-    			}) */
+        		
         		if(navigator.mediaDevices.getUserMedia){
         			navigator.mediaDevices.getUserMedia({video: true})
         				.then(function(stream){
@@ -122,51 +120,13 @@
         					console.log('모니터가 연결이 안되어있음')
         				})
         		}
-        		///////////////////////////////
-        		/* webButton.onclick = function(){
-        			var canvas = document.createElement('canvas')
-        			canvas.width = webcam_capture.width;
-        			canvas.height = webcam_capture.height;
-        			var context = canvas.getContext('2d');
-        			context.drawImage(webcam_video, 0, 0, canvas.width, canvas.height);
-        			var url = canvas.toDataURL('image/png');
-        			webcam_capture.src = url;
-        		}
-        		monitorButton.onclick = function(){
-        			var canvas = document.createElement('canvas')
-        			canvas.width = monitor_capture.width;
-        			canvas.height = monitor_capture.height;
-        			var context = canvas.getContext('2d');
-        			context.drawImage(monitor_video, 0, 0, canvas.width, canvas.height);
-        			var url = canvas.toDataURL('image/png');
-        			monitor_capture.src = url;
-        		} */
-        		
-        		var divButton = document.getElementById('divButton');
-        		/* var capture_container = document.getElementById('capture_container');
-        		var container_capture = document.getElementById('container_capture');
-        		$("#divButton").on("click", function(){
-        			html2canvas(document.querySelector("#video_container2")).then(canvas => {
-        				container_capture.src = canvas.toDataURL('image/png')
-                        });
-        		}) */
-        		
-        		/* var css_capture = document.getElementById('css_capture');
-        		$("#divButton").on("click", function(){
-        			var canvas = document.createElement('canvas')
-        			canvas.width = 1280;
-        			canvas.height = 720;
-        			var context = canvas.getContext('2d');
-        			context.drawImage(monitor_video, 0, 0, 1280, 720);
-        			context.drawImage(webcam_video, 0, 0, 320, 180);
-        			var url = canvas.toDataURL('image/png');
-        			css_capture.src = url;
-        		}) */
         		var css_capture = document.getElementById('css_capture')
         		
+        		var frame_count = 0;
         		var btn = document.getElementById('btn')
+        		/*
         		btn.onclick=function(){
-        			console.log(url);
+        			//console.log(url);
         			var canvas = document.createElement('canvas')
         			canvas.width = 1280;
         			canvas.height = 720;
@@ -179,29 +139,53 @@
         				url: '/ajax/frame_send',
         				type: 'POST',
         				data: {
+        					'frame_count': frame_count,
         					'frame_url': url
         				},
         				dataType: 'json',
         				success: function(data){
         					console.log(data);
+        					frame_count = frame_count + 1;
+        					console.log(frame_count);
         				}
         			})
-        			}
-        			/* timer = setInterval(function(){
-            			$.ajax({
-            				url: '/ajax/frame_send',
-            				type: 'POST',
-            				data: {
-            					'frame_url': url
-            				},
-            				dataType: 'json',
-            				success: function(data){
-            					console.log(data);
-            				}
-            			})
-            			}
-            		, 5000); */
-        		
+        		}
+        		*/
+        		var testcode = "1234";
+        		var sockJs = new SockJS('/stomp/streaming');
+    			var stomp = Stomp.over(sockJs);
+    			
+    			var monitorButton = document.getElementById('monitorButton');
+    			
+    			
+        		var loop = setInterval(function(){
+        			var canvas = document.createElement('canvas');
+        			canvas.width = 1280;
+        			canvas.height = 720;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, 1280, 720);
+        			context.drawImage(webcam_video, 0, 0, 320, 180);
+        			var url = canvas.toDataURL('image/png');
+        			css_capture.src = url;
+        			console.log(url);
+        			$.ajax({
+        				url: '/ajax/frame_send',
+        				type: 'POST',
+        				data: {
+        					'frame_count': frame_count,
+        					'frame_url': url
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					frame_count = frame_count + 1;
+        					console.log(frame_count);
+        	    			stomp.send('/pub/streaming/message', {}, JSON.stringify({code: testcode, url: url}));
+        				}
+        			})
+        		}, 66);
+        		btn.onclick=function(){
+        			clearInterval(loop);
+        		}
         		
         	/*]]*/
     </script>

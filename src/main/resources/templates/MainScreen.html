@@ -89,7 +89,7 @@
                 			
                 			livelist.setAttribute('class', 'video')
             				livelist.innerHTML=
-            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["video_code"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
+            					'<a href="/Guest_Mode?video_code='+ a[i]["video_code"] +'"><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["title"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
                     		target.appendChild(livelist);
                 		}
         			}

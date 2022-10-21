@@ -8,13 +8,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class Tconf implements WebSocketMessageBrokerConfigurer{
+public class StreamLiveConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// TODO Auto-generated method stub
 		WebSocketMessageBrokerConfigurer.super.registerStompEndpoints(registry);
-		registry.addEndpoint("/stomp/chat").setAllowedOrigins("http:/192.168.0.123:8080").withSockJS();
+		registry.addEndpoint("/stomp/streaming").setAllowedOrigins("http:/192.168.0.123:8080").withSockJS();
 	}
 
 	@Override
@@ -24,6 +24,5 @@ public class Tconf implements WebSocketMessageBrokerConfigurer{
 		registry.enableSimpleBroker("/sub");
 		registry.setApplicationDestinationPrefixes("/pub");
 	}
-	
 	
 }

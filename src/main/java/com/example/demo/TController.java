@@ -18,8 +18,20 @@ public class TController {
 	
 	@RequestMapping(value="/livetest", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2() {
-		return "livetest";
+		return "LiveOwnerScreen";
 	}
+	
+	@RequestMapping(value="/livetest2", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test3() {
+		return "LiveGuestScreen";
+	}
+	
+	@RequestMapping(value="/streamtest", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test2_1_1() {
+		return "streamtest";
+	}
+	
+	
 	
 	
 	

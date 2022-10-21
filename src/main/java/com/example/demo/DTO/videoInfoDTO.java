@@ -9,11 +9,12 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class videoDTO {
+public class videoInfoDTO {
 	private String video_code;
 	private String streamer_id;
 	private String title;
-	private Date video_date;
-	private String saveUrl;
-	private String thumbnail;
+	private String profile;
+	private String session;
+	private String liveDate;
 }
+

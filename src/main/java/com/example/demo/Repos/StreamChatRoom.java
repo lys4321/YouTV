@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Repos;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,13 +10,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Troom {
+public class StreamChatRoom {
 	private String code;
-	//private Map<WebSocketSession,String> sessions = new HashMap<>();
 	private Set<WebSocketSession> sessions = new HashSet<>();
 	
-	public static Troom create(String code) {
-		Troom room = new Troom();
+	public static StreamChatRoom create(String code) {
+		StreamChatRoom room = new StreamChatRoom();
 		room.code = code;
 		return room;
 	}
