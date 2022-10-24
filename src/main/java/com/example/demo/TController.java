@@ -31,6 +31,11 @@ public class TController {
 		return "streamtest";
 	}
 	
+	@RequestMapping(value="/LayoutTest", method= {RequestMethod.GET})
+	public String LayoutTest() {
+		return "LayoutTest";
+	}
+	
 	
 	
 	

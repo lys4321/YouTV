@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+        <style>
+      div {
+        width: 100%;
+      }
+      div.left {
+        width: 30%;
+        float: left;
+      }
+      div.right {
+        width: 70%;
+        float: right;
+        height: 10 rem;
+      }
+ </style>
+    </head>
+    <body>
+    	<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<!-- <div class="LeftSide" id="Flist">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div> -->
+    	<div class="videoBody">
+    		<th:block th:replace="parts/videoBody :: videoBody"></th:block>
+    	</div>
+    	<div class="chattingBody">
+    		<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
+    	</div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+</html>
