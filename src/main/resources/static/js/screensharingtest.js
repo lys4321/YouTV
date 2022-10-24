@@ -16,7 +16,7 @@ var spinner = null;
 
 var now_date = new Date();
 var userid = sessionStorage.getItem("using_id"); 
-	if(userid === null) userid="test1";//"lys4321"//sessionStorage.getItem("userid");
+	if(userid === null) userid="user";//"lys4321"//sessionStorage.getItem("userid");
 var date = null;
 var year = null;
 var month = null;
@@ -157,7 +157,7 @@ $(document).ready(function() {
 									Janus.debug("Event: " + event);
 									if(event) {
 										if(event === "joined") {
-											myid = sessionStorage.getItem("using_id"); if(sessionStorage.getItem("using_id")===null){ myid = notuser }
+											myid = sessionStorage.getItem("using_id"); if(sessionStorage.getItem("using_id")===null){ myid = "notuser" }
 											$('#session').html(room);
 											$('#title').html(msg["description"]);
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
@@ -380,6 +380,14 @@ function shareScreen() {
 			"thumbnail_url": null,
 			"live_session": live_session
 		}
+		$.ajax({
+			url: "/Ajax/Create_Room",
+			type: "POST",
+			data: {
+				"code": video_code
+			}
+		});
+		
 		$.ajax({
 			url: "/Ajax/Live/Create_Stream",
 			type: "POST",
