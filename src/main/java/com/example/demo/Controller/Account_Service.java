@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,13 +21,12 @@ import com.example.demo.Service.SHA256_Service;
 public class Account_Service {
 	@Autowired
 	private web_user_mapper wum;
-	@Autowired
 	private SHA256_Service ShaS = new SHA256_Service();
 	
 	@RequestMapping(value="/ajax/AccountExistCheck", method = {RequestMethod.POST})
 	public boolean AccountExistCheck(HttpServletRequest request) {
-		String insert_id = request.getParameter("inid");
-		String insert_pw = request.getParameter("inpassword");
+		String insert_id = request.getParameter("id");
+		String insert_pw = request.getParameter("password");
 		web_userDTO checksum = wum.UserLogin(insert_id, ShaS.encrypt(insert_pw));
 		if(checksum != null) {
 			System.out.println("입력된 ID : ["+insert_id+"], 입력된 PW : ["+ShaS.encrypt(insert_pw)+"] 결과 : [로그인 성공]");
@@ -39,6 +40,7 @@ public class Account_Service {
 	@RequestMapping(value="/ajax/AccountDupCheck", method = {RequestMethod.POST})
 	public boolean AccountDupCheck(HttpServletRequest request) {
 		String insert_id = request.getParameter("inid");
+		System.out.println("ID 중복 체크1234 : "+insert_id);
 		String out_id = wum.SearchUser(insert_id);
 		System.out.println("ID 중복 체크 : "+out_id);
 		if(out_id != null) {
@@ -52,6 +54,10 @@ public class Account_Service {
 	
 	@RequestMapping(value="/ajax/AccountCreate", method = {RequestMethod.POST})
 	public boolean AccountCreate(HttpServletRequest request) {
+		
+		
+		
+		
 		String insert_id = request.getParameter("inid");
 		String insert_pw = ShaS.encrypt(request.getParameter("inpassword"));
 		String insert_name = request.getParameter("inname");

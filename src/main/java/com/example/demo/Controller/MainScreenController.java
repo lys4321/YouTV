@@ -20,7 +20,7 @@ public class MainScreenController {
 	@Autowired
 	private videoInfoMapper vim;
 	///YouTV/MainScreen
-	@RequestMapping(value="/", method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/YouTV/MainScreen", method= {RequestMethod.POST, RequestMethod.GET})
     public String MainScreen(Model model){
 		ArrayList<videoInfoDTO> livelist = vim.liveList();
 		ArrayList<videoDTO> recordlist = vmap.recordList();

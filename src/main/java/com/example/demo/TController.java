@@ -21,6 +21,8 @@ public class TController {
 		return "LiveOwnerScreen";
 	}
 	
+	
+	
 	@RequestMapping(value="/livetest2", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test3() {
 		return "LiveGuestScreen";
