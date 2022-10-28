@@ -16,9 +16,9 @@ public class TController {
 	@Autowired
 	video_mapper vm;
 	
-	@RequestMapping(value="/livetest", method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2() {
-		return "LiveOwnerScreen";
+		return "LayoutTest";
 	}
 	
 	

@@ -1113,6 +1113,7 @@ h6 {
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
+  border-radius: 0 25px 25px 0;
 }
 
 @media (max-width: 1199px) {

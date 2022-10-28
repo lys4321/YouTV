@@ -14,4 +14,5 @@ public interface videoInfoMapper {
 	videoInfoDTO selectVideoInfo(String video_code); // 방송 선택 시 정보 전달
 	ArrayList<videoInfoDTO> allLiveList(); // 생방송 목록 가져오기
 	ArrayList<videoInfoDTO> liveList(); // 생방송 목록 가져오기 5개
+	videoInfoDTO selectById(String user_id);
 }

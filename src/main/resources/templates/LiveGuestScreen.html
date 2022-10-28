@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html 
+	lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <!-- xmlns="http://www.w3.org/1999/xhtml" -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Janus WebRTC Server: Screen Sharing Demo</title>
 <style>
-      div {
+      /* div {
         width: 100%;
       }
       div.left {
@@ -17,7 +21,7 @@
         width: 70%;
         float: right;
         height: 10 rem;
-      }
+      } */
  </style>
 
 <script type="text/javascript"
@@ -36,18 +40,45 @@
 <script type="text/javascript" src="js/guestStream.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-<link rel="stylesheet"
+<!-- <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css"
-	type="text/css" />
-<link rel="stylesheet" href="css/demo.css" type="text/css" />
-<link rel="stylesheet" href="css/chatting.css" type="text/css" />
+	type="text/css" /> -->
+<link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+<link th:href="@{/css/mycss.css}" rel="stylesheet">
+<link th:href="@{/css/chatting.css}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="css/chatting.css" type="text/css" /> -->
+
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 	type="text/css" />
 </head>
 <body>
+		<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="Aside">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div>
+    	
+    	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>  
+    	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -76,23 +107,16 @@
 						</div>
 					</div>
 				</div>
-				<div class ="left">
-					<div id="msgSector">
-						<div id="msgArea" class="col"></div>
-					    	<div class="col-6">
-					        	<div class="input-group mb-3" id="chatting_area">
-					            	<div id="insertSector">
-					            		<input type="text" id="msg" class="form-control">
-					            		<div class="input-group-append">
-					                	<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
-					            	</div>
-					            </div>
-					        </div>
-					    </div>
-					</div>
-				</div>
-				<div class = "right">
-					<div class="container hide" id="room">
+				<div class="main" id="main">
+					<div class="videoBody">
+		    				<th:block th:replace="parts/videoBody :: videoBody"></th:block>
+		    			</div>
+					<div class="chattingBody">
+	    				<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
+    				</div>
+				
+					
+					<!-- <div class="container hide" id="room">
 						<div class="row">
 							<div class="col-md-12" id="">
 								<div class="panel panel-default">
@@ -108,8 +132,9 @@
 						<div class="col-6"></div>
 	
 					</div>
+				</div> -->
+				
 				</div>
-			</div>
 		</div>
 	</div>
 </body>
@@ -160,17 +185,17 @@
                console.log("확인????");
 
                if(writer === userid){
-                   str = "<div class='col-6'>";
-                   str += "<div class='alert alert-secondary'>";
-                   str += "<b>" + writer + " : " + chatting + "</b>";
+                   str = "<div class='activity-item d-flex'>";
+                   str += "<b class=activite-label>" + writer + " : " + "</b>";
+                   str += "<b class=activity-content>" + chatting + "</b>";
                    str += "</div></div>";
                    $("#msgArea").append(str);
                    $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
                }
                else{
-                   str = "<div class='col-6'>";
-                   str += "<div class='alert alert-warning'>";
-                   str += "<b>" + writer + " : " + chatting + "</b>";
+            	   str = "<div class='activity-item d-flex'>";
+                   str += "<b class=activite-label>" + writer + " : " + "</b>";
+                   str += "<b class=activity-content>" + chatting + "</b>";
                    str += "</div></div>";
                    $("#msgArea").append(str);
                    $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
@@ -180,17 +205,13 @@
         $('#button-send').on("click", function chatsendButton(){
         	//var sockJs = new SockJS("/stomp/chat");
         	//var stomp = Stomp.over(sockJs);
-            var msg = document.getElementById("msg");
+            var msg = $('#msg')
             console.log(msg);
-            if(!msg){
+            if(!msg.val()){
              	alert("입력이 필요")
              }else{
-             	console.log(userid + ":" + msg.value);
-             	
-             	
-             	console.log("test" + video_code + msg.value + userid );
-                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.value, user_id: userid, chat_status: true}));
-                 msg.value = '';
+                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.val(), user_id: userid, chat_status: true}));
+                 msg.val('');
              }
              console.log(msg.value);
          });

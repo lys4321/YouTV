@@ -3,25 +3,41 @@
 <th:block th:fragment="updatingAccount(UA)">
     <body>
     <div class="member_login">
-    	<a><i id="exitmark" class="fa-solid fa-xmark"></i></a>
-    	<span id="title" class="card-title">로그인</span>
-        <form id="loginform" class="row g-3 needs-validation" th:action="@{#}" th:method="POST">
+    	<a><i id="exitmark_update" class="fa-solid fa-xmark"></i></a>
+    	<span id="title" class="card-title">계정수정</span>
+    	<pre>
+    	 
+    	</pre>
+    	<label for="profile-file" id="btnlabel" class="">
+        	<img id="img-profile" class="rounded-circle-img">
+        </label>
+    	
+    	<pre>
+    	</pre>
+        <form id="fileform" action="" class="row g-3 needs-validation" th:action="@{#}" th:method="POST">
+        	<input class="form-control" id="filename" placeholder="첨부파일">
+        	<input type="file" id="profile-file" accept="image/*">
+        	<div class="member_login_btn">
+        		<input type="button" class="btn btn-secondary" id="btn-profile" value="변경">
+        	</div>
+        </form>
+        <form id="updateform" class="row g-3 needs-validation" th:action="@{#}" th:method="POST">
             <div class="member_login_input">
             	<input id="id" class="form-control" type="text" name="id" placeholder="아이디" >
+            	<input id="dupCheck" type="button" class="btn btn-secondary" value="중복검사">
             </div>
-
             <div class="member_login_input">
                 <input id="password" class="form-control" type="password" name="password" placeholder="비밀번호">
             </div>
-
-            <div class="member_login_btn">
-
-                <input type="button" class="btn btn-secondary" id="btn-login" value="로그인">
-
-                <input type="button" class="btn btn-secondary" id=btn-create-login value="회원가입">
-
+            <div id="inlinebtn">
+            	<div class="member_login_btn">
+            		<input type="button" class="btn btn-secondary" id="btn-update" value="변경">
+	            </div>
             </div>
         </form>
+        <div class="member_login_btn">
+            <a id="deleteIcon" class="mainIcon" href="#"><i class="fa-solid fa-user-xmark"></i> 계정삭제를 원하신가요?</a>
+        </div>
     </div>
     </body>
 </th:block>

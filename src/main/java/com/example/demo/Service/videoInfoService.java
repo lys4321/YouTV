@@ -29,4 +29,7 @@ public class videoInfoService {
 	ArrayList<videoInfoDTO> liveList(){
 		return vim.liveList();
 	}
+	videoInfoDTO selectById(String user_id) {
+		return vim.selectById(user_id);
+	}
 }

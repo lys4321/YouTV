@@ -31,12 +31,17 @@
 	<select id="allLiveList" resultType="com.example.demo.DTO.videoInfoDTO">
 		select *
 		from videoInfo
-		order by liveDate DESC
+		order by liveDate
 	</select>
 	<select id="liveList" resultType="com.example.demo.DTO.videoInfoDTO">
 		select *
 		from videoInfo
-		order by liveDate DESC
+		order by liveDate
 		limit 5
+	</select>
+	<select id="selectById" parameterType="string" resultType="com.example.demo.DTO.videoInfoDTO">
+		select *
+		from videoInfo
+		where streamer_id = #{streamer_id}
 	</select>
 </mapper>
