@@ -37,6 +37,11 @@
 	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
 	     		</div>
 	    	</div>  
+	    	<div class="modal_del">
+	     			 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/delete.html :: delete(~{this::del} )}"></th:block>
+	     			 </div>
+	     	</div>
     	</div>
     	
     	<div class="main" id="main">
@@ -71,6 +76,7 @@
         			const modal = document.querySelector('.modal');
         			const modal_create = document.querySelector('.modal_create')
         			const modal_update = document.querySelector('.modal_update')
+        			const modal_del = document.querySelector('.modal_del')
         			const leftvalue = $('.sidebar').offset().left;
         			
         			//sessionStorage.clear();
@@ -88,9 +94,43 @@
         				);
         				$('.sidebar').css("left", -300);
         				$('#FL').hide();
-        				$('')
-        				
         			}else{
+        				$.ajax({
+        					url: '/ajax/main_follows',
+        					type: 'GET',
+        					data: {
+        						"userid": sessionStorage.getItem("using_id")
+        					},
+        					dataType: 'text',
+        					success: function(data){
+                        		var obj = JSON.parse(data);
+                        		var thum = obj["FollowThumbnail"];
+                        		var ulist = obj["follows"];
+                        		var len = ulist.length
+                        		
+                        		for(var i=0;i<len;i++){
+                        			if(obj["FollowThumbnail"][i] === null){
+                        					$('#sidebar-nav').append(
+                    	        				'<li class="nav-item">'+
+                    	        				'<a class="nav-link" href="/Guest_Mode?video_code=' + ulist[i]["video_code"] + '">'+
+                    	        				'<img src="" width="50px" height="50px" style="border-radius:50%;" alt="Profile" class="rounded-circle">'+
+                    	        				ulist[i]["streamer_id"] +'</a></li>' 
+                    	        			);
+                        			}else{
+                        				$('#sidebar-nav').append(
+                    	        				'<li class="nav-item">'+
+                    	        				'<a class="nav-link" href="/Guest_Mode?video_code=' + ulist[i]["video_code"] + '">'+
+                    	        				'<img src="data:image/png;base64,' + thum[i] + '" width="50px" height="50px" style="border-radius:50%;" alt="Profile" class="rounded-circle">'+
+                    	        				ulist[i]["streamer_id"] +'</a></li>' 
+                    	        		);
+                        			}
+                        		}
+                			},
+                			error: function(){
+                				console.log("error");
+                			}
+        				});
+        				
         				$.ajax({
                 			url: '/ajax/main_followlist',
                 			type: 'GET',
@@ -114,6 +154,7 @@
         	                    				'<h3>' + ulist[i]["streamer_id"] + '</h3>'+
         	                    				'</div>'
                                 		); 
+                        				console.log("!!!!!!!!!!!!!!")
                         			}else{
                         				$('#followList').append(
                         						'<div class="items cardWhite">'+
@@ -237,6 +278,56 @@
         		    	 sessionStorage.clear(); 
         		      });
         		      
+        		      $('#deleteIcon').click(function(){
+							modal_del.style.display = 'block';
+      		      	  });
+        		      $('#del_exitmark').click(function(){
+        		    	  modal_del.style.display = 'none';
+      		          });
+        		      
+        		      $('#yesbtn').click(function(){
+        		    	  $.ajax({
+        		    		 url: '/ajax/AccountDelete',
+        		    		 type: 'POST',
+        		    		 data: {
+        		    			 'userid': sessionStorage.getItem("using_id")
+        		    		 },
+        		    		 success: function(){
+        		    			sessionStorage.clear();
+                       			window.location.href = "/YouTV/MainScreen";
+                       			alert("계정 삭제 완료");
+        		    		 }
+        		    	  });
+        		      });
+        		      
+					  $('#nobtn').click(function(){
+						  modal_del.style.display = 'none';
+        		      });
+					  
+					  $('#btn-check').click(function(){
+						  if(sessionStorage.getItem("using_pw") === $('#checkpassword').val()){
+							  $('#check').css('display', 'none');
+							  $('#setting').css('display', 'block');
+						  }else{
+							  alert("인증실패");
+						  }
+					  });
+					  
+					  $('#btn-update').click(function(){
+						  $.ajax({
+	        		    		 url: '/ajax/AccountUpdate',
+	        		    		 type: 'POST',
+	        		    		 data: {
+	        		    			 'inid': sessionStorage.getItem("using_id"),
+	        		    			 'newpassword': $('#upassword').val()
+	        		    		 },
+	        		    		 success: function(){
+	        		    			 sessionStorage.setItem("using_pw", $('#upassword').val());
+	                       			window.location.href = "/YouTV/MainScreen";
+	                       			alert("계정 수정 완료");
+	        		    		 }
+	        		    	  });
+					  });
               		
               		if(document.getElementById("") != null){
               			document.getElementById("").onclick = function(){
@@ -244,6 +335,14 @@
                   			window.location.href = "/YouTV/MainScreen";
                   		}
               		}
+              		
+              		
+              		$('#streamMenu2').append(
+    						'<a id="streamIcon" class="mainIcon" href="/Owner_Mode">'+
+    						'<i class="fa-solid fa-signal-stream"></i>방송하기</a>'+	
+    						'<a id="clipIcon" class="mainIcon" href="#">'+
+    						'<i class="fa-solid fa-paperclip"></i>클립제작</a>'
+    				);
           		
             		//
             		$('#followIcon').click(function(){
@@ -312,6 +411,8 @@
         				}
             		});
             		
+            		
+            		
             		$('#profile-file').on('change', function(){
             			var filename = $('#profile-file').val();
             			$('#filename').val(filename);
@@ -324,8 +425,36 @@
             					$('#img-profile').attr('src', e.target.result);
             				}
             				reader.readAsDataURL(this.files[0]);
+            				//console.log(this.files[0])
             			}
+            			
             		});
+            		$('#btn-profile').on('click', function(){
+            			var formData = new FormData();
+            			$('#profile-file').attr("name", sessionStorage.getItem("using_id"));
+            			console.log($('#profile-file')[0].files[0])
+            			formData.append(sessionStorage.getItem("using_id"), $('#profile-file')[0].files[0]);
+            			
+            			
+            			$.ajax({
+            				url: '/ajax/AccountUpdateImg',
+            				processData: false,
+            				contentType: false,
+            				type: 'POST',
+            				data: formData,
+            				success: function(data){
+            					console.log(data);
+            					//sessionStorage.setItem("profile", data);
+            					//window.location.href = "/YouTV/MainScreen";
+            				},
+            			error: function(e){
+            				console.log(e)
+            			}
+            			});
+            		});
+            		
+            		
+            		
             		
             		var comcheck = 0;
             		$('#cpw').keyup(function(){

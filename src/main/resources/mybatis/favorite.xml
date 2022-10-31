@@ -19,5 +19,6 @@
 	<select id="allfollows" parameterType="String" resultType="String">
 		select streamer_id
 		from favorites
+		where viewer_id = #{viewer_id}
 	</select>
 </mapper>

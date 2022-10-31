@@ -18,7 +18,7 @@ public class TController {
 	
 	@RequestMapping(value="/", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2() {
-		return "LayoutTest";
+		return "recordTest";
 	}
 	
 	

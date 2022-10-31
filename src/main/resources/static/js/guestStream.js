@@ -68,6 +68,8 @@ function randomString(len, charSet) {
 
 
 $(document).ready(function() {
+	
+	
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
 		// Use a button to start the demo

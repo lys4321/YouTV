@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class videoInfoService {
 	int addVInfo(videoInfoDTO info) {
 		return vim.addVInfo(info);
 	}
-	int deleteInfo(videoInfoDTO info) {
-		return vim.deleteInfo(info);
+	int deleteInfo(@Param(value="code")String code) {
+		return vim.deleteInfo(code);
 	}
 	videoInfoDTO selectVideoInfo(String video_code) {
 		return vim.selectVideoInfo(video_code);

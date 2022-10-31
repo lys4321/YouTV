@@ -193,7 +193,7 @@ $(document).ready(function() {
 														Janus.warn("Not a stop to our recording?");
 														return;
 													}
-													bootbox.alert("Recording completed! Check the list of recordings to replay it.");
+													bootbox.alert("녹화 완료!");
 												}
 												if(selectedRecording) {
 													if(selectedRecording !== id) {
@@ -403,12 +403,7 @@ function startRecording() {
 	// Start a recording
 	recording = true;
 	playing = false;
-	bootbox.prompt("Insert a name for the recording (e.g., John Smith says hello)", function(result) {
-		if(!result) {
-			recording = false;
-			return;
-		}
-		myname = result;
+	myname = "코드 동영상";////////////sessionStorage.getItem("코드")
 		$('#record').unbind('click').attr('disabled', true);
 		$('#play').unbind('click').attr('disabled', true);
 		$('#list').unbind('click').attr('disabled', true);
@@ -453,7 +448,6 @@ function startRecording() {
 					recordplay.hangup();
 				}
 			});
-	});
 }
 
 function startPlayout() {

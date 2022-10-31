@@ -66,8 +66,22 @@ function randomString(len, charSet) {
     return randomString;
 }
 
+function deleteLiveStreaming(){
+	$.ajax({
+		url: '/ajax/deleteLiveStreaming',
+		type: 'GET',
+		data: {
+			"code": video_code
+		}
+	});
+}
+
 
 $(document).ready(function() {
+	window.addEventListener('beforeunload', deleteLiveStreaming);
+	
+	
+	
 	
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
@@ -90,7 +104,7 @@ $(document).ready(function() {
 								plugin: "janus.plugin.videoroom",
 								opaqueId: opaqueId,
 								success: function(pluginHandle) {
-									title = $('#title').val();
+									title = $('.intitle').val();
 									
 									$('#details').remove();
 									screentest = pluginHandle;
@@ -113,6 +127,11 @@ $(document).ready(function() {
 										});
 								},
 								error: function(error) {
+									$.ajax({
+										url: '/ajax/deleteLiveStreaming',
+										type: 'GET',
+										data: video_code
+									});
 									Janus.error("  -- Error attaching plugin...", error);
 									bootbox.alert("Error attaching plugin... " + error);
 								},
@@ -158,7 +177,7 @@ $(document).ready(function() {
 									if(event) {
 										if(event === "joined") {
 											myid = sessionStorage.getItem("using_id"); if(sessionStorage.getItem("using_id")===null){ myid = "notuser" }
-											$('#session').html(room);
+											//$('#session').html(room);
 											$('#title').html(msg["description"]);
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
 											if(role === "publisher") {
@@ -173,6 +192,11 @@ $(document).ready(function() {
 															screentest.send({ message: publish, jsep: jsep });
 														},
 														error: function(error) {
+														$.ajax({
+															url: '/ajax/deleteLiveStreaming',
+															type: 'GET',
+															data: video_code
+														});
 															Janus.error("WebRTC error:", error);
 															bootbox.alert("WebRTC error... " + error.message);
 														}
@@ -224,8 +248,10 @@ $(document).ready(function() {
 									Janus.debug(" ::: Got a local stream :::", stream);
 									$('#screenmenu').hide();
 									$('#room').removeClass('hide').show();
+									$('#mainTitle').text(title);
 									if($('#screenvideo').length === 0) {
 										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
+										
 										$('#chatting_area').append(
 										"<input type='text' id='msg' class='form-control'>"
                         				+"<div class='input-group-append'>"
@@ -257,6 +283,11 @@ $(document).ready(function() {
 							});
 					},
 					error: function(error) {
+						$.ajax({
+						url: '/ajax/deleteLiveStreaming',
+						type: 'GET',
+						data: video_code
+					});
 						Janus.error(error);
 						bootbox.alert(error, function() {
 							window.location.reload();
@@ -268,6 +299,16 @@ $(document).ready(function() {
 				});
 		});
 	}});
+	/*$(window).unload(function(){
+		//deleteLiveStreaming(video_code);
+		alert("hhhhh");
+	});*/
+	
+	
+	
+	/*$(window).onbeforeunload(function(){
+		deleteLiveStreaming(video_code);
+	});	*/
 });
 
 function checkEnterShare(field, event) {
@@ -380,6 +421,7 @@ function shareScreen() {
 			"thumbnail_url": null,
 			"live_session": live_session
 		}
+		
 		$.ajax({
 			url: "/Ajax/Create_Room",
 			type: "POST",
@@ -396,6 +438,7 @@ function shareScreen() {
 			},
 			dataType: "text",
 			success: function(data){
+				
 				sockJs = new SockJS("/stomp/chat");
                 //1. SockJS를 내부에 들고있는 stomp를 내어줌
                 stomp = Stomp.over(sockJs);
@@ -430,6 +473,11 @@ function shareScreen() {
                 });
 			},
 			error: function(e){
+				$.ajax({
+					url: '/ajax/deleteLiveStreaming',
+					type: 'GET',
+					data: video_code
+				});
 				alert("방송시작 실패함");
 			}
 		});
@@ -532,6 +580,11 @@ function newRemoteFeed(id, display) {
 				remoteFeed.send({ message: listen });
 			},
 			error: function(error) {
+				$.ajax({
+					url: '/ajax/deleteLiveStreaming',
+					type: 'GET',
+					data: video_code
+				});
 				Janus.error("  -- Error attaching plugin...", error);
 				bootbox.alert("Error attaching plugin... " + error);
 			},
@@ -568,6 +621,11 @@ function newRemoteFeed(id, display) {
 								remoteFeed.send({ message: body, jsep: jsep });
 							},
 							error: function(error) {
+								$.ajax({
+									url: '/ajax/deleteLiveStreaming',
+									type: 'GET',
+									data: video_code
+								});
 								Janus.error("WebRTC error:", error);
 								bootbox.alert("WebRTC error... " + error.message);
 							}

@@ -21,7 +21,7 @@
 	<delete id="deleteInfo" parameterType="string">
 		delete
 		from videoInfo
-		where video_code = #{video_code}
+		where video_code = #{code}
 	</delete>
 	<select id="selectVideoInfo" resultType="com.example.demo.DTO.videoInfoDTO" parameterType="String">
 		select *

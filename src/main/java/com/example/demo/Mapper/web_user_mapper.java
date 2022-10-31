@@ -11,6 +11,7 @@ import com.example.demo.DTO.web_userDTO;
 public interface web_user_mapper {
 	ArrayList<web_userDTO> AllUserList();// 모든 유저 목록
 	String SearchUser(@Param("uuid") String uuid);// 중복체크를 위함
+	String SearchUserProfile(@Param("uuid") String uuid);
 	web_userDTO reSearchUser(@Param("name") String name, @Param("pnum") String pnum);
 	web_userDTO UserLogin(@Param("uuid") String uuid, @Param("uupw") String uupw);// 로그인
 	int UserUpdate(web_userDTO user);// 유저 수정

@@ -21,7 +21,11 @@ public class Web_User_Service {
 	}
 	
 	String SearchUser(@Param("_uuid") String uuid) {
-		return userMapper.SearchUser(uuid);
+		return userMapper.SearchUser(uuid); 
+	}
+	
+	String SearchUserProfile(@Param("_uuid") String uuid) {
+		return userMapper.SearchUserProfile(uuid); 
 	}
 	
 	web_userDTO reSearchUser(@Param("name") String name, @Param("pnum") String pnum){

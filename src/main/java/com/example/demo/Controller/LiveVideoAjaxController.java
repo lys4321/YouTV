@@ -64,6 +64,15 @@ public class LiveVideoAjaxController {
 		}
 	}
 	
+	@RequestMapping(value="/ajax/deleteLiveStreaming", method = {RequestMethod.GET})
+	public void deleteLiveStreaming(HttpServletRequest request) {
+		String code = request.getParameter("code");
+		System.out.println("코드는 : "+ code);
+		vim.deleteInfo(code);
+		streamChatRoomRepo.deleteRoom(code);
+		System.out.println("삭제된 : "+ code);
+	}
+	
 	//생방송 등러갈 시 정보를 저장하는 메소드
 		/*@RequestMapping(value="/Ajax/Live/Join_Stream", method = {RequestMethod.POST})
 		public String JoinLiveSession(HttpServletRequest request) {

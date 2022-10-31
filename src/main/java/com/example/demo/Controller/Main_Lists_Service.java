@@ -18,10 +18,13 @@ import com.example.demo.DTO.videoInfoDTO;
 import com.example.demo.Mapper.favoriteMapper;
 import com.example.demo.Mapper.videoInfoMapper;
 import com.example.demo.Mapper.video_mapper;
+import com.example.demo.Mapper.web_user_mapper;
 
 @Controller
 @ResponseBody
 public class Main_Lists_Service {
+	@Autowired
+	private web_user_mapper wum;
 	@Autowired
 	private video_mapper vmap;
 	@Autowired
@@ -72,6 +75,41 @@ public class Main_Lists_Service {
 		return map;
 	}
 	
+	@RequestMapping(value="/ajax/main_follows", method= {RequestMethod.GET})
+	public HashMap<String, Object> main_follows(@RequestParam(value="userid") String userid) {
+		ArrayList<String> follows = fm.allfollows(userid);
+		System.out.println("팔로우 목록 화면 정보");
+		ArrayList<byte[]> arr = new ArrayList<byte[]>();
+		ArrayList<videoInfoDTO> vinfo = new ArrayList<videoInfoDTO>();
+		for(int i=0; i<follows.size(); i++) {
+			videoInfoDTO vin = vim.selectById(follows.get(i));
+			if(vin == null) {
+				continue;
+			}
+			
+			if(vin.getProfile() == null) {
+				continue;
+			}
+			
+			vinfo.add(vin);
+			
+			File file = new File(vin.getProfile());
+			
+			try {
+				arr.add(FileCopyUtils.copyToByteArray(file));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("follows", vinfo);
+		map.put("FollowThumbnail", arr);
+		
+		return map;
+	}
+	
 	@RequestMapping(value="/ajax/main_livelist", method= {RequestMethod.GET})
 	public HashMap<String, Object> main_livelist() {
 		ArrayList<videoInfoDTO> livelist = vim.liveList();
@@ -101,7 +139,6 @@ public class Main_Lists_Service {
 		map.put("LiveList", livelist);
 		map.put("LiveThumbnail", arr);
 		
-		System.out.println("구아아아아아아아");
 		return map;
 	}
 	
