@@ -212,9 +212,25 @@
             if(!msg.val()){
              	alert("입력이 필요")
              }else{
-                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.val(), user_id: userid, chat_status: true}));
+                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.val(), user_id: userid, chat_status: false}));
                  msg.val('');
              }
+            
+            var today = new Date();
+            console.log(today);
+            
+            $.ajax({
+            	url: '/ajax/addChat',
+            	type: 'GET',
+				data: {
+					"userid": userid,
+					"video_code": video_code,
+					"chat": msg.val(),
+					"chat_status": "false",
+					"chatDate": today
+				}
+            });
+            
              console.log(msg.value);
          });
         

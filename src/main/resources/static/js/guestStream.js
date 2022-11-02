@@ -317,8 +317,7 @@ function joinScreen() {//방에 들어갈 때
 	}
 	var result=null;
 	
-	room = parseInt(roomid);//result;//여기가 방 들어오는 세션 생성하는 부분(나중에 방송코드로 변경)
-	role = "listener";
+	room = parseInt(roomid);//result;
 	myusername = randomString(12);
 	var register = {
 		request: "join",

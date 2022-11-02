@@ -123,6 +123,7 @@ public class Main_Lists_Service {
 			File file = new File(livelist.get(i).getProfile());
 			
 			try {
+				
 				arr.add(FileCopyUtils.copyToByteArray(file));
 			} catch (IOException e) {
 				e.printStackTrace();

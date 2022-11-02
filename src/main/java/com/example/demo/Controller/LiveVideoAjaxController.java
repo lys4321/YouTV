@@ -18,6 +18,7 @@ import com.example.demo.DTO.videoDTO;
 import com.example.demo.DTO.videoInfoDTO;
 import com.example.demo.Mapper.videoInfoMapper;
 import com.example.demo.Mapper.video_mapper;
+import com.example.demo.Mapper.web_user_mapper;
 import com.example.demo.Repos.StreamChatRoomRepo;
 
 @Controller
@@ -27,6 +28,8 @@ public class LiveVideoAjaxController {
 	private videoInfoMapper vim;
 	@Autowired
 	private StreamChatRoomRepo streamChatRoomRepo = new StreamChatRoomRepo();
+	@Autowired
+	private web_user_mapper wum;
 	
 	//생방송 시작 시 정보를 저장하는 메소드
 	@RequestMapping(value="/Ajax/Live/Create_Stream", method = {RequestMethod.POST})
@@ -37,13 +40,14 @@ public class LiveVideoAjaxController {
 			String streamer_id = info.get("streamer_id").toString();
 			String title = (String) info.get("title");
 			String video_date = (String) info.get("video_date");
-			String userFrofile = null;/////////
+			String userFrofile = null;
 			System.out.println(info.get("live_session"));
 			String live_session = Long.toString((Long)info.get("live_session"));
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = null;
 			try {
+				userFrofile = wum.SearchUserProfile(streamer_id);
 				date = formatter.parse(video_date);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

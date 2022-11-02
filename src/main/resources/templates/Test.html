@@ -1,101 +1,36 @@
 <!DOCTYPE html>
-<html lang="ko" 
+<html
+	lang="ko" 
     xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <meta charset="UTF-8">
-        <link th:href="@{/css/testCSS.css}" rel="stylesheet">
-        
-    </head>
-    <body>
-    	<div class="Head">
-    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
-    	</div>
-    	<div class="ScreenBody">
-    		<div class="LeftSide">
-    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
-    		</div>
-    		<div class="RightSide">
-    			<h2>팔로우한 스트리머</h2>	
-    				<div class="listBoard">
-    					<div class="followlive">
-    				
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>생방송 중인 스트리머</h2>	
-    				<div class="listBoard">
-    					<div class="livePlayList" id="LiveList">
-    					
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>다시보기</h2>	
-    				<div class="listBoard">
-    					<div class="rePlayList" id="RecordList">
-    					
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>최신 클립</h2>	
-    				<div class="listBoard">
-    					<div class="latestClipList">
-    				
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    		</div>
-    	</div>
-    </body>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script th:inline="javascript">
-        	/*<![CDATA[*/
-        		// 방송 기본 정보 받아오기
-        		
-        		var a = /*[[${livelist}]]*/ "live";
-        		var b = /*[[${recordlist}]]*/ "record";
-        		
-        		/*
-        		
-        		//AJAX를 이용하여 썸네일 가져오기
-        		$.ajax({
-        			url: '/ajax/main_livelist',
-        			type: 'GET',
-        			dataType: 'text',
-        			success: function(data){
-        				var target = document.getElementById("LiveList");
-                		var obj = JSON.parse(data);
-                		for(var i=0;i<a.length;i++){
-                			var livelist = document.createElement("div");
-                			
-                			livelist.setAttribute('class', 'video')
-            				livelist.innerHTML=
-            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["video_code"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
-                    		target.appendChild(livelist);
-                		}
-        			}
-        		});
-        		
-        		$.ajax({
-        			url: '/ajax/main_recordlist',
-        			type: 'GET',
-        			dataType: 'text',
-        			success: function(data){
-        				var target = document.getElementById("RecordList");
-                		var obj = JSON.parse(data);
-                		for(var i=0;i<b.length;i++){
-                			var recordlist = document.createElement("div");
-                			
-                			recordlist.setAttribute('class', 'video')
-            				recordlist.innerHTML=
-            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + b[i]["video_code"] + '</div><div class="SuserId">' + b[i]["streamer_id"] + '</div></a>';
-                    		target.appendChild(recordlist);
-                		}
-        			}
-        		});
-        		
-        		*/
-        		
-        	/*]]*/
-        </script>
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="js/janus.js" ></script>
+<script type="text/javascript" src="js/sharePlusrecord.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<style>
+	#style{
+		width: 100%;
+		height: 100%;
+	}
+</style>
+</head>
+<body>
+	<div id="divdivman">
+		
+	</div>
+</body>
+<script>
+</script>
 </html>

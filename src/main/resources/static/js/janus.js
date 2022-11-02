@@ -1263,6 +1263,9 @@ function Janus(gatewayCallbacks) {
 			ws.send(JSON.stringify(request));
 			return;
 		}
+		
+
+		console.log("리퀘스트 : "+JSON.stringify(request));
 		Janus.httpAPICall(server + "/" + sessionId, {
 			verb: 'POST',
 			withCredentials: withCredentials,

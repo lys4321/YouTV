@@ -54,6 +54,28 @@ function createCode(){
     date = year+"-"+month+"-"+day;
 }
 
+function createDate(){
+	//코드, 아이디, 제목, 날짜, 상태 , --, --
+	year = now_date.getFullYear();
+	month = now_date.getMonth() + 1;
+	day = now_date.getDate();
+	hour = now_date.getHours();
+	minute = now_date.getMinutes();
+	second = now_date.getSeconds();
+	
+	month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+    hour = hour >= 10 ? hour : '0' + hour;
+    minute = minute >= 10 ? minute : '0' + minute;
+    second = second >= 10 ? second : '0' + second;
+    
+    date = year+"-"+month+"-"+day;
+    time = hour+":"+minute+":"+second;
+    var result = date+" "+time;
+    
+    return result;
+}
+
 
 // Just an helper to generate random usernames
 function randomString(len, charSet) {
@@ -269,6 +291,7 @@ $(document).ready(function() {
 												color: 'white'
 											}
 										});
+										console.log("10")
 									}
 								},
 								onremotestream: function(stream) {
@@ -492,16 +515,31 @@ function chatsendButton(){
 	//var stomp = Stomp.over(sockJs);
     var msg = document.getElementById("msg");
     console.log(msg);
+    var mval;
     if(!msg){
      	alert("입력이 필요")
      }else{
      	console.log(userid + ":" + msg.value);
-     	
-     	
-     	console.log("test" + video_code + msg.value + userid );
+     	mval = msg.value;
          stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.value, user_id: userid, chat_status: true}));
          msg.value = '';
      }
+     
+     var today = createDate();
+	console.log(today);
+	
+	$.ajax({
+		url: '/ajax/addChat',
+		type: 'GET',
+		data: {
+			"userid": userid,
+			"video_code": video_code,
+			"chat": mval,
+			"chat_status": "false",
+			"chatDate": today
+		}
+	});
+     
      console.log(msg.value);
  }
 
