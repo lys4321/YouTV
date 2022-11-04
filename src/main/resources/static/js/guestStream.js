@@ -236,7 +236,7 @@ $(document).ready(function() {
 									$('#room').removeClass('hide').show();
 									if($('#screenvideo').length === 0) {
 										
-										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
+										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline/>');
 										
 									}
 									Janus.attachMediaStream($('#screenvideo').get(0), stream);
@@ -251,6 +251,7 @@ $(document).ready(function() {
 											}
 										});
 									}
+									$('#loding').empty();
 								},
 								onremotestream: function(stream) {
 									// The publisher stream is sendonly, we don't expect anything here
@@ -327,7 +328,7 @@ function joinScreen() {//방에 들어갈 때
 	};
 	screentest.send({ message: register });
 		console.log('로딩화면 내리기');
-	$('#loding').empty();
+	
 }
 
 function newRemoteFeed(id, display) {

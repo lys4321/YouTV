@@ -16,16 +16,21 @@ public class TController {
 	@Autowired
 	video_mapper vm;
 	
-	@RequestMapping(value="/", method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/hest/Test", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test5() {
+		return "mmerge";
+	}
+	
+	@RequestMapping(value="/hest", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2() {
-		return "Test";
+		return "camTest";
 	}
 	
 	
 	
-	@RequestMapping(value="/1", method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/test", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test3() {
-		return "recordTest";
+		return "Test";
 	}
 	
 	@RequestMapping(value="/streamtest", method= {RequestMethod.POST, RequestMethod.GET})

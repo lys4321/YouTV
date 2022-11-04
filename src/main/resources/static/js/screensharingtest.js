@@ -291,7 +291,6 @@ $(document).ready(function() {
 												color: 'white'
 											}
 										});
-										console.log("10")
 									}
 								},
 								onremotestream: function(stream) {
@@ -599,6 +598,8 @@ function joinScreen() {//방에 들어갈 때
 function newRemoteFeed(id, display) {
 	// A new feed has been published, create a new plugin handle and attach to it as a listener
 	source = id;
+	console.log("소스는 무엇인가 :"+ source );
+	console.log("소스는 무엇인가2 :"+ display );
 	var remoteFeed = null;
 	janus.attach(
 		{

@@ -281,6 +281,12 @@
         	width: 75%;
 	        }
 	        
+	        .screenvideo{
+	        	display: inline-block; 
+        		margin-right: 50px;
+        		width: 75%;
+	        }
+	        
 	        .chattingBody{
 	        	display: inline-block;  
 	        }
@@ -291,4 +297,32 @@
 	        
 	        .setting{
 	        	display: none;
+	        }
+	        
+	        .textf{
+	        	border-radius: 5px;
+				font-size: 20px;
+				padding: 5px;
+	        }
+	        
+	        .sizing{
+	        	border-radius: 3px;
+	        	width: 100px;
+	        	height: 50px;
+	        	font-size: 15px;
+	        }
+	        
+	        .rorow{
+	        	position: relative;
+	        }
+
+	        #start{
+	        position: absolute;
+  			top: 50%;
+  			margin-top: -25px;
+	        margin-left: 5px;
+	        }
+	        
+	        #ownerchat{
+	        	visibility: hidden;
 	        }

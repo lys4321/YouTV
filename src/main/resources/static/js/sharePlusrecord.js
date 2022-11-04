@@ -1,265 +1,420 @@
+var server = "http://192.168.0.141:8088/janus";
 var janus = null;
-var target = null;
-var opaqueId = "screensharingtest-" +Janus.randomString(12);
+var recordplay = null;
+var opaqueId = "recordplaytest-"+Janus.randomString(12);
 
-var capture = null;
-var role = null;
-var room = null;
-var myusername = null;
+var spinner = null;
+var bandwidth = 1024 * 1024;
 
-function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
-    }
-    return randomString;
-}
+var myname = null;
+var recording = false;
+var playing = false;
+var recordingId = null;
+var selectedRecording = null;
+var selectedRecordingInfo = null;
 
-function videocreate(){
-	console.log("동영상 공유를 시작하려합니다.");
-	$('#divdivman').append(
-		'<video id="vide" width="100%" height="100%" autoplay playsinline muted="muted"/>'
-	);
-	capture = "screen";
-	if(navigator.mozGetUserMedia) {
-		// Firefox needs a different constraint for screen and window sharing
-		bootbox.dialog({
-			title: "Share whole screen or a window?",
-			message: "Firefox handles screensharing in a different way: are you going to share the whole screen, or would you rather pick a single window/application to share instead?",
-			buttons: {
-				screen: {
-					label: "Share screen",
-					className: "btn-primary",
-					callback: function() {
-						capture = "screen";
-						var desc = "123456789"
-							role = "publisher";
-							var create = {
-								request: "create",
-								description: desc,
-								bitrate: 500000,
-								publishers: 1
-							};
-							target.send({ message: create, success: function(result) {
-								var event = result["videoroom"];
-								console.log("Event: " + event);
-								if(event) {
-									// Our own screen sharing session has been created, join it
-									room = result["room"];
-									console.log("Screen sharing session created: " + room);
-									myusername = randomString(12);
-									var register = {
-										request: "join",
-										room: room,
-										ptype: "publisher",
-										display: myusername
-									};
-									target.send({ message: register });
-								}
-							}});
-					}
-				},
-				window: {
-					label: "Pick a window",
-					className: "btn-success",
-					callback: function() {
-						capture = "window";
-							var desc = "123456789"
-							role = "publisher";
-							var create = {
-								request: "create",
-								description: desc,
-								bitrate: 500000,
-								publishers: 1
-							};
-							target.send({ message: create, success: function(result) {
-								var event = result["videoroom"];
-								console.log("Event: " + event);
-								if(event) {
-									// Our own screen sharing session has been created, join it
-									room = result["room"];
-									console.log("Screen sharing session created: " + room);
-									myusername = randomString(12);
-									var register = {
-										request: "join",
-										room: room,
-										ptype: "publisher",
-										display: myusername
-									};
-									target.send({ message: register });
-								}
-							}});
-					}
-				}
-			},
-			onEscape: function() {
+var acodec = (getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null);
+var vcodec = (getQueryStringValue("vcodec") !== "" ? getQueryStringValue("vcodec") : null);
+var vprofile = (getQueryStringValue("vprofile") !== "" ? getQueryStringValue("vprofile") : null);
+var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
+var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true");
+
+
+$(document).ready(function() {
+	// Initialize the library (all console debuggers enabled)
+	Janus.init({debug: "all", callback: function() {
+		// Use a button to start the demo
+		$('#start').one('click', function() {
+			$(this).attr('disabled', true).unbind('click');
+			// Make sure the browser supports WebRTC
+			if(!Janus.isWebrtcSupported()) {
+				bootbox.alert("No WebRTC support... ");
+				return;
 			}
-		});
-	} else {
-							var desc = "123456789"
-							role = "publisher";
-							var create = {
-								request: "create",
-								description: desc,
-								bitrate: 500000,
-								publishers: 1
-							};
-							target.send({ message: create, success: function(result) {
-								var event = result["videoroom"];
-								console.log("Event: " + event);
-								if(event) {
-									// Our own screen sharing session has been created, join it
-									room = result["room"];
-									console.log("Screen sharing session created: " + room);
-									myusername = randomString(12);
-									var register = {
-										request: "join",
-										room: room,
-										ptype: "publisher",
-										display: myusername
-									};
-									target.send({ message: register });
-								}
-							}});
-	}
-}
-
-$(document).ready(function(){
-	var server = "http://192.168.0.141:8088/janus";
-	Janus.init({debug: "all", callback: function(){
-		if(!Janus.isWebrtcSupported()) {
-			bootbox.alert("No WebRTC support... ");
-			console.log("aa");
-			return;
-		}
-		janus = new Janus({
-			server: server,
-			success: function(){
-				$('#screen').hide();
-				console.log("비디오 숨음")
-				janus.attach({
-					plugin: "janus.plugin.videoroom",
-					opaqueId: opaqueId,
-					success: function(pluginHandle){ //플러그인 생성 성공 시
-						target = pluginHandle;
-						console.log("Plugin attached! (" + target.getPlugin() + ", id=" + target.getId() + ")");
-						console.log("비디오 나옴")
-						$('#divdivman').append(
-							'<input type="button" id="cbtn" value="create"><input type="button" id="ebtn" value="exit">'
-						);
-						$('#cbtn').click(videocreate);
-					},
-					error: function(error){ // 플러그인 생성 실패 시
-						Janus.error("  -- Error attaching plugin...", error);
-						bootbox.alert("Error attaching plugin... " + error);
-					},
-					consentDialog: function(on){ //consentDialog은 UI관리용
+			
+			// Create session
+			janus = new Janus(
+				{
+					server: server,
+					success: function() {
+						// Attach to Record&Play plugin
+						$('#record').css('display', 'none');
+						$('#list').css('display', 'none');
 						
-					},
-					iceState: function(state){  // PeerConnection의 ICE 상태가 변경될 시 발동
-						Janus.log("ICE state changed to " + state);
-					},
-					mediaState: function(medium, on){ // Janus가 미디어 수신을 시작하거나 중지할 시 발동
-						Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);		
-					},
-					webrtcState: function(on){ // Janus 관점에서 핸들에 연결된 PeerConnection 상태에 따라 다르게 발동
-						if(on) {
-										bootbox.alert("Your screen sharing session just started: pass the <b>" + room + "</b> session identifier to those who want to attend.");
-									} else {
-										bootbox.alert("Your screen sharing session just stopped.", function() {
+						////////////////////////////
+						janus.attach(
+							{
+								plugin: "janus.plugin.recordplay",
+								opaqueId: opaqueId,
+								success: function(pluginHandle) {
+									console.log("플러그인 핸들 : "+JSON.stringify(pluginHandle));
+									$('#details').remove();
+									recordplay = pluginHandle;
+									Janus.log("Plugin attached! (" + recordplay.getPlugin() + ", id=" + recordplay.getId() + ")");
+									// Prepare the name prompt
+									$('#recordplay').removeClass('hide').show();
+									$('#start').removeAttr('disabled').html("Stop")
+										.click(function() {
+											$(this).attr('disabled', true);
 											janus.destroy();
-											window.location.reload();
 										});
+									updateRecsList();
+								},
+								error: function(error) {
+									Janus.error("  -- Error attaching plugin...", error);
+									bootbox.alert("  -- Error attaching plugin... " + error);
+								},
+								consentDialog: function(on) {
+									Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+									if(on) {
+										// Darken screen and show hint
+										$.blockUI({
+											message: '<div><img src="up_arrow.png"/></div>',
+											css: {
+												border: 'none',
+												padding: '15px',
+												backgroundColor: 'transparent',
+												color: '#aaa',
+												top: '10px',
+												left: (navigator.mozGetUserMedia ? '-100px' : '300px')
+											} });
+									} else {
+										// Restore screen
+										$.unblockUI();
 									}
-					},
-					onmessage: function(msg, jsep){ // 플러그인에서 메시지나 이벤트 수신 될 시 발동
-						var event = msg["videoroom"];
-									Janus.debug("Event: " + event);
-									if(event) {
-										if(event === "joined") {
-											myid = msg["id"];
-											$('#session').html(room);
-											$('#title').html(msg["description"]);
-											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
-											if(role === "publisher") {
-												// This is our session, publish our stream
-												Janus.debug("Negotiating WebRTC stream for our screen (capture " + capture + ")");
-												target.createOffer(
+								},
+								iceState: function(state) {
+									Janus.log("ICE state changed to " + state);
+								},
+								mediaState: function(medium, on) {
+									Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
+								},
+								webrtcState: function(on) {
+									Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+									$("#videobox").parent().unblock();
+								},
+								onmessage: function(msg, jsep) {
+									Janus.debug(" ::: Got a message :::", msg);
+									var result = msg["result"];
+									if(result) {
+										if(result["status"]) {
+											var event = result["status"];
+											if(event === 'preparing' || event === 'refreshing') {
+												Janus.log("Preparing the recording playout");
+												recordplay.createAnswer(
 													{
-														media: { video: capture, audioSend: true, videoRecv: false},	// Screen sharing Publishers are sendonly
+														jsep: jsep,
+														media: { audioSend: false, videoSend: false },	// We want recvonly audio/video
 														success: function(jsep) {
-															Janus.debug("Got publisher SDP!", jsep);
-															var publish = { request: "configure", audio: true, video: true };
-															target.send({ message: publish, jsep: jsep });
+															Janus.debug("Got SDP!", jsep);
+															var body = { request: "start" };
+															recordplay.send({ message: body, jsep: jsep });
 														},
 														error: function(error) {
 															Janus.error("WebRTC error:", error);
 															bootbox.alert("WebRTC error... " + error.message);
 														}
 													});
-											} else {
-												// We're just watching a session, any feed to attach to?
-												if(msg["publishers"]) {
-													var list = msg["publishers"];
-													Janus.debug("Got a list of available publishers/feeds:", list);
-													for(var f in list) {
-														var id = list[f]["id"];
-														var display = list[f]["display"];
-														Janus.debug("  >> [" + id + "] " + display);
-														newRemoteFeed(id, display)
-													}
+												if(result["warning"])
+													bootbox.alert(result["warning"]);
+											} else if(event === 'recording') {
+												// Got an ANSWER to our recording OFFER
+												if(jsep)
+													recordplay.handleRemoteJsep({ jsep: jsep });
+												var id = result["id"];
+												if(id) {
+													Janus.log("The ID of the current recording is " + id);
+													recordingId = id;
 												}
-											}
-										} else if(event === "event") {
-											// Any feed to attach to?
-											if(role === "listener" && msg["publishers"]) {
-												var list = msg["publishers"];
-												Janus.debug("Got a list of available publishers/feeds:", list);
-												for(var f in list) {
-													var id = list[f]["id"];
-													var display = list[f]["display"];
-													Janus.debug("  >> [" + id + "] " + display);
-													newRemoteFeed(id, display)
-												}
-											} else if(msg["leaving"]) {
-												// One of the publishers has gone away?
-												var leaving = msg["leaving"];
-												Janus.log("Publisher left: " + leaving);
-												if(role === "listener" && msg["leaving"] === source) {
-													bootbox.alert("The screen sharing session is over, the publisher left", function() {
-														window.location.reload();
+											} else if(event === 'slow_link') {
+												var uplink = result["uplink"];
+												if(uplink !== 0) {
+													// Janus detected issues when receiving our media, let's slow down
+													bandwidth = parseInt(bandwidth / 1.5);
+													recordplay.send({
+														message: {
+															request: 'configure',
+															'video-bitrate-max': bandwidth,		// Reduce the bitrate
+															'video-keyframe-interval': 15000	// Keep the 15 seconds key frame interval
+														}
 													});
 												}
-											} else if(msg["error"]) {
-												bootbox.alert(msg["error"]);
+											} else if(event === 'playing') {
+												Janus.log("Playout has started!");
+											} else if(event === 'stopped') {
+												Janus.log("Session has stopped!");
+												var id = result["id"];
+												if(recordingId) {
+													if(recordingId !== id) {
+														Janus.warn("Not a stop to our recording?");
+														return;
+													}
+													bootbox.alert("녹화 완료!");
+												}
+												if(selectedRecording) {
+													if(selectedRecording !== id) {
+														Janus.warn("Not a stop to our playout?");
+														return;
+													}
+												}
+												// FIXME Reset status
+												$('#videobox').empty();
+												$('#video').hide();
+												recordingId = null;
+												recording = false;
+												playing = false;
+												recordplay.hangup();
+												//$('#record').removeAttr('disabled').click(startRecording);
+												$('#play').removeAttr('disabled').click(startPlayout);
+												$('#list').removeAttr('disabled').click(updateRecsList);
+												$('#recset').removeAttr('disabled');
+												$('#recslist').removeAttr('disabled');
+												updateRecsList();
+												
 											}
 										}
+										console.log("00000000000000000");
+									} else {
+										// FIXME Error?
+										var error = msg["error"];
+										bootbox.alert(error);
+										// FIXME Reset status
+										$('#videobox').empty();
+										$('#video').hide();
+										recording = false;
+										playing = false;
+										recordplay.hangup();
+										//$('#record').removeAttr('disabled').click(startRecording);
+										$('#play').removeAttr('disabled').click(startPlayout);
+										$('#list').removeAttr('disabled').click(updateRecsList);
+										$('#recset').removeAttr('disabled');
+										$('#recslist').removeAttr('disabled');
+										updateRecsList();
 									}
-									if(jsep) {
-										Janus.debug("Handling SDP as well...", jsep);
-										target.handleRemoteJsep({ jsep: jsep });
+								},
+								onlocalstream: function(stream) {
+								},
+								onremotestream: function(stream) {
+									
+									if(playing === false)
+										return;
+									Janus.debug(" ::: Got a remote stream :::", stream);
+									if($('#thevideo').length === 0) {
+										$('#videotitle').html(selectedRecordingInfo);
+										$('#stop').unbind('click').click(stop);
+										$('#video').removeClass('hide').show();
+										$('#videobox').append('<video class="rounded centered hide" id="thevideo" width="100%" height="100%" preload="auto" controls autoplay/>');
+										// No remote video yet
+										//$('#videobox').append('<video class="rounded centered" id="waitingvideo" width="100%" height="100%" />');
+										if(spinner == null) {
+											var target = document.getElementById('videobox');
+											spinner = new Spinner({top:100}).spin(target);
+										} else {
+											spinner.spin();
+										}
+										// Show the video, hide the spinner and show the resolution when we get a playing event
+										$("#thevideo").bind("playing", function () {
+											$('#waitingvideo').remove();
+											$('#thevideo').removeClass('hide');
+											if(spinner)
+												spinner.stop();
+											spinner = null;
+										});
+										console.log("333333333333333333");
 									}
+									console.log("스트림 : "+stream);
+									Janus.attachMediaStream($('#thevideo').get(0), stream);
+									var videoTracks = stream.getVideoTracks();
+									if(!videoTracks || videoTracks.length === 0) {
+										// No remote video
+										$('#thevideo').hide();
+										if($('#videobox .no-video-container').length === 0) {
+											$('#videobox').append(
+												'<div class="no-video-container">' +
+													'<i class="fa fa-video-camera fa-5 no-video-icon"></i>' +
+													'<span class="no-video-text">No remote video available</span>' +
+												'</div>');
+										}
+									} else {
+										$('#videobox .no-video-container').remove();
+										$('#thevideo').removeClass('hide').show();
+									}
+									
+								},
+								oncleanup: function() {
+									Janus.log(" ::: Got a cleanup notification :::");
+									// FIXME Reset status
+									$('#waitingvideo').remove();
+									if(spinner)
+										spinner.stop();
+									spinner = null;
+									$('#videobox').empty();
+									$("#videobox").parent().unblock();
+									$('#video').hide();
+									recording = false;
+									playing = false;
+									//$('#record').removeAttr('disabled').click(startRecording);
+									$('#play').removeAttr('disabled').click(startPlayout);
+									$('#list').removeAttr('disabled').click(updateRecsList);
+									$('#recset').removeAttr('disabled');
+									$('#recslist').removeAttr('disabled');
+									updateRecsList();
+								}
+							});
+							////////////////////////////////
+							
+							
+							
+							
+							
 					},
-					onlocalstream: function(stream){ // 로컬 MediaStream을 사용, 표시할 준비가 됨
-						Janus.attachMediaStream($('#vide').get(0), stream);
-													
+					error: function(error) {
+						Janus.error(error);
+						bootbox.alert(error, function() {
+							window.location.reload();
+						});
 					},
-					onremotestream: function(stream){ // 원격 MediaStream을 사용, 표시할 준비가 됨
-						//
-					},
-					oncleanup: function(){ // 플러그인과 Peer가 닫힘
-						console.log("플러그인 종료")
+					destroyed: function() {
+						window.location.reload();
 					}
 				});
-			},
-			error: function(error){
-				console.log("마지막 에러 : "+error);
-			},
-			destroyed: function(){
-				console.log("야누스 끝");
+		});
+	}});
+	console.log("쟈누스 : "+janus)
+});
+
+function checkEnter(field, event) {
+	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+	if(theCode == 13) {
+		if(field.id == 'name')
+			insertName();
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function updateRecsList() {
+	$('#list').unbind('click');
+	$('#update-list').addClass('fa-spin');
+	var body = { request: "list" };
+	Janus.debug("Sending message:", body);
+	recordplay.send({ message: body, success: function(result) {
+		setTimeout(function() {
+			$('#list').click(updateRecsList);
+			$('#update-list').removeClass('fa-spin');
+		}, 500);
+		if(!result) {
+			bootbox.alert("Got no response to our query for available recordings");
+			return;
+		}
+		if(result["list"]) {
+			console.log("리스트들 : "+ JSON.stringify(result));
+			$('#recslist').empty();
+			//$('#record').removeAttr('disabled').click(startRecording);
+			$('#list').removeAttr('disabled').click(updateRecsList);
+			var list = result["list"];
+			list.sort(function(a, b) {return (a["date"] < b["date"]) ? 1 : ((b["date"] < a["date"]) ? -1 : 0);} );
+			Janus.debug("Got a list of available recordings:", list);
+			for(var mp in list) {
+				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
+				$('#recslist').append("<li><a href='#' id='" + list[mp]["id"] + "'>" + list[mp]["name"] + " [" + list[mp]["date"] + "]" + "</a></li>");
 			}
-		}); // janus.attach end
-	}}); // Janus.init end
-}); // ready end
+			$('#recslist a').unbind('click').click(function() {
+				selectedRecording = $(this).attr("id");
+				selectedRecordingInfo = $(this).text();
+				$('#recset').html($(this).html()).parent().removeClass('open');
+				$('#play').removeAttr('disabled').click(startPlayout);
+				return false;
+			});
+		}
+	}});
+}
+
+function startRecording() {
+	if(recording)
+		return;
+	// Start a recording
+	recording = true;
+	playing = false;
+	myname = "ExampleVideoCode";////////////sessionStorage.getItem("코드")
+		//$('#record').unbind('click').attr('disabled', true);
+		$('#play').unbind('click').attr('disabled', true);
+		$('#list').unbind('click').attr('disabled', true);
+		$('#recset').attr('disabled', true);
+		$('#recslist').attr('disabled', true);
+
+		// bitrate and keyframe interval can be set at any time:
+		// before, after, during recording
+		recordplay.send({
+			message: {
+				request: 'configure',
+				'video-bitrate-max': bandwidth,		// a quarter megabit
+				'video-keyframe-interval': 15000	// 15 seconds
+			}
+		});
+
+		recordplay.createOffer(
+			{
+				// By default, it's sendrecv for audio and video... no datachannels
+				// If you want to test simulcasting (Chrome and Firefox only), then
+				// pass a ?simulcast=true when opening this demo page: it will turn
+				// the following 'simulcast' property to pass to janus.js to true
+				simulcast: doSimulcast,
+				success: function(jsep) {
+					Janus.debug("Got SDP!", jsep);
+					var body = { request: "record", name: myname };
+					// We can try and force a specific codec, by telling the plugin what we'd prefer
+					// For simplicity, you can set it via a query string (e.g., ?vcodec=vp9)
+					if(acodec)
+						body["audiocodec"] = acodec;
+					if(vcodec)
+						body["videocodec"] = vcodec;
+					// For the codecs that support them (VP9 and H.264) you can specify a codec
+					// profile as well (e.g., ?vprofile=2 for VP9, or ?vprofile=42e01f for H.264)
+					if(vprofile)
+						body["videoprofile"] = vprofile;
+					recordplay.send({ message: body, jsep: jsep });
+				},
+				error: function(error) {
+					Janus.error("WebRTC error...", error);
+					bootbox.alert("WebRTC error... " + error.message);
+					recordplay.hangup();
+				}
+			});
+}
+
+function startPlayout() {
+	if(playing)
+		return;
+	// Start a playout
+	recording = false;
+	playing = true;
+	if(!selectedRecording) {
+		playing = false;
+		return;
+	}
+	//$('#record').unbind('click').attr('disabled', true);
+	$('#play').unbind('click').attr('disabled', true);
+	$('#list').unbind('click').attr('disabled', true);
+	$('#recset').attr('disabled', true);
+	$('#recslist').attr('disabled', true);
+	var play = { request: "play", id: parseInt(selectedRecording) };
+	recordplay.send({ message: play });
+}
+
+function stop() {
+	// Stop a recording/playout
+	$('#stop').unbind('click');
+	var stop = { request: "stop" };
+	recordplay.send({ message: stop });
+	recordplay.hangup();
+}
+
+// Helper to parse query string
+function getQueryStringValue(name) {
+	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search);
+	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
