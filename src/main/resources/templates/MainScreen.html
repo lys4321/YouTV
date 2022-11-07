@@ -553,10 +553,14 @@
                     		var obj = JSON.parse(data);
                     		for(var i=0;i<a.length;i++){
                     			var livelist = document.createElement("div");
+                    			var guestid=useid;
+                    			if(guestid==null){
+                    				guestid = "NoNameUser";
+                    			}
                     			if(obj["LiveThumbnail"][i] === null){
                     				target.append(
                             				'<div class="items cardWhite">'+
-                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&&guestid='+ guestid + '">'+
     	                    				'<img src="" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
     	                    				'<h2>' + a[i]["title"] + '</h2>'+
     	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+
@@ -567,7 +571,7 @@
                     				console.log("보세요 : "+ obj["LiveThumbnail"][i]);
                     				target.append(
                             				'<div class="items cardWhite">'+
-                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&&guestid='+ guestid + '">'+
     	                    				'<img src= "data:image/png;base64,'+ obj["LiveThumbnail"][i] +'" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
     	                    				'<h2>' + a[i]["title"] + '</h2>'+
     	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+

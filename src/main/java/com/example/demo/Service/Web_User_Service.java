@@ -28,6 +28,10 @@ public class Web_User_Service {
 		return userMapper.SearchUserProfile(uuid); 
 	}
 	
+	int UserUpdateimg(web_userDTO user) {
+		return userMapper.UserUpdateimg(user);
+	}
+	
 	web_userDTO reSearchUser(@Param("name") String name, @Param("pnum") String pnum){
 		return userMapper.reSearchUser(name, pnum);
 	}

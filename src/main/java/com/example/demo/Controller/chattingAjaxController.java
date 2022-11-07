@@ -45,4 +45,14 @@ public class chattingAjaxController {
 				
 		cm.addChatting(chatting);
 	}
+	
+	@RequestMapping(value="/ajax/queryHistoryList", method = {RequestMethod.GET})
+	public List<String> queryHistoryList(HttpServletRequest request) {
+		String code = request.getParameter("code");
+		String userid = request.getParameter("userid");
+		List<String> arr = cm.searchByIdCode(code, userid);
+		System.out.println(arr);
+		
+		return arr;
+	}
 }

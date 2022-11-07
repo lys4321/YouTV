@@ -111,18 +111,31 @@ public class Account_Service {
 	public boolean AccountUpdateImg(MultipartHttpServletRequest request) {
 		//List<MultipartFile> filelist = request.getFiles("img_file");
 		Iterator it = request.getFileNames();
+		System.out.println(it);
 		MultipartFile  mf = request.getFile((String) it.next());
+		System.out.println(mf);
 		
 		System.out.println(mf.getName());
 		
 		String path = "C:\\YTVrepo\\profile\\";
 		
+		String uid = request.getParameter("name");
+		System.out.println("1번 : "+request);
+		
 		File file = new File(path + mf.getName()+".png");
+		
+		String URL = path + mf.getName()+".png";
+		System.out.println("2번 : "+URL);
+		
 		try {
 			file.createNewFile();
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(mf.getBytes());
 			fos.close();
+			
+			web_userDTO user = new web_userDTO(mf.getName(), null, null, null, URL);
+			wum.UserUpdateimg(user);
+			
 			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

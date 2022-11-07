@@ -326,3 +326,56 @@
 	        #ownerchat{
 	        	visibility: hidden;
 	        }
+	        
+	        .modal_listUser{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				display: none;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			
+			.modal_listUser.show {
+			  display: block;
+			}
+			
+			#exitmark_listuser{
+				position: absolute;
+				right: 5%;
+				top: 2.5%;
+				font-size: 40px;
+			}
+			
+			#listsUserlist{
+				border: 4px solid blue;
+				border-radius: 5px;
+				padding: 2px;
+				background-color: rgba(0, 0, 0, 0.1);
+			}
+			
+			.UserList{
+				  list-style:none;
+			}
+			
+			.modal_History{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				display: none;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			
+			.modal_History.show {
+			  display: block;
+			}
+			
+			#exitmark_history{
+				position: absolute;
+				right: 5%;
+				top: 2.5%;
+				font-size: 40px;
+			}

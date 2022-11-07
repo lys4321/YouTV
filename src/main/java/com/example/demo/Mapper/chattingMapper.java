@@ -13,4 +13,5 @@ public interface chattingMapper {
 	int addChatting(video_chatDTO chat);
 	List<video_chatDTO> searchByCode(@Param(value="code")String code);
 	List<video_chatDTO> searchById(@Param(value="userid")String userid);
+	List<String> searchByIdCode(@Param(value="code")String code, @Param(value="userid")String userid);
 }

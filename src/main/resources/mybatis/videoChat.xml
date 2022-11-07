@@ -13,6 +13,11 @@
 	<select id="searchById" parameterType="String" resultType="com.example.demo.DTO.video_chatDTO">
 		select *
 		from videochat
-		where video_code=#{userid}
+		where user_id=#{userid}
+	</select>
+	<select id="searchByIdCode" parameterType="String" resultType="String">
+		select *
+		from videochat
+		where video_code = #{code} and user_id = #{userid}
 	</select>
 </mapper>

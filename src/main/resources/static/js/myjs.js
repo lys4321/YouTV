@@ -1,8 +1,9 @@
 $(document).ready(function(){
 					const modal = document.querySelector('.modal');
-        			const modal_create = document.querySelector('.modal_create')
-        			const modal_update = document.querySelector('.modal_update')
-        			const modal_del = document.querySelector('.modal_del')
+        			const modal_create = document.querySelector('.modal_create');
+        			const modal_update = document.querySelector('.modal_update');
+        			const modal_del = document.querySelector('.modal_del');
+        			const modal_listUser = document.querySelector('.modal_listUser');
         			const leftvalue = $('.sidebar').offset().left;
         			
         			//sessionStorage.clear();
@@ -160,7 +161,6 @@ $(document).ready(function(){
         		      $('#deleteIcon').click(function(){
 							modal_del.style.display = 'block';
         		      	});
-        		     });
         		      
         		      $('#exitmark').click(function(){
         		    	  modal.style.display = 'none';
@@ -195,6 +195,7 @@ $(document).ready(function(){
         		    	  if(useid != null){
          		    		 $('.sidebar').css("left", leftvalue);
          		    	  }
+         		      });
         		      
         		      $('#logoutIcon').click(function(){
         		    	 sessionStorage.clear(); 
@@ -379,7 +380,108 @@ $(document).ready(function(){
             			}
             		});
             		
-            		
+            		$('#listUser').click(function(){
+						$('.modal_listUser').css('display', 'block');
+					    $('.sidebar').css("left", -300);
+					    console.log($('#listuserid').val());
+					    console.log(video_code);
+					    $.ajax({
+							url: '/ajax/getUserList',
+							type: 'GET',
+							data: {
+								"code": video_code
+							},
+							dataType: 'json',
+							success: function(data){
+								var arr = new Array();
+								arr.push(data);
+								for(var a of arr){
+									for(var b of a){
+										$('#listsUserlist').append(
+									'<li>' + b + '</li>'			
+									);
+									}
+								}
+								
+								$('#listsUserlist li').on('click', function(){
+									$('.modal_History').css('display', 'block');
+									var title = $(this).text();
+									$('#hititle').text(title);
+									
+									$.ajax({
+										url: '/ajax/queryHistoryList',
+										type: 'GET',
+										data: {
+											"code": video_code,
+											"userid": title
+										},
+										dataType: 'json',
+										success: function(data){
+											console.log(data);
+										},
+										error: function(error){
+											console.log(error);
+											alert("유저 정보 불러오기 실패1");
+										}
+									});
+								});
+							},
+							error: function(){
+								alert("유저 정보 불러오기 실패");
+							}
+						});
+					});	
+					
+					$('#btn-user').click(function(){
+						var query = $('#listuserid').val();
+						console.log(query);
+						$.ajax({
+							url: '/ajax/queryUserList',
+							type: 'GET',
+							data: {
+								"code": video_code,
+								"query": query
+							},
+							dataType: 'json',
+							success: function(data){
+								$('#listsUserlist').empty();
+								var arr = new Array();
+								arr.push(data);
+								for(var a of arr){
+									for(var b of a){
+										$('#listsUserlist').append(
+											'<li>' + b + '</li>'		
+										);	
+									}
+								}
+								$('#listsUserlist li').on('click', function(){
+									$('.modal_History').css('display', 'block');
+									var title = $(this).text();
+									$('#hititle').text(title);
+									
+									$.ajax({
+										url: '/ajax/queryHistoryList',
+										type: 'GET',
+										data: {
+											"code": video_code,
+											"userid": title
+										},
+										dataType: 'json',
+										success: function(data){
+											console.log(data);
+										},
+										error: function(error){
+											console.log(error);
+											alert(video_code +" "+ title);
+										}
+									});
+								});
+							},
+							error: function(){
+								alert("유저 정보 불러오기 실패");
+							}
+						});
+					});
             		
             		//가입
             		$('#btn-create').click(function(){
@@ -418,4 +520,43 @@ $(document).ready(function(){
             				}
             			}
             		});
+            		
+            		
+					
+		/*		$('#listsUserlist li').on('click', function(){
+						$('.modal_History').css('display', 'block');
+						var title = $(this).text();
+						$('#hititle').text(title);
+						
+						$.ajax({
+							url: '/ajax/queryHistoryList',
+							type: 'GET',
+							data: {
+								"code": video_code,
+								"userid": title
+							},
+							dataType: 'json',
+							success: function(data){
+								console.log(data);
+							},
+							error: function(){
+								alert("유저 정보 불러오기 실패");
+							}
+						});
+					});*/
+					
+					$('#exitmark_listuser').click(function(){
+							$('#listsUserlist').empty();
+        		    	  	modal_listUser.style.display = 'none';
+        		    	  	
+        		    	  if(useid != null){
+         		    		 $('.sidebar').css("left", leftvalue);
+         		    	  }
+         		      });
+         		      
+         		    $('#exitmark_history').click(function(){
+							$('.modal_History').css('display', 'none');
+         		      });
 });
+
+

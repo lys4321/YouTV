@@ -31,14 +31,17 @@ public class LiveController {
 	}
 	
 	@RequestMapping(value="/Guest_Mode", method= {RequestMethod.GET})
-	public ModelAndView guestMode(@RequestParam(value="video_code", required=false) String video_code) {
+	public ModelAndView guestMode(@RequestParam(value="video_code", required=false) String video_code, @RequestParam(value="guestid", required=false) String guestid) {
 		videoInfoDTO video = vim.selectVideoInfo(video_code);
 		ModelAndView mav = new ModelAndView();
+		
+		streamChatRoomRepo.enterChatroom(video_code, guestid);
 		
 		mav.setViewName("LiveGuestScreen");
 		mav.addObject("video_code", video_code);
 		mav.addObject("chatting_room", streamChatRoomRepo.findRoomById(video_code));
 		mav.addObject("catch_session", video.getSession());
+		
 		
 		return mav;
 	}

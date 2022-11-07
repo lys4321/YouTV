@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import com.example.demo.DTO.videoInfoDTO;
 import com.example.demo.Mapper.videoInfoMapper;
 import com.example.demo.Mapper.video_mapper;
 import com.example.demo.Mapper.web_user_mapper;
+import com.example.demo.Repos.StreamChatRoom;
 import com.example.demo.Repos.StreamChatRoomRepo;
 
 @Controller
@@ -27,9 +29,9 @@ public class LiveVideoAjaxController {
 	@Autowired
 	private videoInfoMapper vim;
 	@Autowired
-	private StreamChatRoomRepo streamChatRoomRepo = new StreamChatRoomRepo();
-	@Autowired
 	private web_user_mapper wum;
+	
+	private StreamChatRoomRepo streamChatRoomRepo = new StreamChatRoomRepo();
 	
 	//생방송 시작 시 정보를 저장하는 메소드
 	@RequestMapping(value="/Ajax/Live/Create_Stream", method = {RequestMethod.POST})
@@ -76,6 +78,35 @@ public class LiveVideoAjaxController {
 		streamChatRoomRepo.deleteRoom(code);
 		System.out.println("삭제된 : "+ code);
 	}
+	
+	@RequestMapping(value="/ajax/getUserList", method = {RequestMethod.GET})
+	public ArrayList<String> usersinStreaming(HttpServletRequest request) {
+		System.out.println("request : "+ request);
+		String code = request.getParameter("code");
+		ArrayList<String> arr = new ArrayList<String>();
+		ArrayList<String> guestes = streamChatRoomRepo.getLists(code);
+		
+		for(int i=0; i<guestes.size(); i++) {
+			if(guestes.get(i).equals("NoNameUser")) {
+				continue;
+			}else {
+				arr.add(guestes.get(i));
+			}
+		}
+		
+		return arr;
+	}
+	
+	@RequestMapping(value="/ajax/queryUserList", method = {RequestMethod.GET})
+	public ArrayList<String> queryUserList(HttpServletRequest request) {
+		System.out.println("request : "+ request);
+		String code = request.getParameter("code");
+		String query = request.getParameter("query");
+		ArrayList<String> arr = streamChatRoomRepo.getQueryLists(code, query);
+		
+		return arr;
+	}
+	
 	
 	//생방송 등러갈 시 정보를 저장하는 메소드
 		/*@RequestMapping(value="/Ajax/Live/Join_Stream", method = {RequestMethod.POST})

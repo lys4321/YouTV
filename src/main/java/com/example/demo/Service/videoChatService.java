@@ -23,4 +23,7 @@ public class videoChatService {
 	List<video_chatDTO> searchById(@Param(value="userid")String userid){
 		return cm.searchById(userid);
 	}
+	List<String> searchByIdCode(@Param(value="code")String code, @Param(value="userid")String userid){
+		return cm.searchByIdCode(code, userid);
+	}
 }

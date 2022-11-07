@@ -1,0 +1,15 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="userList(LU)">
+    <body>
+    <div class="listUser">
+    	<a><i id="exitmark_listuser" class="fa-solid fa-xmark"></i></a>
+    	<span id="title" class="card-title">유저목록</span>
+        <input id="listuserid" class="form-control" type="text" name="id" placeholder="아이디" >
+        <input type="button" class="btn btn-secondary" id="btn-user" value="찾기">
+        <ul id="listsUserlist">
+        	
+        </ul>
+    </div>
+    </body>
+</th:block>

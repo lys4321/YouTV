@@ -45,23 +45,7 @@
     		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
     	</div>
 		
-		<div id="modals">
-    		 <div class="modal">
-	      		 <div class="modal_body">
-	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
-	     		</div>
-	    	</div>
-	    	<div class="modal_create">
-	      		 <div class="modal_body">
-	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
-	     		</div>
-	    	</div>
-	    	<div class="modal_update">
-	      		 <div class="modal_body">
-	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
-	     		</div>
-	    	</div>  
-    	</div>
+		
 		
 	<div class="container">
 		<div class="row">
@@ -106,6 +90,10 @@
 			<div class="chattingBody" id="ownerchat">
 	    		<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
     		</div>
+    		<div class="chatControls">
+    			<button class="btn btn-secondary sizing" id="listUser">유저 목록</button>
+    			<button class="btn btn-secondary sizing" id="banUser">채팅 금지</button>
+    		</div>
 		</div>
 		
 		<!-- <div class="container">
@@ -119,6 +107,41 @@
 			<div class="col-6"></div>
 		</div> -->
 	</div>
+	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_listUser">
+	      		 <div class="modal_body">
+	      		 	<th:block th:replace="~{/parts/listUser :: userList(~{this::LU} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_History">
+	      		 <div class="modal_body">
+	      		 	<th:block th:replace="~{/parts/chatHistory :: historyChat(~{this::HC} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<!-- <div class="modal_banUser">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/listUser ::  )}"></th:block>
+	     		</div>
+	    	</div>  -->     
+    	</div>
 </body>
+<script>
+
+</script>
 </html>
 
