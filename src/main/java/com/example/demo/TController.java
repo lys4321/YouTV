@@ -22,8 +22,9 @@ public class TController {
 	}
 	
 	@RequestMapping(value="/hest", method= {RequestMethod.POST, RequestMethod.GET})
-	public String test2() {
-		return "camTest";
+	public String test2(@RequestParam(value="sessionId", required=false, defaultValue="not_exist") String sessionId, @RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestParam(value="title", required=false, defaultValue="not_exist") String title, Model model) {
+		model.addAttribute("test", "Test");
+		return "rerecordpplay";
 	}
 	
 	

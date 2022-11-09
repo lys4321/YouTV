@@ -1,7 +1,7 @@
 var server = "http://192.168.0.141:8088/janus";
 var janus = null;
 var recordplay = null;
-var opaqueId = "recordplaytest-"+Janus.randomString(12);
+var opaqueId = "1234"//"recordplaytest-"+Janus.randomString(12);
 
 var spinner = null;
 var bandwidth = 1024 * 1024;
@@ -20,26 +20,22 @@ var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringV
 var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true");
 
 
+var arr_session = new Array();
+var arr_code = new Array();
+var arr_date = new Array();
+
+
 $(document).ready(function() {
-	var msg = "${test}";
-	console.log(msg);
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
-		// Use a button to start the demo
-		$('#start').one('click', function() {
-			$(this).attr('disabled', true).unbind('click');
-			// Make sure the browser supports WebRTC
-			if(!Janus.isWebrtcSupported()) {
-				bootbox.alert("No WebRTC support... ");
-				return;
-			}
-			
-			// Create session
+		// Create session
 			janus = new Janus(
 				{
 					server: server,
 					success: function() {
 						// Attach to Record&Play plugin
+						$('#record').css('display', 'none');
+						$('#list').css('display', 'none');
 						
 						////////////////////////////
 						janus.attach(
@@ -59,6 +55,7 @@ $(document).ready(function() {
 											janus.destroy();
 										});
 									updateRecsList();
+									
 								},
 								error: function(error) {
 									Janus.error("  -- Error attaching plugin...", error);
@@ -66,22 +63,11 @@ $(document).ready(function() {
 								},
 								consentDialog: function(on) {
 									Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
-									if(on) {
-										// Darken screen and show hint
-										$.blockUI({
-											message: '<div><img src="up_arrow.png"/></div>',
-											css: {
-												border: 'none',
-												padding: '15px',
-												backgroundColor: 'transparent',
-												color: '#aaa',
-												top: '10px',
-												left: (navigator.mozGetUserMedia ? '-100px' : '300px')
-											} });
-									} else {
-										// Restore screen
-										$.unblockUI();
-									}
+									for(var i=0;i<5;i++){
+				
+				
+            	
+            }
 								},
 								iceState: function(state) {
 									Janus.log("ICE state changed to " + state);
@@ -91,7 +77,6 @@ $(document).ready(function() {
 								},
 								webrtcState: function(on) {
 									Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-									$("#videobox").parent().unblock();
 								},
 								onmessage: function(msg, jsep) {
 									Janus.debug(" ::: Got a message :::", msg);
@@ -157,85 +142,25 @@ $(document).ready(function() {
 														return;
 													}
 												}
-												// FIXME Reset status
-												$('#videobox').empty();
-												$('#video').hide();
 												recordingId = null;
 												recording = false;
 												playing = false;
 												recordplay.hangup();
-												$('#record').removeAttr('disabled').click(startRecording);
-												$('#play').removeAttr('disabled').click(startPlayout);
-												$('#list').removeAttr('disabled').click(updateRecsList);
-												$('#recset').removeAttr('disabled');
-												$('#recslist').removeAttr('disabled');
 												updateRecsList();
-												$('#play').click();
-												
 											}
 										}
 										console.log("00000000000000000");
 									} else {
-										// FIXME Error?
 										var error = msg["error"];
 										bootbox.alert(error);
-										// FIXME Reset status
-										$('#videobox').empty();
-										$('#video').hide();
 										recording = false;
 										playing = false;
 										recordplay.hangup();
-										$('#record').removeAttr('disabled').click(startRecording);
-										$('#play').removeAttr('disabled').click(startPlayout);
-										$('#list').removeAttr('disabled').click(updateRecsList);
-										$('#recset').removeAttr('disabled');
-										$('#recslist').removeAttr('disabled');
 										updateRecsList();
 									}
+									
 								},
 								onlocalstream: function(stream) {
-									
-									if(playing === true)
-										return;
-									console.log(stream)
-									Janus.debug(" ::: Got a local stream :::", stream);
-									$('#videotitle').html("Recording...");
-									$('#stop').unbind('click').click(stop);
-									$('#video').removeClass('hide').show();
-									if($('#thevideo').length === 0)
-										$('#videobox').append('<video class="rounded centered" id="thevideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
-									
-									Janus.attachMediaStream($('#thevideo').get(0), stream);
-									
-									
-									$("#thevideo").get(0).muted = "muted";
-									if(recordplay.webrtcStuff.pc.iceConnectionState !== "completed" &&
-											recordplay.webrtcStuff.pc.iceConnectionState !== "connected") {
-										$("#videobox").parent().block({
-											message: '<b>Publishing...</b>',
-											css: {
-												border: 'none',
-												backgroundColor: 'transparent',
-												color: 'white'
-											}
-										});
-									}
-									var videoTracks = stream.getVideoTracks();
-									if(!videoTracks || videoTracks.length === 0) {
-										// No remote video
-										$('#thevideo').hide();
-										if($('#videobox .no-video-container').length === 0) {
-											$('#videobox').append(
-												'<div class="no-video-container">' +
-													'<i class="fa fa-video-camera fa-5 no-video-icon"></i>' +
-													'<span class="no-video-text">No remote video available</span>' +
-												'</div>');
-										}
-									} else {
-										$('#videobox .no-video-container').remove();
-										$('#thevideo').removeClass('hide').show();
-									}
-									
 								},
 								onremotestream: function(stream) {
 									
@@ -243,36 +168,15 @@ $(document).ready(function() {
 										return;
 									Janus.debug(" ::: Got a remote stream :::", stream);
 									if($('#thevideo').length === 0) {
-										var query = window.location.search;
-										var param = new URLSearchParams(query);
-										var title = param.get('title'); 
-									
-										console.log(title);   
-										$('#videotitle').html(title);
+										$('#videotitle').html(selectedRecordingInfo);
 										$('#stop').unbind('click').click(stop);
 										$('#video').removeClass('hide').show();
-										$('#videobox').append('<video class="rounded centered hide" id="thevideo" width="100%" height="100%" autoplay playsinline/>');
-										// No remote video yet
-										$('#videobox').append('<video class="rounded centered" id="waitingvideo" width="100%" height="100%" />');
-										if(spinner == null) {
-											var target = document.getElementById('videobox');
-											spinner = new Spinner({top:100}).spin(target);
-										} else {
-											spinner.spin();
-										}
-										// Show the video, hide the spinner and show the resolution when we get a playing event
-										$("#thevideo").bind("playing", function () {
-											$('#waitingvideo').remove();
-											$('#thevideo').removeClass('hide');
-											if(spinner)
-												spinner.stop();
-											spinner = null;
-										});
+										$('#videobox').append('<video class="rounded centered hide" id="thevideo" width="100%" height="100%" preload="auto" controls autoplay/>');
+										
 									}
 									Janus.attachMediaStream($('#thevideo').get(0), stream);
 									var videoTracks = stream.getVideoTracks();
 									if(!videoTracks || videoTracks.length === 0) {
-										// No remote video
 										$('#thevideo').hide();
 										if($('#videobox .no-video-container').length === 0) {
 											$('#videobox').append(
@@ -289,22 +193,6 @@ $(document).ready(function() {
 								},
 								oncleanup: function() {
 									Janus.log(" ::: Got a cleanup notification :::");
-									// FIXME Reset status
-									$('#waitingvideo').remove();
-									if(spinner)
-										spinner.stop();
-									spinner = null;
-									$('#videobox').empty();
-									$("#videobox").parent().unblock();
-									$('#video').hide();
-									recording = false;
-									playing = false;
-									$('#record').removeAttr('disabled').click(startRecording);
-									$('#play').removeAttr('disabled').click(startPlayout);
-									$('#list').removeAttr('disabled').click(updateRecsList);
-									$('#recset').removeAttr('disabled');
-									$('#recslist').removeAttr('disabled');
-									updateRecsList();
 								}
 							});		
 					},
@@ -318,7 +206,6 @@ $(document).ready(function() {
 						window.location.reload();
 					}
 				});
-		});
 	}});
 });
 
@@ -349,39 +236,69 @@ function updateRecsList() {
 		}
 		if(result["list"]) {
 			$('#recslist').empty();
-			$('#record').removeAttr('disabled').click(startRecording);
+			//$('#record').removeAttr('disabled').click(startRecording);
 			$('#list').removeAttr('disabled').click(updateRecsList);
 			var list = result["list"];
 			list.sort(function(a, b) {return (a["date"] < b["date"]) ? 1 : ((b["date"] < a["date"]) ? -1 : 0);} );
 			Janus.debug("Got a list of available recordings:", list);
-			var query = window.location.search;
-			var param = new URLSearchParams(query);
-			var title = param.get('title'); 
-			$('#recslist').append("<li><a href='#' id='" + list[0]["id"] + "'>" + title + " [" + list[0]["date"] + "]" + "</a></li>");
 			
-			$('#recset').click();
-			$('#recslist a').bind('click').click(function() {
-				selectedRecording = $(this).attr("id");
-				selectedRecordingInfo = $(this).text();
-				$('#recset').html($(this).html()).parent().removeClass('open');
-				$('#play').removeAttr('disabled').click(startPlayout);
-				$('#play').click();
+			var i=0;
+			
+			for(var mp in list) {
+				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
+				arr_session.push(list[mp]["id"]);
+				console.log(list[mp]["id"]);
+				var ssid = list[mp]["id"];
+				arr_code.push(list[mp]["name"]);
+				arr_date.push(list[mp]["date"]);
+				console.log("[1]"+JSON.stringify(list[mp]));
 				
-				return false;
-			});
+
+					console.log("[2]"+list.length);
+					$.ajax({
+					url: '/ajax/getRecordInfo',
+					type: 'GET',
+					data: {
+						"code": list[mp]["name"],
+						"session": list[mp]["id"]
+					},
+					success: function(data){
+						$('#recordList').append(
+            			'<div class="items cardWhite">'+
+            			'<a href="/YouTV/Video?sessionId=' + data["session"] + '&video_code='+ data["RecordInfo"]["video_code"] + '&title='+data["RecordInfo"]["title"]+'">'+
+	        			'<img src="data:image/png;base64,' + data["RecordThumbnail"] + '" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+	        			'<h2>' + data["RecordInfo"]["title"] + '</h2>'+  //제목으로 바꾸기
+	        			'<h3>' + data["RecordInfo"]["streamer_id"] + '</h3>'+
+	        			'</a>'+
+	        			'</div>')
+						
+					},
+					error: function(error){
+						
+					}
+				});
+				
+				i++;
+				if(i>=5){
+					break;
+				}
+			}
 			
+			
+			//startPlayout
 		}
+		
 	}});
 }
 
-function startRecording() {
+function startRecording() { //메인메뉴??
 	if(recording)
 		return;
 	// Start a recording
 	recording = true;
 	playing = false;
-	myname = "코드 동영상";////////////sessionStorage.getItem("코드")
-		$('#record').unbind('click').attr('disabled', true);
+	myname = "ExampleVideoCode";////////////sessionStorage.getItem("코드")
+		//$('#record').unbind('click').attr('disabled', true);
 		$('#play').unbind('click').attr('disabled', true);
 		$('#list').unbind('click').attr('disabled', true);
 		$('#recset').attr('disabled', true);
@@ -427,7 +344,7 @@ function startRecording() {
 			});
 }
 
-function startPlayout() {
+function startPlayout() { //기록된걸 재생
 	if(playing)
 		return;
 	// Start a playout
@@ -437,19 +354,16 @@ function startPlayout() {
 		playing = false;
 		return;
 	}
-	$('#record').unbind('click').attr('disabled', true);
+	//$('#record').unbind('click').attr('disabled', true);
 	$('#play').unbind('click').attr('disabled', true);
 	$('#list').unbind('click').attr('disabled', true);
 	$('#recset').attr('disabled', true);
 	$('#recslist').attr('disabled', true);
 	
-	var query = window.location.search;
-	var param = new URLSearchParams(query);
-	var id = param.get('sessionId'); 
-
-	console.log(id);   
 	
-	var play = { request: "play", id: parseInt(id) };
+	
+	
+	var play = { request: "play", id: parseInt(selectedRecording) };
 	recordplay.send({ message: play });
 }
 

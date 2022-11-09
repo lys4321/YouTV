@@ -30,6 +30,8 @@ public class LiveVideoAjaxController {
 	private videoInfoMapper vim;
 	@Autowired
 	private web_user_mapper wum;
+	@Autowired
+	private video_mapper vm;
 	
 	private StreamChatRoomRepo streamChatRoomRepo = new StreamChatRoomRepo();
 	
@@ -70,6 +72,8 @@ public class LiveVideoAjaxController {
 		}
 	}
 	
+	
+	
 	@RequestMapping(value="/ajax/deleteLiveStreaming", method = {RequestMethod.GET})
 	public void deleteLiveStreaming(HttpServletRequest request) {
 		String code = request.getParameter("code");
@@ -93,19 +97,49 @@ public class LiveVideoAjaxController {
 				arr.add(guestes.get(i));
 			}
 		}
-		
+		System.out.println("[arr1] : "+ arr);
 		return arr;
 	}
 	
 	@RequestMapping(value="/ajax/queryUserList", method = {RequestMethod.GET})
 	public ArrayList<String> queryUserList(HttpServletRequest request) {
-		System.out.println("request : "+ request);
 		String code = request.getParameter("code");
 		String query = request.getParameter("query");
 		ArrayList<String> arr = streamChatRoomRepo.getQueryLists(code, query);
-		
+		System.out.println("[arr2] : "+ arr);
 		return arr;
 	}
+	
+	@RequestMapping(value="/ajax/recordLiveStreaming", method = {RequestMethod.POST})
+	public void recordLiveStreaming(HttpServletRequest request) {
+		String video_code = request.getParameter("video_code");
+		String streamer_id = request.getParameter("streamer_id");
+		String title = request.getParameter("title");
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String ndate = formatter.format(date);
+		
+		String publicPath = "C:\\YTVrepo";
+		String thumbnailPath = "\\thumbnail\\";
+		
+		String thumbnailName = video_code + "_thumb.png";
+		
+		/*
+		 * 이미지 파일 생성하는 구역
+		 * */
+		
+		String totalPath = publicPath + thumbnailPath + thumbnailName;
+		
+		System.out.println("["+ video_code +"]"+"["+ streamer_id +"]"+"["+ title +"]"+"["+ ndate +"]");
+		
+		videoDTO vDTO = new videoDTO(video_code, streamer_id, title, ndate, totalPath);
+		System.out.println(vDTO);
+		
+		int check = vm.addvideo(vDTO);
+		
+	}
+	
 	
 	
 	//생방송 등러갈 시 정보를 저장하는 메소드

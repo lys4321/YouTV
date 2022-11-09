@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.DTO.videoDTO;
 import com.example.demo.DTO.videoInfoDTO;
+import com.example.demo.Mapper.chatBanMapper;
 import com.example.demo.Mapper.videoInfoMapper;
 import com.example.demo.Mapper.video_mapper;
 import com.example.demo.Repos.StreamChatRoomRepo;
@@ -24,6 +25,8 @@ public class LiveController {
 	
 	@Autowired
 	private videoInfoMapper vim;
+	@Autowired
+	private chatBanMapper cbm;
 	
 	@RequestMapping(value="/Owner_Mode", method= {RequestMethod.GET})
 	public String ownerMode() {
@@ -36,11 +39,15 @@ public class LiveController {
 		ModelAndView mav = new ModelAndView();
 		
 		streamChatRoomRepo.enterChatroom(video_code, guestid);
+		videoInfoDTO viDTO = vim.selectVideoInfo(video_code);
 		
+		mav.addObject("videoTitle", viDTO.getTitle());
 		mav.setViewName("LiveGuestScreen");
 		mav.addObject("video_code", video_code);
 		mav.addObject("chatting_room", streamChatRoomRepo.findRoomById(video_code));
+		System.out.println("[챗룸] : "+ streamChatRoomRepo.findRoomById(video_code));
 		mav.addObject("catch_session", video.getSession());
+		System.out.println("[세션] : "+ video.getSession());
 		
 		
 		return mav;

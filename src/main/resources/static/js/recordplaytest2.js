@@ -21,8 +21,6 @@ var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStrin
 
 
 $(document).ready(function() {
-	var msg = "${test}";
-	console.log(msg);
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
 		// Use a button to start the demo
@@ -170,7 +168,6 @@ $(document).ready(function() {
 												$('#recset').removeAttr('disabled');
 												$('#recslist').removeAttr('disabled');
 												updateRecsList();
-												$('#play').click();
 												
 											}
 										}
@@ -243,12 +240,7 @@ $(document).ready(function() {
 										return;
 									Janus.debug(" ::: Got a remote stream :::", stream);
 									if($('#thevideo').length === 0) {
-										var query = window.location.search;
-										var param = new URLSearchParams(query);
-										var title = param.get('title'); 
-									
-										console.log(title);   
-										$('#videotitle').html(title);
+										$('#videotitle').html(selectedRecordingInfo);
 										$('#stop').unbind('click').click(stop);
 										$('#video').removeClass('hide').show();
 										$('#videobox').append('<video class="rounded centered hide" id="thevideo" width="100%" height="100%" autoplay playsinline/>');
@@ -268,7 +260,9 @@ $(document).ready(function() {
 												spinner.stop();
 											spinner = null;
 										});
+										console.log("333333333333333333");
 									}
+									console.log("스트림 : "+stream);
 									Janus.attachMediaStream($('#thevideo').get(0), stream);
 									var videoTracks = stream.getVideoTracks();
 									if(!videoTracks || videoTracks.length === 0) {
@@ -354,22 +348,17 @@ function updateRecsList() {
 			var list = result["list"];
 			list.sort(function(a, b) {return (a["date"] < b["date"]) ? 1 : ((b["date"] < a["date"]) ? -1 : 0);} );
 			Janus.debug("Got a list of available recordings:", list);
-			var query = window.location.search;
-			var param = new URLSearchParams(query);
-			var title = param.get('title'); 
-			$('#recslist').append("<li><a href='#' id='" + list[0]["id"] + "'>" + title + " [" + list[0]["date"] + "]" + "</a></li>");
-			
-			$('#recset').click();
-			$('#recslist a').bind('click').click(function() {
+			for(var mp in list) {
+				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
+				$('#recslist').append("<li><a href='#' id='" + list[mp]["id"] + "'>" + list[mp]["name"] + " [" + list[mp]["date"] + "]" + "</a></li>");
+			}
+			$('#recslist a').unbind('click').click(function() {
 				selectedRecording = $(this).attr("id");
 				selectedRecordingInfo = $(this).text();
 				$('#recset').html($(this).html()).parent().removeClass('open');
 				$('#play').removeAttr('disabled').click(startPlayout);
-				$('#play').click();
-				
 				return false;
 			});
-			
 		}
 	}});
 }
@@ -442,14 +431,7 @@ function startPlayout() {
 	$('#list').unbind('click').attr('disabled', true);
 	$('#recset').attr('disabled', true);
 	$('#recslist').attr('disabled', true);
-	
-	var query = window.location.search;
-	var param = new URLSearchParams(query);
-	var id = param.get('sessionId'); 
-
-	console.log(id);   
-	
-	var play = { request: "play", id: parseInt(id) };
+	var play = { request: "play", id: parseInt(selectedRecording) };
 	recordplay.send({ message: play });
 }
 

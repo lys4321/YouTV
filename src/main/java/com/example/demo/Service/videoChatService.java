@@ -17,13 +17,13 @@ public class videoChatService {
 	int addChatting(video_chatDTO chat) {
 		return cm.addChatting(chat);
 	}
-	List<video_chatDTO> searchByCode(@Param(value="code")String code){
+	List<video_chatDTO> searchByCode(@Param(value="code") String code){
 		return cm.searchByCode(code);
 	}
-	List<video_chatDTO> searchById(@Param(value="userid")String userid){
+	List<video_chatDTO> searchById(@Param(value="userid") String userid){
 		return cm.searchById(userid);
 	}
-	List<String> searchByIdCode(@Param(value="code")String code, @Param(value="userid")String userid){
+	List<video_chatDTO> searchByIdCode(String code, String userid){
 		return cm.searchByIdCode(code, userid);
 	}
 }

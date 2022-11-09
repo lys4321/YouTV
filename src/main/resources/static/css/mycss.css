@@ -62,9 +62,23 @@
 			
 			#barSearch{
 				width: 300px;
+				margin-top: 30px;
 			}
 			
+			#header{
+				 display: flex;
+  				align-items: center; /* 수직 정렬 */
+  				flex-direction: row; /* default: row */
+			}
 			
+			.homeBtn{
+				margin-top: -15px;
+			}
+			
+			#streamMenu{
+				margin-left: 50px;
+				margin-top: -20px;
+			}
 			
 			.search-bar{
 				display: inline-block;
@@ -78,15 +92,8 @@
 			}
 			
 			#icons{
-				display: inline-block;
-				display: table;
-    			margin-left: auto;
-    			margin-right: auto;
-    			position: absolute;
-			    top: 3.5%;
-			    left: 80%;
-			    transform: translate(-50%, -50%);
-			    position: absolute;
+				margin-left: 50%;
+				margin-top: -15px;
 			}
 			
 			.homeBtn{
@@ -378,4 +385,38 @@
 				right: 5%;
 				top: 2.5%;
 				font-size: 40px;
+			}
+			
+			.modal_banUser{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				display: none;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			
+			.modal_banUser.show {
+			  display: block;
+			}
+			
+			#exitmark_ban{
+				position: absolute;
+				right: 5%;
+				top: 2.5%;
+				font-size: 40px;
+			}
+			
+			#banReasonSector{
+				resize: none;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+			#banUserId{
+				font-size: 40px;
+			}
+			#listUser{
+				visibility: hidden;
 			}

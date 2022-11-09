@@ -8,7 +8,7 @@
 	<delete id="deletefollow" parameterType="String">
 		delete
 		from favorites
-		where viewer_id = #{viewer_id} and streamer_id = #{streamer_id}
+		where viewer_id = #{param1} and streamer_id = #{param2}
 	</delete>
 	<select id="listfollows" parameterType="String" resultType="String">
 		select streamer_id
@@ -20,5 +20,10 @@
 		select streamer_id
 		from favorites
 		where viewer_id = #{viewer_id}
+	</select>
+	<select id="findByIds" resultType="com.example.demo.DTO.favoritesDTO">
+		select *
+		from favorites
+		where streamer_id=#{param1} and viewer_id=#{param2}
 	</select>
 </mapper>

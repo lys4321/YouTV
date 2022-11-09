@@ -15,9 +15,9 @@
 		from videochat
 		where user_id=#{userid}
 	</select>
-	<select id="searchByIdCode" parameterType="String" resultType="String">
+	<select id="searchByIdCode" resultType="com.example.demo.DTO.video_chatDTO">
 		select *
 		from videochat
-		where video_code = #{code} and user_id = #{userid}
+		where video_code=#{param1} and user_id=#{param2}
 	</select>
 </mapper>

@@ -5,7 +5,8 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!-- xmlns="http://www.w3.org/1999/xhtml" -->
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Janus WebRTC Server: Screen Sharing Demo</title>
 <script type="text/javascript"
@@ -23,7 +24,7 @@
 <script type="text/javascript" src="/js/janus.js"></script>
  <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
 <script type="text/javascript" src="/js/myjs.js" ></script>
-<script type="text/javascript" src="/js/guestStream.js"></script>
+<script type="text/javascript" src="/js/replaymake2.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -112,7 +113,13 @@
     var session = /*[[${catch_session}]]*/;
     var chatting_room = /*[[${chatting_room}]]*/;
     var video_code = /*[[${video_code}]]*/;
-    var videoTitle = /*[[${videoTitle}]]*/;
+    var title = /*[[${title}]]*/;
+    
+    var csession=/*[[${sessionId}]]*/;
+    var cvideo_code=/*[[${video_code}]]*/;
+    var ctitle = /*[[${title}]]*/;
+    
+    console.log(csession + cvideo_code + ctitle);
     
     const startBtn = document.getElementById('start');
     const inputBar = document.getElementById('roomid');
@@ -120,8 +127,6 @@
     
     var sid = video_code.slice(0,-14);
     
-    var sockJs = null;
-    var stomp = null;
     
     var checking = 0;
     
@@ -175,7 +180,7 @@
         			if(data === true){
         				checking = 1;
         				$('#VideoTitle').empty();
-        		    	$('#VideoTitle').text(videoTitle);
+        		    	$('#VideoTitle').text(ctitle);
         		    	$('#VideoTitle').append('<span>&emsp;</span>'+
         				'<i id="followIcon" class="fa-solid fa-heart" onclick="followbtn()">팔로우하기</i>');
 						
@@ -198,7 +203,7 @@
 					if(data === true){
 						checking = 0;
 						$('#VideoTitle').empty();
-        		    	$('#VideoTitle').text(videoTitle);
+        		    	$('#VideoTitle').text(title);
         		    	$('#VideoTitle').append(
         		    			'<span>&emsp;</span>'+
     		    				'<i id="followIcon" class="fa-regular fa-heart" onclick="followbtn()">팔로우하기</i>');
@@ -217,13 +222,18 @@
     	startBtn.style.display = 'none';
     	inputBar.style.display = 'none';
     	joinBtn.style.display = 'none';
-    	
-    	console.log("["+ session +"]"+"["+ JSON.stringify(chatting_room) +"]")
+    	$('#button-send').css('display', 'none');
+    	console.log("["+ csession +"]"+"["+ cvideo_code +"]"+"["+ ctitle +"]")
     	$('#roomid').val(session);
     	$('#start').click();
     	
     	$('#VideoTitle').empty();
-    	$('#VideoTitle').text(videoTitle);
+    	$('#VideoTitle').text(ctitle);
+    	
+    	
+    	
+    	
+    	
     	
     	$.ajax({
     		url: '/ajax/checkFavorite',
@@ -257,102 +267,29 @@
     		}
     	});
     	
+    	$.ajax({
+			url: '/ajax/main_follows',
+			type: 'GET',
+			data: {
+				"userid": sessionStorage.getItem("using_id")
+			},
+			dataType: 'text',
+			success: function(data){
+        		var obj = JSON.parse(data);
+        		var thum = obj["FollowThumbnail"];
+        		var ulist = obj["follows"];
+        		var len = ulist.length
+        		
+        		
+			},
+			error: function(){
+				console.log("error");
+			}
+		});
+       
     	
     	
     	
-    	$('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
-    	
-    	sockJs = new SockJS("/stomp/chat");
-        //1. SockJS를 내부에 들고있는 stomp를 내어줌
-        stomp = Stomp.over(sockJs);
-
-        //2. connection이 맺어지면 실행
-        stomp.connect({}, function (){
-           console.log("STOMP Connection")
-
-           //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-           stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {
-               var content = JSON.parse(chat.body);
-
-               var writer = content.user_id;
-               var chatting = content.chat;
-               var str = '';
-               
-               console.log("확인????");
-
-               if(writer === userid){
-                   str = "<div class='activity-item d-flex'>";
-                   str += "<b class=activite-label>" + writer + " : " + "</b>";
-                   str += "<b class=activity-content>" + chatting + "</b>";
-                   str += "</div></div>";
-                   $("#msgArea").append(str);
-                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
-               }
-               else{
-            	   str = "<div class='activity-item d-flex'>";
-                   str += "<b class=activite-label>" + writer + " : " + "</b>";
-                   str += "<b class=activity-content>" + chatting + "</b>";
-                   str += "</div></div>";
-                   $("#msgArea").append(str);
-                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
-               }
-           });
-        });
-        
-        
-        console.log("sid : " + sid);
-        
-        $.ajax({
-        	url: '/ajax/checkBan',
-        	type: 'GET',
-        	data:{
-        		"streamer_id": sid,
-        		"myid": userid
-        	},
-        	success: function(data){
-        		if(data === false){
-        			$('#button-send').css('display', 'none');
-        		}else{
-        			$('#button-send').css('display', 'inline-block');
-        		}
-        	},
-        	error: function(error){
-        		console.log(error);
-        	}
-        });
-        
-        
-        $('#button-send').on("click", function chatsendButton(){
-        	//var sockJs = new SockJS("/stomp/chat");
-        	//var stomp = Stomp.over(sockJs);
-            var msg = $('#msg')
-            console.log(msg);
-            if(!msg.val()){
-             	alert("입력이 필요")
-             }else{
-                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.val(), user_id: userid, chat_status: false}));
-                 console.log()
-                 mval = msg.val();
-                 msg.val('');
-             }
-            
-            var today = new Date();
-            console.log(today);
-            
-            $.ajax({
-            	url: '/ajax/addChat',
-            	type: 'GET',
-				data: {
-					"userid": userid,
-					"video_code": video_code,
-					"chat": mval,
-					"chat_status": "false",
-					"chatDate": createDate
-				}
-            });
-            
-             console.log(msg.value);
-         });
         
         
     });

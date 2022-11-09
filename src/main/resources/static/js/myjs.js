@@ -5,7 +5,7 @@ $(document).ready(function(){
         			const modal_del = document.querySelector('.modal_del');
         			const modal_listUser = document.querySelector('.modal_listUser');
         			const leftvalue = $('.sidebar').offset().left;
-        			
+        			var title = null;
         			//sessionStorage.clear();
         			
         			var useid = sessionStorage.getItem("using_id");
@@ -106,7 +106,7 @@ $(document).ready(function(){
         				
         				$('#streamMenu2').append(
         						'<a id="streamIcon" class="mainIcon" href="/Owner_Mode">'+
-        						'<i class="fa-solid fa-signal-stream"></i>방송하기</a>'+	
+        						'<i class="fa-solid fa-tower-broadcast"></i>방송하기</a>'+	
         						'<a id="clipIcon" class="mainIcon" href="#">'+
         						'<i class="fa-solid fa-paperclip"></i>클립제작</a>'
         				);
@@ -115,10 +115,8 @@ $(document).ready(function(){
         						'<a id="logoutIcon" class="mainIcon" href="/YouTV/MainScreen">'+
         						'<i class="fa-solid fa-right-from-bracket"></i>로그아웃</a>'+	
         						'<a id="updateIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'+
+        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'
         						//여기는 나중에 팔로우 기능 제작 시 그대로 가져가 사용하기
-        						'<a id="followIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-heart"></i></a>'
         				);
         				
         				$('#sidebar-nav').append(
@@ -405,8 +403,10 @@ $(document).ready(function(){
 								
 								$('#listsUserlist li').on('click', function(){
 									$('.modal_History').css('display', 'block');
-									var title = $(this).text();
+									title = $(this).text();
 									$('#hititle').text(title);
+									console.log(video_code);
+									console.log(title);
 									
 									$.ajax({
 										url: '/ajax/queryHistoryList',
@@ -417,7 +417,11 @@ $(document).ready(function(){
 										},
 										dataType: 'json',
 										success: function(data){
-											console.log(data);
+											for(var i=0; i<data.length; i++){
+												$('#tbody').append(
+												'<tr><td>'+data[i]['chat']+'</td><td>'+data[i]['chatDate']+'</td></tr>'
+												);
+											}
 										},
 										error: function(error){
 											console.log(error);
@@ -468,11 +472,15 @@ $(document).ready(function(){
 										},
 										dataType: 'json',
 										success: function(data){
-											console.log(data);
+											for(var i=0; i<data.length; i++){
+												$('#tbody').append(
+												'<tr><td>'+data[i]['chat']+'</td><td>'+data[i]['chatDate']+'</td></tr>'
+												);
+											}
 										},
 										error: function(error){
 											console.log(error);
-											alert(video_code +" "+ title);
+											alert("유저 정보 불러오기 실패1");
 										}
 									});
 								});
@@ -521,6 +529,30 @@ $(document).ready(function(){
             			}
             		});
             		
+            		$('#banUserbtn').on('click', function(){
+						$('.modal_banUser').css('display', 'block');
+						$('#banUserId').text(title);
+					});
+					
+					$('#banConfirm').on('click', function(){
+						var str = $('#banReasonSector').val();
+						$.ajax({
+							url: '/ajax/addBan',
+							type: 'POST',
+							data: {
+								"sid": useid,
+								"uid": title,
+								"banReason": str
+							},
+							success: function(data){
+								alert(JSON.stringify(data));
+							},
+							error: function(error){
+								alert("?");
+							}
+						});
+					});
+            		
             		
 					
 		/*		$('#listsUserlist li').on('click', function(){
@@ -556,7 +588,18 @@ $(document).ready(function(){
          		      
          		    $('#exitmark_history').click(function(){
 							$('.modal_History').css('display', 'none');
+							$('#tbody').empty();
+							
+							
          		      });
+         		       $('#exitmark_ban').click(function(){
+							$('.modal_banUser').css('display', 'none');
+							$('#banReasonSector').empty();
+         		      });
+         		      
+         		      $.ajax({
+						
+						});
 });
 
 

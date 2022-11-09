@@ -1,7 +1,7 @@
 var server = "http://192.168.0.141:8088/janus";
 var janus = null;
 var recordplay = null;
-var opaqueId = "recordplaytest-"+Janus.randomString(12);
+var opaqueId = "1234"//"recordplaytest-"+Janus.randomString(12);
 
 var spinner = null;
 var bandwidth = 1024 * 1024;
@@ -321,8 +321,8 @@ function updateRecsList() {
 				$('#recslist').append("<li><a href='#' id='" + list[mp]["id"] + "'>" + list[mp]["name"] + " [" + list[mp]["date"] + "]" + "</a></li>");
 			}
 			$('#recslist a').unbind('click').click(function() {
-				selectedRecording = $(this).attr("id");
-				selectedRecordingInfo = $(this).text();
+				selectedRecording = $(this).attr("id");//list[mp]["id"]
+				selectedRecordingInfo = $(this).text();//list[mp]["name"] + " [" + list[mp]["date"] + "]" ?
 				$('#recset').html($(this).html()).parent().removeClass('open');
 				$('#play').removeAttr('disabled').click(startPlayout);
 				return false;

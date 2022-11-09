@@ -47,10 +47,12 @@ public class chattingAjaxController {
 	}
 	
 	@RequestMapping(value="/ajax/queryHistoryList", method = {RequestMethod.GET})
-	public List<String> queryHistoryList(HttpServletRequest request) {
+	public List<video_chatDTO> queryHistoryList(HttpServletRequest request) {
 		String code = request.getParameter("code");
+		System.out.println(code);
 		String userid = request.getParameter("userid");
-		List<String> arr = cm.searchByIdCode(code, userid);
+		System.out.println(userid);
+		List<video_chatDTO> arr = cm.searchByIdCode(code, userid);
 		System.out.println(arr);
 		
 		return arr;

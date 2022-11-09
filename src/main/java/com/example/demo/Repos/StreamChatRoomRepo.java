@@ -1,8 +1,10 @@
 package com.example.demo.Repos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +30,14 @@ public class StreamChatRoomRepo {
 	}
 	
 	public void enterChatroom(String code, String userid) {
+		System.out.println("[룸] : "+ roomMap.get(code));
 		roomMap.get(code).addGuestes(userid);
 	}
 
 	public ArrayList<String> getLists(String code){
 		ArrayList<String> arr = roomMap.get(code).getArr();
-		
+		HashSet<String> hash = new HashSet<String>(arr);
+		arr = new ArrayList<String>(hash);
 		return arr;
 	}
 	
@@ -46,6 +50,8 @@ public class StreamChatRoomRepo {
 				arr.add(guestes.get(i));
 			}
 		}
+		HashSet<String> hash = new HashSet<String>(arr);
+		arr = new ArrayList<String>(hash);
 		
 		return arr;
 	}

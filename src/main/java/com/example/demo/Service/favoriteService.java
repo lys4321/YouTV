@@ -2,9 +2,11 @@ package com.example.demo.Service;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.DTO.favoritesDTO;
 import com.example.demo.Mapper.favoriteMapper;
 
 @Service
@@ -20,11 +22,15 @@ public class favoriteService {
 		return fm.allfollows(userid);
 	}
 	
-	int addfollow(String userid, String streamer) {
-		return fm.addfollow(userid, streamer);
+	int addfollow(favoritesDTO fDTO) {
+		return fm.addfollow(fDTO);
 	}
 	
 	int deletefollow(String userid, String streamer) {
 		return fm.deletefollow(userid, streamer);
+	}
+	
+	favoritesDTO findByIds(String streamerid, String userid) {
+		return fm.findByIds(streamerid, userid);
 	}
 }

@@ -4,14 +4,21 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link th:href="@{/css/testyoutube.css}" rel="stylesheet">
         <link th:href="@{/css/mycss.css}" rel="stylesheet">
         <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
-        <style>
-        	
-			
-			
-        </style>
+        
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+		<script type="text/javascript" src="/js/janus.js" ></script>
+		<script type="text/javascript" src="/js/replaymake.js"></script>
+
     </head>
     <body>
     	<div class="Head">
@@ -73,6 +80,8 @@
     <script th:inline="javascript">
         	/*<![CDATA[*/
         		$(document).ready(function(){
+        			
+        			
         			const modal = document.querySelector('.modal');
         			const modal_create = document.querySelector('.modal_create')
         			const modal_update = document.querySelector('.modal_update')
@@ -83,9 +92,9 @@
         			
         			var useid = sessionStorage.getItem("using_id");
         			
-        			console.log("유저 상태 : "+ useid);
         			
-        			if(useid == null){
+        			
+        			if(useid === null){
         				$('#icons2').append(
         						'<a id="loginIcon" class="mainIcon" href="#">'+
         						'<i class="fa-solid fa-right-to-bracket"></i>로그인</a>'+	
@@ -180,10 +189,7 @@
         						'<a id="logoutIcon" class="mainIcon" href="/YouTV/MainScreen">'+
         						'<i class="fa-solid fa-right-from-bracket"></i>로그아웃</a>'+	
         						'<a id="updateIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'+
-        						//여기는 나중에 팔로우 기능 제작 시 그대로 가져가 사용하기
-        						'<a id="followIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-heart"></i></a>'
+        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'
         				);
         				
         				$('#sidebar-nav').append(
@@ -194,7 +200,7 @@
         				
         				$('.streamMenu').append(
         						'<a id="streamIcon" class="mainIcon" href="/Owner_Mode">'+
-        						'<i class="fa-solid fa-signal-stream"></i>방송하기</a>'+	
+        						'<i class="fa-solid fa-tower-broadcast"></i>방송하기</a>'+	
         						'<a id="clipIcon" class="mainIcon" href="#">'+
         						'<i class="fa-solid fa-paperclip"></i>클립제작</a>'
         				);
@@ -345,9 +351,7 @@
     				);
           		
             		//
-            		$('#followIcon').click(function(){
-            			
-            		});
+            		
             		
             		//
             		
@@ -560,7 +564,7 @@
                     			if(obj["LiveThumbnail"][i] === null){
                     				target.append(
                             				'<div class="items cardWhite">'+
-                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&&guestid='+ guestid + '">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&guestid='+ useid + '">'+
     	                    				'<img src="" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
     	                    				'<h2>' + a[i]["title"] + '</h2>'+
     	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+
@@ -571,7 +575,7 @@
                     				console.log("보세요 : "+ obj["LiveThumbnail"][i]);
                     				target.append(
                             				'<div class="items cardWhite">'+
-                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&&guestid='+ guestid + '">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&guestid='+ guestid + '">'+
     	                    				'<img src= "data:image/png;base64,'+ obj["LiveThumbnail"][i] +'" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
     	                    				'<h2>' + a[i]["title"] + '</h2>'+
     	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+
@@ -585,13 +589,13 @@
                     		}
             			}
             		});
-            		
+            		/*
             		$.ajax({
             			url: '/ajax/main_recordlist',
             			type: 'GET',
             			dataType: 'text',
             			success: function(data){
-            				var target = /*document.getElementById("liveList");*/ $('#recordList');
+            				var target = //document.getElementById("liveList");// $('#recordList');
                     		var obj = JSON.parse(data);
                     		console.log(obj);
                     		for(var i=0;i<b.length;i++){
@@ -606,6 +610,7 @@
                     		}
             			}
             		});
+            		*/
             		
             		//AJAX를 이용하여 썸네일 가져오기(클립)
 

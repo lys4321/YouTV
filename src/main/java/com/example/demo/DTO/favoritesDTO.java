@@ -12,5 +12,5 @@ import lombok.ToString;
 public class favoritesDTO {
 	private String viewer_id;
 	private String streamer_id;
-	private Date add_date;
+	private String add_date;
 }

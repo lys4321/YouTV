@@ -12,15 +12,8 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 <script type="text/javascript" src="/js/janus.js" ></script>
-<script type="text/javascript" src="/js/sharePlusrecord.js"></script>
+<script type="text/javascript" src="/js/recordplaytest.js"></script>
 <script>
-	$(function() {
-		$(".navbar-static-top").load("navbar.html", function() {
-			$(".navbar-static-top li.dropdown").addClass("active");
-			$(".navbar-static-top a[href='recordplaytest.html']").parent().addClass("active");
-		});
-		$(".footer").load("footer.html");
-	});
 </script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" type="text/css"/>
 <link rel="stylesheet" href="css/demo.css" type="text/css"/>
@@ -81,6 +74,11 @@
 	<div class="footer">
 	</div>
 </div>
-
 </body>
+<script>
+	
+$(document).ready(function(){
+	$('#start').click();		
+});
+</script>
 </html>

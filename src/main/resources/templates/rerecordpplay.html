@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Janus WebRTC Server: Recorder/Playout Demo</title>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="/js/janus.js"></script>
+ <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/myjs.js" ></script>
+<script type="text/javascript" src="/js/recordplaytest.js"></script>
+
+<link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+<link th:href="@{/css/mycss.css}" rel="stylesheet">
+<link th:href="@{/css/chatting.css}" rel="stylesheet"><style>
+	.page-header{
+		display: none;
+	}
+	#record{
+		display: none;
+	}
+	#list{
+		display: none;
+	}
+	#play{ 
+		visibility: hidden;
+	}
+	#stop{
+		display: none;
+	}
+	#recset{
+		visibility: hidden;
+	}
+	#thevideo{
+		width: 70%;
+		height: 90%;
+	}
+	.panel-body{
+		top: -500px;
+	}
+	.container{
+		margin-left: 200px;
+	}
+</style>
+
+</head>
+<body>
+<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="Aside">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div>
+    	
+    	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>  
+    	</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<button class="btn btn-default" autocomplete="off" id="start">Start</button>
+			</div>
+			<div class="container" id="details">
+				<div class="row">
+					<div class="col-md-12">
+						
+					</div>
+				</div>
+			</div>
+			<div class="container hide" id="recordplay">
+				<div id="demo">
+					<div class="col-md-6" id="controls">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"></h3>
+							</div>
+							<div class="panel-body">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-danger" disabled autocomplete="off" id="record">Record</button>
+									<button class="btn btn-success" disabled autocomplete="off" id="play">Play</button>
+									<button class="btn btn-primary" disabled autocomplete="off" id="list">Update <i id="update-list" class="fa fa-refresh"></i></button>
+								</div>
+								<br/>
+								<div class="btn-group btn-group-sm" style="width: 100%">
+									<div class="btn-group btn-group-sm" style="width: 100%">
+										<button autocomplete="off" id="recset" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+											<span class="caret"></span>
+										</button>
+										<ul id="recslist" class="dropdown-menu" role="menu" style="max-height: 300px; overflow: auto;">
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 hide" id="video">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span id="videotitle">Remote Video</span> <button class="btn-xs btn-danger pull-right" autocomplete="off" id="stop">Stop</button></h3>
+							</div>
+							<div class="panel-body" id="videobox"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		
+		$(document).ready(function(){
+			
+			$('#start').click();
+			
+		});
+		
+	/*]]>*/
+
+	
+</script>
+</body>
+</html>

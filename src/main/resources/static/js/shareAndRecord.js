@@ -205,77 +205,7 @@ function shareScreen() {
 				ptype: "publisher",
 				display: myusername
 			};
-			createCode();
-		var sendData = {
-			"video_code": video_code,
-			"streamer_id": userid,
-			"title": title,
-			"video_date": date,
-			"live_state": live_state,
-			"save_url": null,
-			"thumbnail_url": null,
-			"live_session": live_session
-		}
 		
-		$.ajax({
-			url: "/Ajax/Create_Room",
-			type: "POST",
-			data: {
-				"code": video_code
-			}
-		});
-		
-		$.ajax({
-			url: "/Ajax/Live/Create_Stream",
-			type: "POST",
-			data: {
-				"Streaming": JSON.stringify(sendData)
-			},
-			dataType: "text",
-			success: function(data){
-				$('#loding').remove();
-				sockJs = new SockJS("/stomp/chat");
-                //1. SockJS를 내부에 들고있는 stomp를 내어줌
-                stomp = Stomp.over(sockJs);
-
-                //2. connection이 맺어지면 실행
-                stomp.connect({}, function (){
-                   console.log("STOMP Connection")
-
-                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-                   stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {
-                       var content = JSON.parse(chat.body);
-
-                       var writer = content.user_id;
-                       var chatting = content.chat;
-                       var str = '';
-
-                       if(writer === userid){
-                           str = "<div class='col-6'>";
-                           str += "<div class='alert alert-secondary'>";
-                           str += "<b>" + writer + " : " + chatting + "</b>";
-                           str += "</div></div>";
-                           $("#msgArea").append(str);
-                       }
-                       else{
-                           str = "<div class='col-6'>";
-                           str += "<div class='alert alert-warning'>";
-                           str += "<b>" + writer + " : " + chatting + "</b>";
-                           str += "</div></div>";
-                           $("#msgArea").append(str);
-                       }
-                   });
-                });
-			},
-			error: function(e){
-				$.ajax({
-					url: '/ajax/deleteLiveStreaming',
-					type: 'GET',
-					data: video_code
-				});
-				alert("방송시작 실패함");
-			}
-		});
 		
 			screentest.send({ message: register });
 		}
@@ -340,21 +270,7 @@ function joinScreen() {//방에 들어갈 때
 		return;
 	}
 	var result=null;
-	/*
-	$.ajax({
-			url: "/Ajax/",
-			type: "POST",
-			data: JSON.stringify(sendData),
-			dataType: "JSON",
-			success: function(data){//data는 json 객체로 받아들여 사용한다
-				 //화면 변화시킨다
-				 result = data.session;
-			},
-			error: function(e){
-				alert("방송시작 실패함");
-			}
-		});
-	*/
+	
 	room = parseInt(roomid);//result;//여기가 방 들어오는 세션 생성하는 부분(나중에 방송코드로 변경)
 	role = "listener";
 	myusername = randomString(12);
@@ -489,7 +405,8 @@ function startRecording() {
 	// Start a recording
 	recording = true;
 	playing = false;
-	myname = "좀 특별한거";////////////sessionStorage.getItem("코드")
+	console.log("[cpde] : "+video_code);
+	myname = video_code;////////////sessionStorage.getItem("코드")
 		recordplay.send({
 			message: {
 				request: 'configure',
@@ -502,6 +419,18 @@ function startRecording() {
 			{
 				simulcast: doSimulcast,
 				success: function(jsep) {
+					console.log("["+ video_code +"]"+"["+ userid +"]"+"["+ $('#tititle').val() +"]");
+					$.ajax({
+						url: '/ajax/recordLiveStreaming',
+						type: 'POST',
+						data: {
+							"video_code": video_code,
+							"streamer_id": userid,
+							"title":  title
+						},
+						dataType: "text"
+					});
+					
 					Janus.debug("Got SDP!", jsep);
 					var body = { request: "record", name: myname };
 					// We can try and force a specific codec, by telling the plugin what we'd prefer
@@ -556,8 +485,6 @@ function getQueryStringValue(name) {
 /////
 
 function RecordingV(){
-	console.log(opaqueIdRecord+"아아아아아아아ㅏㅏ");
-	console.log(recordSessionId+"아아아아아아아ㅏㅏ");
 	janus.attach(
 							{
 								plugin: "janus.plugin.recordplay",
@@ -618,6 +545,75 @@ function RecordingV(){
 												recordSessionId = result["id"];
 												
 									console.log(recordSessionId+"아아아아아아아ㅏㅏ");
+									var sendData = {
+			"video_code": video_code,
+			"streamer_id": userid,
+			"title": title,
+			"video_date": date,
+			"live_state": live_state,
+			"save_url": null,
+			"thumbnail_url": null,
+			"live_session": recordSessionId
+		}
+		
+		$.ajax({
+			url: "/Ajax/Create_Room",
+			type: "POST",
+			data: {
+				"code": video_code
+			}
+		});
+		
+		$.ajax({
+			url: "/Ajax/Live/Create_Stream",
+			type: "POST",
+			data: {
+				"Streaming": JSON.stringify(sendData)
+			},
+			dataType: "text",
+			success: function(data){
+				$('#loding').remove();
+				sockJs = new SockJS("/stomp/chat");
+                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                stomp = Stomp.over(sockJs);
+
+                //2. connection이 맺어지면 실행
+                stomp.connect({}, function (){
+                   console.log("STOMP Connection")
+
+                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {
+                       var content = JSON.parse(chat.body);
+
+                       var writer = content.user_id;
+                       var chatting = content.chat;
+                       var str = '';
+
+                       if(writer === userid){
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-secondary'>";
+                           str += "<b>" + writer + " : " + chatting + "</b>";
+                           str += "</div></div>";
+                           $("#msgArea").append(str);
+                       }
+                       else{
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-warning'>";
+                           str += "<b>" + writer + " : " + chatting + "</b>";
+                           str += "</div></div>";
+                           $("#msgArea").append(str);
+                       }
+                   });
+                });
+			},
+			error: function(e){
+				$.ajax({
+					url: '/ajax/deleteLiveStreaming',
+					type: 'GET',
+					data: video_code
+				});
+			}
+		});
 												if(id) {
 													Janus.log("The ID of the current recording is " + id);
 													recordingId = id;
@@ -698,6 +694,12 @@ function RecordingV(){
 /////
 $(document).ready(function() {
 	window.addEventListener('beforeunload', deleteLiveStreaming);
+	window.addEventListener('beforeunload', function(){
+		$('#listsUserlist').empty();
+		$('#tbody').empty();
+		$('#banReasonSector').empty();
+	});
+	createCode();
 	
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
@@ -738,6 +740,7 @@ $(document).ready(function() {
 									//$('#desc').focus();
 									preShareScreen();
 									$('#ownerchat').css('visibility', 'visible');
+									$('#listUser').css('visibility', 'visible');
 									$('#start').removeAttr('disabled').html("방송 나가기")
 										.click(function() {
 											$(this).attr('disabled', true);

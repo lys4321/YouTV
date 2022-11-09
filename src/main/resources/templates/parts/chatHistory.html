@@ -6,7 +6,22 @@
     	<a><i id="exitmark_history" class="fa-solid fa-xmark"></i></a>
     	<span id="hititle" class="card-title"></span>
         <ul id="hiChatlist">
+        	<table>
+        		<thead>
+        			<th>채팅내용</th>
+        			<th>작성날짜</th>
+        		</thead>
+        		<tbody id="tbody">
+        			
+        		</tbody>
+        	</table>
         </ul>
+        <button class="btn btn-secondary sizing" id="banUserbtn">채팅 금지</button>
     </div>
+    <div class="modal_banUser">
+		 <div class="modal_body">
+			 <th:block th:replace="~{/parts/banModal :: banmodal(~{this::BM}) }"></th:block>
+		</div>
+	</div>
     </body>
 </th:block>
