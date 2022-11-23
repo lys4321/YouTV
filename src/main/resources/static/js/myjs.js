@@ -107,7 +107,7 @@ $(document).ready(function(){
         				$('#streamMenu2').append(
         						'<a id="streamIcon" class="mainIcon" href="/Owner_Mode">'+
         						'<i class="fa-solid fa-tower-broadcast"></i>방송하기</a>'+	
-        						'<a id="clipIcon" class="mainIcon" href="#">'+
+        						'<a id="clipIcon" class="mainIcon" href="/YouTV/AllList?type=Record">'+
         						'<i class="fa-solid fa-paperclip"></i>클립제작</a>'
         				);
         				
@@ -391,6 +391,8 @@ $(document).ready(function(){
 							},
 							dataType: 'json',
 							success: function(data){
+								console.log(JSON.stringify(data));
+								
 								var arr = new Array();
 								arr.push(data);
 								for(var a of arr){
@@ -429,6 +431,7 @@ $(document).ready(function(){
 										}
 									});
 								});
+								
 							},
 							error: function(){
 								alert("유저 정보 불러오기 실패");

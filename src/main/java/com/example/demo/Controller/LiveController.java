@@ -11,13 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.DTO.videoDTO;
 import com.example.demo.DTO.videoInfoDTO;
-import com.example.demo.Mapper.chatBanMapper;
 import com.example.demo.Mapper.videoInfoMapper;
-import com.example.demo.Mapper.video_mapper;
 import com.example.demo.Repos.StreamChatRoomRepo;
-import com.example.demo.Service.Chatting_Service;
 
 @Controller
 public class LiveController {
@@ -25,8 +21,6 @@ public class LiveController {
 	
 	@Autowired
 	private videoInfoMapper vim;
-	@Autowired
-	private chatBanMapper cbm;
 	
 	@RequestMapping(value="/Owner_Mode", method= {RequestMethod.GET})
 	public String ownerMode() {
@@ -38,15 +32,15 @@ public class LiveController {
 		videoInfoDTO video = vim.selectVideoInfo(video_code);
 		ModelAndView mav = new ModelAndView();
 		
-		streamChatRoomRepo.enterChatroom(video_code, guestid);
 		videoInfoDTO viDTO = vim.selectVideoInfo(video_code);
+		System.out.println("{오ㅗ오ㅗㅇ오ㅗㅇ오ㅗ오오오오오오오오오오오} : "+viDTO);
 		
 		mav.addObject("videoTitle", viDTO.getTitle());
 		mav.setViewName("LiveGuestScreen");
 		mav.addObject("video_code", video_code);
 		mav.addObject("chatting_room", streamChatRoomRepo.findRoomById(video_code));
 		System.out.println("[챗룸] : "+ streamChatRoomRepo.findRoomById(video_code));
-		mav.addObject("catch_session", video.getSession());
+		mav.addObject("catch_session", video.getCreate_session());
 		System.out.println("[세션] : "+ video.getSession());
 		
 		

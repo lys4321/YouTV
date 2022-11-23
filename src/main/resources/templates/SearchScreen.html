@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+        <link th:href="@{/css/mycss.css}" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
+        
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+		<script type="text/javascript" src="/js/janus.js" ></script>
+		<script type="text/javascript" src="/js/replaymake.js"></script>
+		<script type="text/javascript" src="/js/myjs.js"></script>
+		
+		<style>
+			#searchStreamer{ 
+				display: block;
+			}
+			.inlineBlocks{
+				display: inline-block;
+				vertical-align: middle;
+			}
+		</style>
+    </head>
+    <body>
+    	<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="Aside">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div>
+    	
+    	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>  
+	    	<div class="modal_del">
+	     			 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/delete.html :: delete(~{this::del} )}"></th:block>
+	     			 </div>
+	     	</div>
+    	</div>
+    	
+    	<div class="main" id="main">
+    		<div class="broadList">
+    			<div id="FL">
+    			<h2>스트리머</h2>	
+    				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="searchStreamer"> 
+    				</div>
+    			</div>
+    			<h2>생방송</h2>	
+    				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="searchLive">
+    				</div>
+    			<h2>다시보기</h2>	
+    				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="searchRecord">
+    				</div>
+    			<h2>클립</h2>	
+    				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="searchClip">
+    				</div>
+    		</div>
+    	</div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script th:inline="javascript">
+    	/*<![CDATA[*/
+        		var search = /*[[${search}]]*/;
+        		$(document).ready(function(){
+        			
+        			$.ajax({
+        				url: '/ajax/searchUser',
+        				type: 'GET',
+        				data: {
+        					"search": search
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					for(var i=0;i<data["UserThumbnail"].length;i++){
+        						$('#searchStreamer').append(
+        							'<div>'+
+        							'<div class="inlineBlocks">'+
+        							'<img src="data:image/png;base64,' + data["UserThumbnail"][i] + '" width="100px" height="100px" style="border-radius:50%;" alt="Profile" class="rounded-circle">'+
+        							'</div>'+
+        							'<div class="inlineBlocks">'+
+        							'<h2>' + data["UserList"][i]["user_id"] + '</h2>'+
+        							'</div>'+
+        							'</div>'
+            	        		);
+                    		}
+        				}
+        			});
+        			
+        			$.ajax({
+        				url: '/ajax/searchLive',
+        				type: 'GET',
+        				data: {
+        					"search": search
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					var count = 0
+    						var line;
+    						if((data["liveList"].length % 5) === 0){
+    							line = parseInt(data["liveList"].length / 5);
+    						}else{
+    							line = parseInt(data["liveList"].length / 5) + 1;
+    						}
+    						for(var i=0; i<line; i++){
+    							$('#searchLive').append( 
+    								'<div id="LLine'+ i +'" class="card-body profile-card pt-4 d-flex flex-column align-items-center"></div>'		
+    							);
+    							for(var a=0; a<5; a++){
+    								if(data["liveList"][count] === null){
+    									count++;
+    									continue;
+    								}else {
+    									$('#LLine'+i).append(
+    											'<div class="items cardWhite">'+
+    		                    				'<a href="/Guest_Mode?video_code=' + data["liveList"][count]["video_code"] + '&guestid=' + sessionStorage.getItem("using_id") + '">'+
+    		                    				'<img src="data:image/png;base64,' + data["liveThumbnail"][count] + '" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+    		                    				'<h2>' + data["liveList"][count]["title"] + '</h2>'+
+    		                    				'<h3>' + data["liveList"][count]["streamer_id"] + '</h3>'+
+    		                    				'</a></div>'
+    									);
+    									count++;
+    								}
+    							}
+    						}
+        					
+        					
+        					
+        				}
+        			});
+        			
+        			$.ajax({
+        				url: '/ajax/searchClip',
+        				type: 'GET',
+        				data: {
+        					"search": search
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					var count = 0;
+    						var line;
+    						if((data["cliplist"].length % 5) === 0){
+    							line = parseInt(data["cliplist"].length / 5);
+    						}else{
+    							line = parseInt(data["cliplist"].length / 5) + 1;
+    						}
+    						
+    						for(var i=0; i<line; i++){
+    							$('#searchClip').append(
+    								'<div id="CLine'+ i +'" class="card-body profile-card pt-4 d-flex flex-column align-items-center"></div>'		
+    							);
+    							for(var a=0; a<5; a++){
+    								if(data["cliplist"][count] === null){
+    									count++;
+    									continue;
+    								}else {
+    									$('#CLine'+i).append(
+    											'<div class="items cardWhite">'+
+    		                    				'<a href="/YouTV/Clip?clip_code=' + data["cliplist"][count]["clip_code"] + '&title=' + data["cliplist"][count]["clip_title"] + '">'+
+    		                    				'<img src= "data:image/png;base64,'+ data["clipThumbnail"][count] +'" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+    		                    				'<h2>' + data["cliplist"][count]["clip_title"] + '</h2>'+
+    		                    				'<h3>' + data["cliplist"][count]["user_id"] + '</h3>'+
+    		                    				'</a></div>'
+    									);
+    									count++;
+    								}
+    							}
+    						}
+        					
+        					
+        					
+        				}
+        			});
+        			
+        			console.log("[세션] : "+localStorage.getItem("sessions").split(","));
+					console.log("[,코드] : "+localStorage.getItem("codes").split(","));
+        			
+        			$.ajax({
+        				url: '/ajax/searchrecordBysearch',
+        				type: 'POST',
+        				data: {
+        					"sessions": localStorage.getItem("sessions").split(","),
+        					"codes": localStorage.getItem("codes").split(","),
+        					"search": search
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					
+        					
+        					var count = 0
+    						var line;
+    						if((data["List"].length % 5) === 0){
+    							line = parseInt(data["List"].length / 5);
+    						}else{
+    							line = parseInt(data["List"].length / 5) + 1;
+    						}
+    						for(var i=0; i<line; i++){
+    							$('#searchRecord').append( 
+    								'<div id="RLine'+ i +'" class="card-body profile-card pt-4 d-flex flex-column align-items-center"></div>'		
+    							);
+    							for(var a=0; a<5; a++){
+    								if(data["List"][count] === null){
+    									count++;
+    									continue;
+    								}else {
+    									$('#RLine'+i).append(
+    					            			'<div class="items cardWhite">'+
+    					            			'<a href="/YouTV/Video?sessionId=' + data["session"][count] + '&video_code='+ data["List"][count]["video_code"] + '&title='+data["List"][count]["title"]+'">'+
+    						        			'<img src="data:image/png;base64,' + data["Thumbnail"][count] + '" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+    						        			'<h2>' + data["List"][count]["title"] + '</h2>'+  //제목으로 바꾸기
+    						        			'<h3>' + data["List"][count]["streamer_id"] + '</h3>'+
+    						        			'</a>'+
+    						        			'</div>')
+    									
+    									
+    									count++;
+    								}
+    							}
+    						}
+        					
+        					
+        					
+        				}
+        			});
+        			
+        		});
+        	/*]]*/
+        </script>
+</html>

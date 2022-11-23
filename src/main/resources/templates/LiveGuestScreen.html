@@ -269,6 +269,15 @@
         //2. connection이 맺어지면 실행
         stomp.connect({}, function (){
            console.log("STOMP Connection")
+           
+           $.ajax({
+        	   url: '/ajax/inRoom',
+        	   type: 'POST',
+        	   data: {
+        		   "Vcode": video_code,
+        		   "Id": userid
+        	   },
+           });
 
            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
            stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {

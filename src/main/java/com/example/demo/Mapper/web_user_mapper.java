@@ -18,4 +18,6 @@ public interface web_user_mapper {
 	int UserUpdate(web_userDTO user);// 유저 수정
 	int UserDelete(web_userDTO user);// 유저 삭제
 	int UserCreate(web_userDTO user);// 유저 생성
+	
+	ArrayList<web_userDTO> searchUserBySearch(@Param("search") String search);
 }

@@ -19,6 +19,14 @@ var vprofile = (getQueryStringValue("vprofile") !== "" ? getQueryStringValue("vp
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true");
 
+var date = new Date();
+var dateall = date.getFullYear()+""+(date.getMonth()+1)+""+date.getDate()+""+date.getHours()+""+date.getMinutes()+""+date.getSeconds();
+
+var startCheck = 0;
+var stopCheck = 0;
+
+var urlParams = new URL(location.href).searchParams;
+var video_code = urlParams.get('video_code');
 
 $(document).ready(function() {
 	var msg = "${test}";
@@ -270,6 +278,97 @@ $(document).ready(function() {
 										});
 									}
 									Janus.attachMediaStream($('#thevideo').get(0), stream);
+									
+									
+									var mediaStream = document.getElementById("thevideo").captureStream();
+									console.log(stream);
+									var mediaRecorder = new MediaRecorder(mediaStream, {
+									      mimeType: "video/webm; codecs=vp9"
+									    });
+									var arrVideoData = [];
+									var icheck=0;
+									$('#capstartbtn').on('click', function(){
+										capstartbtn.disabled = true
+    									capstopbtn.disabled = false
+    									
+    									
+    									mediaRecorder.ondataavailable = (event)=>{
+										 console.log("들어감");
+										 arrVideoData.push(event.data);
+										}
+										mediaRecorder.start();
+										startCheck++;
+									});
+									
+									
+									$('#capstopbtn').on('click', function(){
+										capstartbtn.disabled = true
+    									capstopbtn.disabled = true
+    									mediaRecorder.onstop = (event)=>{
+											console.log("이벤트1");
+								            // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
+								            var blob = new Blob(arrVideoData, {type:"video/webm"});
+								
+								            // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
+								            var blobURL = window.URL.createObjectURL(blob);
+								
+											console.log("이벤트2");
+								            // 다운로드 구현
+								            
+											console.log(video_code);
+											console.log(dateall);
+											
+								            var makerId = sessionStorage.getItem("using_id");
+								            console.log(makerId+dateall+video_code);
+								            var $anchor = document.createElement("a"); // 앵커 태그 생성
+								            document.body.appendChild($anchor);
+								            $anchor.style.display = "none";
+								            $anchor.href = blobURL; // 다운로드 경로 설정
+								            $anchor.download = makerId + dateall + video_code + ".webm"; // 파일명 설정
+								            $anchor.click(); // 앵커 클릭
+								            console.log("이벤트3");
+								            // 배열 초기화
+								            arrVideoData.splice(0);
+								        }
+								        mediaRecorder.stop();
+								        stopCheck++;
+									});
+									
+									/*
+									var mediaStream = document.getElementById("thevideo").captureStream();
+									var mediaRecorder = new MediaRecorder(mediaStream);
+									var arrVideoData = [];
+									mediaRecorder.ondataavailable = (event)=>{
+										 arrVideoData.push(event.data);
+									}
+									mediaRecorder.onstop = (event)=>{
+											console.log("이벤트1");
+								            // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
+								            var blob = new Blob(arrVideoData);
+								
+								            // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
+								            var blobURL = window.URL.createObjectURL(blob);
+								
+											console.log("이벤트2");
+								            // 다운로드 구현
+								            var $anchor = document.createElement("a"); // 앵커 태그 생성
+								            document.body.appendChild($anchor);
+								            $anchor.style.display = "none";
+								            $anchor.href = blobURL; // 다운로드 경로 설정
+								            $anchor.download = "test1.webm"; // 파일명 설정
+								            $anchor.click(); // 앵커 클릭
+								            console.log("이벤트3");
+								            // 배열 초기화
+								            arrVideoData.splice(0);
+								        }
+								
+								        // 녹화 시작
+								        mediaRecorder.start(); 
+								        $('#downbtn').on('click', function(){
+											mediaRecorder.stop(); 
+										});*/
+									
+									
 									var videoTracks = stream.getVideoTracks();
 									if(!videoTracks || videoTracks.length === 0) {
 										// No remote video
@@ -320,6 +419,43 @@ $(document).ready(function() {
 				});
 		});
 	}});
+	
+	
+	
+	$('#btn-Clip').on('click', function(){
+		if((startCheck>0) && (stopCheck>0)){
+			var formData = new FormData();
+			var filetitle = $('#filetitle').val();
+			formData.append("makerid", sessionStorage.getItem("using_id"));
+			formData.append("video_code", video_code);
+			formData.append("filetitle", filetitle);
+			formData.append("clipCode", sessionStorage.getItem("using_id")+""+dateall+""+video_code);
+			formData.append(sessionStorage.getItem("using_id")+""+dateall+""+video_code, $('#clipFile')[0].files[0]);
+			console.log(formData);
+			
+			$.ajax({
+				url: '/ajax/uploadClip',
+				processData: false,
+	            contentType: false,
+	            type: 'POST',
+	            data: formData,
+	            success: function(data){
+	            	if(data === true){
+						window.location.href = "/YouTV/MainScreen";
+					}else{
+						alert("클립 업로드 실패");
+					}
+	            	//sessionStorage.setItem("profile", data);
+	            	//window.location.href = "/YouTV/MainScreen";
+	            },
+	            error: function(e){
+	            	console.log(e)
+	            }
+			});
+		}else{
+			alert("클립을 녹화하고 저장해야 합니다.")
+		}
+	});
 });
 
 function checkEnter(field, event) {
@@ -366,6 +502,28 @@ function updateRecsList() {
 				$('#recset').html($(this).html()).parent().removeClass('open');
 				$('#play').removeAttr('disabled').click(startPlayout);
 				$('#play').click();
+				$.ajax({
+				url: '/ajax/recordChat',
+				type: 'GET',
+				data:{
+					"video_code": video_code
+				},
+				success: function(data){
+					var i = 0;
+					setInterval(function(){
+						str = "<div class='col-6'>";
+                        str += "<div class='alert alert-warning'>";
+                        str += "<b>" + data[i]["user_id"] + " : " + data[i]["chat"] + "</b>";
+                        str += "</div></div>";
+                        $('#msgSector').css('visibility', 'visible');
+						$("#msgArea").append(str);
+						i++;
+					}, 1000);
+				},
+				error: function(error){
+					
+				}
+			});
 				
 				return false;
 			});
@@ -451,7 +609,10 @@ function startPlayout() {
 	
 	var play = { request: "play", id: parseInt(id) };
 	recordplay.send({ message: play });
+	
+	
 }
+
 
 function stop() {
 	// Stop a recording/playout

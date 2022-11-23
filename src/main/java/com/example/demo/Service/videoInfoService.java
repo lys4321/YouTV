@@ -33,4 +33,7 @@ public class videoInfoService {
 	videoInfoDTO selectById(String user_id) {
 		return vim.selectById(user_id);
 	}
+	ArrayList<videoInfoDTO> searchLiveBySearch(String search){
+		return vim.searchLiveBySearch(search);
+	}
 }

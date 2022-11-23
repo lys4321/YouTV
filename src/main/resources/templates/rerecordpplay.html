@@ -56,6 +56,23 @@
 	.container{
 		margin-left: 200px;
 	}
+	#buttons{
+		margin-left: 400px;
+	}
+	#thevideo{
+		float: left; 
+        margin-right: 50px;
+        
+	}
+	#msgSector{
+		visibility: hidden;
+	}
+	#insertSector{
+		visibility: hidden;
+	}
+	#msgArea{
+		float: left;
+	}
 </style>
 
 </head>
@@ -110,7 +127,7 @@
 									<button class="btn btn-success" disabled autocomplete="off" id="play">Play</button>
 									<button class="btn btn-primary" disabled autocomplete="off" id="list">Update <i id="update-list" class="fa fa-refresh"></i></button>
 								</div>
-								<br/>
+								
 								<div class="btn-group btn-group-sm" style="width: 100%">
 									<div class="btn-group btn-group-sm" style="width: 100%">
 										<button autocomplete="off" id="recset" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%">
@@ -130,6 +147,9 @@
 							</div>
 							<div class="panel-body" id="videobox"></div>
 						</div>
+						<div class="chattingBody">
+	    					<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
+    					</div>
 					</div>
 				</div>
 			</div>
@@ -138,15 +158,30 @@
 
 	<hr>
 </div>
-
+<div id="buttons">
+<div class="member_login_btn">
+	<input type="button" class="btn btn-secondary" id="capstartbtn" value="Start"></div>
+	<div class="member_login_btn">
+	<input type="button" class="btn btn-secondary" id="capstopbtn" value="Stop"></div>
+	<form id="clipfileform" class="row g-3 needs-validation" enctype="multipart/form-data">
+		<input class="form-control" id="filetitle" placeholder="클립제목">
+		<input type="file" id="clipFile" accept="video/webm" name="CFile">
+		<div class="member_login_btn">
+			<input type="button" class="btn btn-secondary" id="btn-Clip" value="Send">
+		</div>
+	</form>
+</div>
 <script th:inline="javascript">
 	/*<![CDATA[*/
 		
 		$(document).ready(function(){
-			
+			var urlParams = new URL(location.href).searchParams;
+			var video_code = urlParams.get('video_code');
 			$('#start').click();
 			
 		});
+	
+		
 		
 	/*]]>*/
 

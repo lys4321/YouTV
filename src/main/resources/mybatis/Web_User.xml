@@ -43,6 +43,11 @@
 	</delete>
 	<insert id="UserCreate" parameterType="com.example.demo.DTO.web_userDTO">
 		insert into web_user 
-		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, #{image_url})
+		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, "C:\\YTVrepo\\profile\\standard.png")
 	</insert>
+	<select id="searchUserBySearch" resultType="com.example.demo.DTO.web_userDTO">
+		select *
+		from web_user
+		where user_id like concat('%', #{search}, '%')
+	</select>
 </mapper>

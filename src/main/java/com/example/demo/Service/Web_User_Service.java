@@ -24,7 +24,7 @@ public class Web_User_Service {
 		return userMapper.SearchUser(uuid); 
 	}
 	
-	String SearchUserProfile(@Param("_uuid") String uuid) {
+	String SearchUserProfile(String uuid) {
 		return userMapper.SearchUserProfile(uuid); 
 	}
 	
@@ -50,5 +50,9 @@ public class Web_User_Service {
 	
 	int UserCreate(web_userDTO user) {
 		return userMapper.UserCreate(user);
+	}
+	
+	ArrayList<web_userDTO> searchUserBySearch(@Param("search") String search) {
+		return userMapper.searchUserBySearch(search);
 	}
 }

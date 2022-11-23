@@ -16,5 +16,6 @@ public class videoInfoDTO {
 	private String profile;
 	private String session;
 	private String liveDate;
+	private String create_session;
 }
 

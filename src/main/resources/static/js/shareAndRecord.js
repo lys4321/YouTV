@@ -41,7 +41,7 @@ var selectedRecording = null;
 var selectedRecordingInfo = null;
 var acodec = (getQueryStringValue("acodec") !== "" ? getQueryStringValue("acodec") : null);
 var vcodec = (getQueryStringValue("vcodec") !== "" ? getQueryStringValue("vcodec") : null);
-var vprofile = (getQueryStringValue("vprofile") !== "" ? getQueryStringValue("vprofile") : null);
+var vprofile = (getQueryStringValue("vprofile") !== "" ? getQueryStringValue("") : null);
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true");
 /////
@@ -420,6 +420,7 @@ function startRecording() {
 				simulcast: doSimulcast,
 				success: function(jsep) {
 					console.log("["+ video_code +"]"+"["+ userid +"]"+"["+ $('#tititle').val() +"]");
+					
 					$.ajax({
 						url: '/ajax/recordLiveStreaming',
 						type: 'POST',
@@ -429,6 +430,7 @@ function startRecording() {
 							"title":  title
 						},
 						dataType: "text"
+						
 					});
 					
 					Janus.debug("Got SDP!", jsep);
@@ -444,6 +446,8 @@ function startRecording() {
 					if(vprofile)
 						body["profile"] = vprofile;
 					recordplay.send({ message: body, jsep: jsep });
+					
+					
 				},
 				error: function(error) {
 					Janus.error("WebRTC error...", error);
@@ -544,7 +548,8 @@ function RecordingV(){
 												var id = result["id"];
 												recordSessionId = result["id"];
 												
-									console.log(recordSessionId+"아아아아아아아ㅏㅏ");
+									console.log("저장 세션: "+recordSessionId);
+									console.log("생성 세션: "+live_session);
 									var sendData = {
 			"video_code": video_code,
 			"streamer_id": userid,
@@ -553,7 +558,8 @@ function RecordingV(){
 			"live_state": live_state,
 			"save_url": null,
 			"thumbnail_url": null,
-			"live_session": recordSessionId
+			"live_session": recordSessionId,
+			"create_session": live_session
 		}
 		
 		$.ajax({

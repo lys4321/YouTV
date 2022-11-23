@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.DTO.clipDTO;
 import com.example.demo.DTO.videoDTO;
-import com.example.demo.DTO.videoInfoDTO;
-import com.example.demo.Mapper.videoInfoMapper;
+import com.example.demo.Mapper.clipMapper;
 import com.example.demo.Mapper.video_mapper;
 import com.example.demo.Mapper.web_user_mapper;
 
@@ -42,9 +42,9 @@ public class VideoController {
 	@Autowired
 	private video_mapper vmap;
 	@Autowired
-	private videoInfoMapper vim;
-	@Autowired
 	private web_user_mapper wum;
+	@Autowired
+	private clipMapper clm;
 	
 	public void thumbnail() {
 		Runtime run = Runtime.getRuntime();
@@ -59,25 +59,7 @@ public class VideoController {
 			e.printStackTrace();
 		}
 	}
-	
-	@RequestMapping(value="/Test", method = {RequestMethod.POST, RequestMethod.GET})
-	public String broadList(/*web_userDTO user,*/ Model model) {
-		ArrayList<videoInfoDTO> livelist = vim.liveList();
-		ArrayList<videoDTO> recordlist = vmap.recordList();
-		//thumbnail();
-		/*
-		if(user != null) {
-			ArrayList<videoDTO> followlist = ;
-			ArrayList<videoDTO> cliplist =
-		}
-		*/
-		model.addAttribute("livelist", livelist);
-		model.addAttribute("recordlist", recordlist);
-		return "Test";
-	}
-	
-	
-	
+		
 	@RequestMapping(value="/ajax/frame_send", method = {RequestMethod.POST})
 	@ResponseBody
 	public boolean RTSTest(HttpServletRequest request) {
@@ -105,11 +87,8 @@ public class VideoController {
 	@ResponseBody
 	public HashMap<String, Object> getRecordInfo(HttpServletRequest request) {
 		String code = request.getParameter("code");
-		System.out.println("[1] : "+code);
 		videoDTO vDTO = vmap.selectVideo(code);
-		System.out.println("[3] : "+vDTO);
 		String img = wum.SearchUserProfile(vDTO.getStreamer_id());
-		System.out.println("[2] : "+img);
 		String session = request.getParameter("session");
 		File file = new File(img);
 		ArrayList<byte[]> arr = new ArrayList<byte[]>();
@@ -123,27 +102,33 @@ public class VideoController {
 		map.put("RecordInfo", vDTO);
 		map.put("RecordThumbnail", arr);
 		map.put("session", session);
-		System.out.println("마지막 : "+map);
 		
 		return map;
 	}
 	@RequestMapping(value="/YouTV/Video", method= {RequestMethod.GET})
 	public String recordVideo(@RequestParam(value="sessionId", required=false, defaultValue="not_exist") String sessionId, @RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestParam(value="title", required=false, defaultValue="not_exist") String title, Model model)
 	{	
-		System.out.println("[ㄸ]"+sessionId);
-		
 		model.addAttribute("sessionId", sessionId);
 		model.addAttribute("video_code", video_code);
 		model.addAttribute("title", title);
 		return "rerecordpplay";
 	}
-	/*@RequestMapping(value="/YouTV/Video", method= {RequestMethod.GET})
-	public ResponseEntity<ResourceRegion> test3_2(@RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestHeader HttpHeaders headers, Model model) throws UnsupportedEncodingException, IOException 
-	{	videoDTO streaming_video = vmap.selectVideo(video_code); 
-		UrlResource video = new UrlResource("file:"+streaming_video.getSaveUrl());
+	
+	@RequestMapping(value="/YouTV/Clip", method= {RequestMethod.GET})
+	public String recordClip(@RequestParam(value="clip_code", required=false, defaultValue="not_exist") String clip_code, @RequestParam(value="title", required=false, defaultValue="not_exist") String title, Model model)
+	{	
+		model.addAttribute("clip_code", clip_code);
+		model.addAttribute("title", title);
+		return "clipScreen";
+	}
+	
+	@RequestMapping(value="/Clip", method= {RequestMethod.GET})
+	public ResponseEntity<ResourceRegion> watchClip(@RequestParam(value="clip_code", required=false, defaultValue="not_exist") String clip_code, @RequestHeader HttpHeaders headers, Model model) throws UnsupportedEncodingException, IOException 
+	{	clipDTO streaming_clip = clm.selectClip(clip_code);
+		UrlResource clip = new UrlResource("file:"+streaming_clip.getClip_url());
 		    ResourceRegion resourceRegion;
 		    final long chunkSize = 1000000L;
-		    long contentLength = video.contentLength();
+		    long contentLength = clip.contentLength();
 		    Optional<HttpRange> optional = headers.getRange().stream().findFirst();
 		    HttpRange httpRange;
 		    if (optional.isPresent()) {
@@ -151,13 +136,13 @@ public class VideoController {
 		        long start = httpRange.getRangeStart(contentLength);
 		        long end = httpRange.getRangeEnd(contentLength);
 		        long rangeLength = Long.min(chunkSize, end - start + 1);
-		        resourceRegion = new ResourceRegion(video, start, rangeLength);
+		        resourceRegion = new ResourceRegion(clip, start, rangeLength);
 		    } else {
 		        long rangeLength = Long.min(chunkSize, contentLength);
-		        resourceRegion = new ResourceRegion(video, 0, rangeLength);
+		        resourceRegion = new ResourceRegion(clip, 0, rangeLength);
 		    }
 		    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-		          .contentType(MediaTypeFactory.getMediaType(video).orElse(MediaType.APPLICATION_OCTET_STREAM))
+		          .contentType(MediaTypeFactory.getMediaType(clip).orElse(MediaType.APPLICATION_OCTET_STREAM))
 		          .body(resourceRegion);
-	}*/
+	}
 }

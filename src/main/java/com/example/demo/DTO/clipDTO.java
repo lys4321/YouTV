@@ -4,6 +4,7 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
@@ -13,7 +14,7 @@ public class clipDTO {
 	private String clip_code;
 	private String origin_video;
 	private String user_id;
-	private Date clip_date;
+	private String clip_date;
 	private String clip_title;
 	private String clip_url;
 }

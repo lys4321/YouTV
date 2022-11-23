@@ -246,34 +246,15 @@ function updateRecsList() {
 			
 			for(var mp in list) {
 				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
-
 				arr_session.push(list[mp]["id"]);
-				arr_code.push(list[mp]["name"]);
-				arr_date.push(list[mp]["date"]);
-
-			}
-			localStorage.clear();
-			localStorage.setItem("sessions", arr_session);
-			localStorage.setItem("codes", arr_code);
-			console.log("[세션값 들] : "+arr_code);
-			
-			
-			for(var mp in list) {
-				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
-
 				console.log(list[mp]["id"]);
 				var ssid = list[mp]["id"];
-
-				
-				
-				
+				arr_code.push(list[mp]["name"]);
+				arr_date.push(list[mp]["date"]);
 				console.log("[1]"+JSON.stringify(list[mp]));
 				
 
 					console.log("[2]"+list.length);
-					console.log("코드 :" + list[mp]["name"]);
-					console.log("세션 : " + list[mp]["id"]);
-					
 					$.ajax({
 					url: '/ajax/getRecordInfo',
 					type: 'GET',
@@ -301,9 +282,7 @@ function updateRecsList() {
 				if(i>=5){
 					break;
 				}
-				
 			}
-
 			
 			
 			//startPlayout

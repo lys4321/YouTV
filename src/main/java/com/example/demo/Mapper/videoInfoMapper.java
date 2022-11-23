@@ -16,4 +16,6 @@ public interface videoInfoMapper {
 	ArrayList<videoInfoDTO> allLiveList(); // 생방송 목록 가져오기
 	ArrayList<videoInfoDTO> liveList(); // 생방송 목록 가져오기 5개
 	videoInfoDTO selectById(String user_id);
+	
+	ArrayList<videoInfoDTO> searchLiveBySearch(String search);
 }

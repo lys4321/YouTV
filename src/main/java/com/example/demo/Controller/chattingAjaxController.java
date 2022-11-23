@@ -16,12 +16,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.DTO.video_chatDTO;
 import com.example.demo.Mapper.chattingMapper;
+import com.example.demo.Repos.StreamChatRoomRepo;
 
 @Controller
 @ResponseBody
 public class chattingAjaxController {
 	@Autowired 
 	private chattingMapper cm;
+	
+	@Autowired
+	private final StreamChatRoomRepo streamChatRoomRepo = new StreamChatRoomRepo();
 	
 	@RequestMapping(value="/ajax/addChat", method = {RequestMethod.GET})
 	public void addChat(HttpServletRequest request) {
@@ -56,5 +60,25 @@ public class chattingAjaxController {
 		System.out.println(arr);
 		
 		return arr;
+	}
+	
+	@RequestMapping(value="/ajax/recordChat", method = {RequestMethod.GET})
+	public List<video_chatDTO> recordChat(HttpServletRequest request) {
+		String code = request.getParameter("video_code");
+		List<video_chatDTO> arr = cm.searchByCode(code);
+		System.out.println("[기록챗]"+arr);
+		
+		return arr;
+	}
+	
+	
+	@RequestMapping(value="/ajax/inRoom", method = {RequestMethod.POST})
+	public void inRoom(HttpServletRequest request) {
+		String code = request.getParameter("Vcode");
+		System.out.println(code);
+		String userid = request.getParameter("Id");
+		System.out.println(userid);
+		
+		//streamChatRoomRepo.findRoomById(code).addGuestes(userid);
 	}
 }

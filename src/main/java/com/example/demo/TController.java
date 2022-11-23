@@ -31,7 +31,7 @@ public class TController {
 	
 	@RequestMapping(value="/test", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test3() {
-		return "Test";
+		return "allLists";
 	}
 	
 	@RequestMapping(value="/streamtest", method= {RequestMethod.POST, RequestMethod.GET})

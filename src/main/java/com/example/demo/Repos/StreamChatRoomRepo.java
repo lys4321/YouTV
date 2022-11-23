@@ -15,21 +15,23 @@ public class StreamChatRoomRepo {
 	private Map<String, StreamChatRoom> roomMap = new HashMap<String, StreamChatRoom>();
 	
 	public StreamChatRoom findRoom(String code) {
+		
 		return roomMap.get(code);
 	}
 	
 	public StreamChatRoom createRoom(String code) {
+		System.out.println("[방코드] : "+ code);
 		StreamChatRoom room = StreamChatRoom.create(code);
 		roomMap.put(code, room);
 		return room;
 	}
 	
 	public void deleteRoom(String code) {
-		roomMap.get(code).getArr().clear();
 		roomMap.remove(code);
 	}
 	
 	public void enterChatroom(String code, String userid) {
+		System.out.println("[방코드2] : "+ code);
 		System.out.println("[룸] : "+ roomMap.get(code));
 		roomMap.get(code).addGuestes(userid);
 	}

@@ -20,4 +20,9 @@
 		insert into video
 		values(#{video_code}, #{streamer_id}, #{title}, #{video_date}, #{thumbnail})
 	</insert>
+	<select id="searchVideoBySearch" resultType="com.example.demo.DTO.videoDTO" parameterType="String">
+		select *
+		from video
+		where streamer_id like concat('%', #{search}, '%')
+	</select>
 </mapper>

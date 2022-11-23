@@ -11,12 +11,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
 public class video_chatDTO {
 	private String user_id;
-	private String chat;
 	private String video_code;
+	private String chat;
 	private boolean chat_status;
 	private String chatDate;
 }
