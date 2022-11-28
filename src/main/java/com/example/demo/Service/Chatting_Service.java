@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +23,9 @@ public class Chatting_Service {
     
     public StreamChatRoom get_RoomByCode(String code) {
 		return streamChatRoomRepo.findRoomById(code);
+    }
+    
+    public List<StreamChatRoom> findallroom(){
+    	return streamChatRoomRepo.findAllRooms();
     }
 }

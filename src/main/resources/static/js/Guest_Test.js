@@ -120,7 +120,7 @@ $(document).ready(function() {
 									Janus.debug("Event: " + event);
 									if(event) {
 										if(event === "joined") {
-											myid = "lys4321"//sessionStorage.getItem("userid"); if(sessionStorage.getItem("userid")===null){ myid = notuser }
+											myid = "lys431"//sessionStorage.getItem("userid"); if(sessionStorage.getItem("userid")===null){ myid = notuser }
 											$('#session').html(room);
 											$('#title').html(msg["description"]);
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);

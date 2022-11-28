@@ -21,6 +21,8 @@ public class TController {
 		return "LiveOwnerScreen";
 	}
 	
+	
+	
 	@RequestMapping(value="/livetest2", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test3() {
 		return "LiveGuestScreen";
@@ -29,6 +31,11 @@ public class TController {
 	@RequestMapping(value="/streamtest", method= {RequestMethod.POST, RequestMethod.GET})
 	public String test2_1_1() {
 		return "streamtest";
+	}
+	
+	@RequestMapping(value="/LayoutTest", method= {RequestMethod.GET})
+	public String LayoutTest() {
+		return "LayoutTest";
 	}
 	
 	

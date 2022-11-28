@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Janus WebRTC Server: Screen Sharing Demo</title>
+<style>
+      div {
+        width: 100%;
+      }
+      div.left {
+        width: 30%;
+        float: left;
+      }
+      div.right {
+        width: 70%;
+        float: right;
+        height: 10 rem;
+      }
+ </style>
+
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js"></script>
 <script type="text/javascript"
@@ -20,17 +35,19 @@
 <script type="text/javascript" src="js/janus.js"></script>
 <script type="text/javascript" src="js/guestStream.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css"
 	type="text/css" />
 <link rel="stylesheet" href="css/demo.css" type="text/css" />
+<link rel="stylesheet" href="css/chatting.css" type="text/css" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 	type="text/css" />
 </head>
 <body>
-	<nav class="navbar navbar-default navbar-static-top"></nav>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -59,38 +76,38 @@
 						</div>
 					</div>
 				</div>
-				<div class="container hide" id="room">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h3 class="panel-title">Screen Capture <span class="label label-info" id="title"></span>
-										<span class="label label-success" id="session"></span>
-									</h3>
-								</div>
-								<div class="panel-body" id="screencapture"></div>
-							</div>
-						</div>
+				<div class ="left">
+					<div id="msgSector">
+						<div id="msgArea" class="col"></div>
+					    	<div class="col-6">
+					        	<div class="input-group mb-3" id="chatting_area">
+					            	<div id="insertSector">
+					            		<input type="text" id="msg" class="form-control">
+					            		<div class="input-group-append">
+					                	<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+					            	</div>
+					            </div>
+					        </div>
+					    </div>
 					</div>
 				</div>
-				<div >
-					<p1 id="loding"><h1>방송화면 로딩중입니다. 잠시만 기다려 주세요! </h1></p1>
-				</div>
-				<div class="container">
-					<div class="col-6"></div>
-						<div>
-							<div id="msgArea" class="col"></div>
-							<div class="col-6">
-								<div class="input-group mb-3">
-									<input type="text" id="msg" class="form-control">
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
-									</div>
+				<div class = "right">
+					<div class="container hide" id="room">
+						<div class="row">
+							<div class="col-md-12" id="">
+								<div class="panel panel-default">
+									<div class="panel-body" id="screencapture"></div>
 								</div>
 							</div>
+							
+						<p1 id="loding"><h1>방송화면 로딩중입니다. 잠시만 기다려 주세요! </h1></p1>
 						</div>
-					<div class="col-6"></div>
-
+					<div class="container">
+	                
+	                </div>
+						<div class="col-6"></div>
+	
+					</div>
 				</div>
 			</div>
 		</div>
@@ -100,9 +117,19 @@
     /*<![CDATA[*/
     var session = /*[[${catch_session}]]*/;
     var chatting_room = /*[[${chatting_room}]]*/;
+    var video_code = /*[[${video_code}]]*/;
+    
     const startBtn = document.getElementById('start');
     const inputBar = document.getElementById('roomid');
     const joinBtn = document.getElementById('join');
+    
+    var sockJs = null;
+    var stomp = null;
+    
+    var userid = sessionStorage.getItem("using_id");
+    console.log(userid);
+    
+    
 
     $(document).ready(function(){
     	startBtn.style.display = 'none';
@@ -111,6 +138,64 @@
     	console.log("["+ session +"]"+"["+ chatting_room +"]")
     	$('#roomid').val(session);
     	$('#start').click();
+    	
+    	$('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+    	
+    	sockJs = new SockJS("/stomp/chat");
+        //1. SockJS를 내부에 들고있는 stomp를 내어줌
+        stomp = Stomp.over(sockJs);
+
+        //2. connection이 맺어지면 실행
+        stomp.connect({}, function (){
+           console.log("STOMP Connection")
+
+           //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+           stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {
+               var content = JSON.parse(chat.body);
+
+               var writer = content.user_id;
+               var chatting = content.chat;
+               var str = '';
+               
+               console.log("확인????");
+
+               if(writer === userid){
+                   str = "<div class='col-6'>";
+                   str += "<div class='alert alert-secondary'>";
+                   str += "<b>" + writer + " : " + chatting + "</b>";
+                   str += "</div></div>";
+                   $("#msgArea").append(str);
+                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+               }
+               else{
+                   str = "<div class='col-6'>";
+                   str += "<div class='alert alert-warning'>";
+                   str += "<b>" + writer + " : " + chatting + "</b>";
+                   str += "</div></div>";
+                   $("#msgArea").append(str);
+                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+               }
+           });
+        });
+        $('#button-send').on("click", function chatsendButton(){
+        	//var sockJs = new SockJS("/stomp/chat");
+        	//var stomp = Stomp.over(sockJs);
+            var msg = document.getElementById("msg");
+            console.log(msg);
+            if(!msg){
+             	alert("입력이 필요")
+             }else{
+             	console.log(userid + ":" + msg.value);
+             	
+             	
+             	console.log("test" + video_code + msg.value + userid );
+                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.value, user_id: userid, chat_status: true}));
+                 msg.value = '';
+             }
+             console.log(msg.value);
+         });
+        
+        
     });
     /*]]>*/
 </script>

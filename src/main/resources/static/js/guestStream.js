@@ -84,12 +84,10 @@ $(document).ready(function() {
 					server: server,
 					success: function() {
 						// Attach to VideoRoom plugin
-						console.log("2번");
 						janus.attach({
 								plugin: "janus.plugin.videoroom",
 								opaqueId: opaqueId,
 								success: function(pluginHandle) {
-									console.log("3번");
 									
 									
 									
@@ -102,11 +100,10 @@ $(document).ready(function() {
 									
 									$('#title').remove();
 									
-									console.log("3-1번");
 									
 									$('#screenmenu').removeClass('hide').show();
 									$('#createnow').removeClass('hide').show();
-									$('#create').click(preShareScreen);
+									//$('#create').click(preShareScreen);
 									$('#joinnow').removeClass('hide').show();
 									$('#join').click(joinScreen);
 									//$('#desc').focus();
@@ -116,7 +113,6 @@ $(document).ready(function() {
 											$(this).attr('disabled', true);
 											janus.destroy();
 										});
-									console.log("3-2번");
 									
 									$('#join').click();
 								},
@@ -125,7 +121,6 @@ $(document).ready(function() {
 									bootbox.alert("Error attaching plugin... " + error);
 								},
 								consentDialog: function(on) {
-									console.log("3-3번");
 									Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
 									if(on) {
 										// Darken screen
@@ -143,15 +138,12 @@ $(document).ready(function() {
 									}
 								},
 								iceState: function(state) {
-									console.log("3-4번");
 									Janus.log("ICE state changed to " + state);
 								},
 								mediaState: function(medium, on) {
-									console.log("3-5번");
 									Janus.log("Janus " + (on ? "started" : "stopped") + " receiving our " + medium);
 								},
 								webrtcState: function(on) {
-									console.log("3-6번");
 									Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
 									$("#screencapture").parent().unblock();
 									if(on) {
@@ -164,17 +156,16 @@ $(document).ready(function() {
 									}
 								},
 								onmessage: function(msg, jsep) {
-									console.log("5번");
 									
 									
 									
-									console.log("메세지 내용보기 : "+JSON.stringify(jsep));
 									Janus.debug(" ::: Got a message (publisher) :::", msg);
 									var event = msg["videoroom"];
 									Janus.debug("Event: " + event);
 									if(event) {
 										if(event === "joined") {
-											myid = "lys4321"//sessionStorage.getItem("userid"); if(sessionStorage.getItem("userid")===null){ myid = notuser }
+											myid = sessionStorage.getItem("userid"); 
+											if(sessionStorage.getItem("userid")===null){ myid = "notuser" }
 											$('#session').html(room);
 											$('#title').html(msg["description"]);
 											Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
@@ -244,11 +235,7 @@ $(document).ready(function() {
 									if($('#screenvideo').length === 0) {
 										
 										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
-										$('#chatting_area').append(
-										"<input type='text' id='msg' class='form-control'>"
-                        				+"<div class='input-group-append'>"
-                            				+"<button class='btn btn-outline-secondary' type='button' id='button-send'>전송</button>"
-                       		 			+"</div>")
+										
 									}
 									Janus.attachMediaStream($('#screenvideo').get(0), stream);
 									if(screentest.webrtcStuff.pc.iceConnectionState !== "completed" &&
@@ -300,113 +287,6 @@ function checkEnterShare(field, event) {
 	}
 }
 
-function preShareScreen() {
-	if(!Janus.isExtensionEnabled()) {
-		bootbox.alert("You're using Chrome but don't have the screensharing extension installed: click <b><a href='https://chrome.google.com/webstore/detail/janus-webrtc-screensharin/hapfgfdkleiggjjpfpenajgdnfckjpaj' target='_blank'>here</a></b> to do so", function() {
-			window.location.reload();
-		});
-		return;
-	}
-	// Create a new room
-
-
-	$('#desc').attr('disabled', true);
-	$('#create').attr('disabled', true).unbind('click');
-	$('#roomid').attr('disabled', true);
-	$('#join').attr('disabled', true).unbind('click');
-	if($('#desc').val() === "") {
-		bootbox.alert("Please insert a description for the room");
-		$('#desc').removeAttr('disabled', true);
-		$('#create').removeAttr('disabled', true).click(preShareScreen);
-		$('#roomid').removeAttr('disabled', true);
-		$('#join').removeAttr('disabled', true).click(joinScreen);
-		return;
-	}
-	
-	capture = "screen";
-	if(navigator.mozGetUserMedia) {
-		// Firefox needs a different constraint for screen and window sharing
-		bootbox.dialog({
-			title: "Share whole screen or a window?",
-			message: "Firefox handles screensharing in a different way: are you going to share the whole screen, or would you rather pick a single window/application to share instead?",
-			buttons: {
-				screen: {
-					label: "Share screen",
-					className: "btn-primary",
-					callback: function() {
-						capture = "screen";
-						shareScreen();
-					}
-				},
-				window: {
-					label: "Pick a window",
-					className: "btn-success",
-					callback: function() {
-						capture = "window";
-						shareScreen();
-					}
-				}
-			},
-			onEscape: function() {
-				
-				$('#desc').removeAttr('disabled', true);
-				$('#create').removeAttr('disabled', true).click(preShareScreen);
-				$('#roomid').removeAttr('disabled', true);
-				$('#join').removeAttr('disabled', true).click(joinScreen);
-				
-			}
-		});
-	} else {
-		shareScreen();
-	}
-	
-}
-
-function shareScreen() {
-	// Create a new room
-	var desc = userid//$('#desc').val();
-	console.log(desc)
-	role = "publisher";
-	var create = {
-		request: "create",
-		description: desc,
-		bitrate: 50000,
-		publishers: 1
-	};
-	screentest.send({ message: create, success: function(result) {
-		var event = result["videoroom"];
-		console.log("1번 : " + event);
-		console.log("2번 : " + JSON.stringify(result));
-		Janus.debug("Event: " + event);
-		if(event) {
-			// Our own screen sharing session has been created, join it
-			room = result["room"];
-			live_session = room;
-			Janus.log("Screen sharing session created: " + room);
-			myusername = randomString(12);
-			var register = {
-				request: "join",
-				room: room,
-				ptype: "publisher",
-				display: myusername
-			};
-			createCode();
-		var sendData = {
-			"video_code": video_code,
-			"streamer_id": userid,
-			"title": title,
-			"video_date": date,
-			"live_state": live_state,
-			"save_url": null,
-			"thumbnail_url": null,
-			"live_session": live_session
-		}
-		
-		
-			screentest.send({ message: register });
-		}
-	}});
-}
 
 function checkEnterJoin(field, event) {
 	var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
@@ -428,30 +308,13 @@ function joinScreen() {//방에 들어갈 때
 	if(isNaN(roomid)) {
 		bootbox.alert("Session identifiers are numeric only");
 		$('#desc').removeAttr('disabled', true);
-		$('#create').removeAttr('disabled', true).click(preShareScreen);
+		//$('#create').removeAttr('disabled', true).click(preShareScreen);
 		$('#roomid').removeAttr('disabled', true);
 		$('#join').removeAttr('disabled', true).click(joinScreen);
 		return;
 	}
 	var result=null;
 	
-	/////////
-	/*
-	$.ajax({
-			url: "/Ajax/Live/Join_Stream",
-			type: "POST",
-			data: {
-				"code": 
-			},
-			dataType: "text",
-			success: function(data){//data는 json 객체로 받아들여 사용한다
-				 result = data.session;
-			},
-			error: function(e){
-				alert("방송시작 실패함");
-			}
-		});
-	*/
 	room = parseInt(roomid);//result;//여기가 방 들어오는 세션 생성하는 부분(나중에 방송코드로 변경)
 	role = "listener";
 	myusername = randomString(12);

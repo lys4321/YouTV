@@ -1,10 +1,35 @@
-<html 
-	lang="ko"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+	
 	<div th:fragment="TopBar" class="HeadLine">
-		<div class="Borderline" id="borderline">
-			<input type="button" value="메인으로" id="mainButton">
-			<input type="button" value="검색예정" id="searchsector">
-		</div>
+		<header id="header" class="header fixed-top d-flex align-items-center" >
+			<div class="homeBtn">
+				<a class="d-flex align-items-center justify-content-between" href="/YouTV/MainScreen">
+					<img id="logo" src="/../img/menuLogo.png">
+				</a>
+			</div>
+			<!-- <div id="menuList" class="bi bi-list toggle-sidebar-btn">
+				<a><i id="listicon" class="fa-solid fa-list-ul"></i></a>
+				<ul class="lists">
+					<li class="notUser"><a href="#">로그인</a></li>
+					<li class="notUser"><a href="#">회원가입</a></li>
+					<li class="User"><a href="#">방송하기</a></li>
+					<li class="User"><a href="#">계정수정</a></li>
+					<li class="User"><a href="#">계정삭제</a></li>
+				</ul>
+			</div> -->
+			<div class="search-bar">
+				<form class="search-form d-flex align-items-center" method="POST" action="#"> 
+					<input id="barSearch" type="text" name="query" placeholder="Search" title="Enter search keyword"> 
+					<button type="submit" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+				</form>
+			</div>
+            
+            <div id="icons" class="row gy-4">
+            	<div id="icons2" class="col-md-12 text-center">
+            		<!-- <a id="loginIcon" class="mainIcon" href="#"><i class="fa-solid fa-right-to-bracket"></i>로그인</a>
+            		<a id="createAccount" class="mainIcon" href="#"><i class="fa-solid fa-plus"></i>회원가입</a>-->
+            	</div>
+            </div>
+        </header>
 	</div>
 </html>
