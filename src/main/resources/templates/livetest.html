@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <style>
+    	#video_container{
+    		display: block;
+    	}
+    
+    	#button_container{
+    		display: block;
+    	}
+    
+    	#capture_container{
+    		display: block;
+    		margin: 800px;
+    	}
+    
+    	#webcam_video{
+    		width: 320px;
+    		height: 180px;
+    		border: 1px solid orange;
+    		position: absolute;
+    		z-index: 1;
+    	}
+    	
+    	#monitor_video{
+    		width: 1280px;
+    		height: 720px;
+    		border: 1px solid orange;
+    		position: absolute;
+    	}
+    	
+    	#video_container2{
+    		width: 1280px;
+    		height: 720px;
+    	}
+    	
+    	#webcam_capture{
+    		width: 320px;
+    		height: 180px;
+    		border: 1px solid orange;
+    		position: absolute;
+    		z-index: 1;
+    	}
+    	
+    	#monitor_capture{
+    		width: 1280px;
+    		height: 720px;
+    		border: 1px solid orange;
+    		position: absolute;
+    	}
+    	
+    	#container_capture{
+    		width: 1280px;
+    		height: 720px;
+    		margin: 800px;
+    		position: absolute;
+    		border: 1px solid orange;
+    	}
+    </style>
+    <body>
+    	<h1>라이브 테스트</h1>
+    	<div id="video_container">
+    		<div id="video_container2">
+    			<video id="webcam_video" autoplay></video>
+    			<video id="monitor_video" autoplay></video>
+    		</div>
+    	</div>
+    	<div id="button_container">
+    		<input type="button" id="btn" value="btn">
+    		<input type="button" id="monitorButton" value="monitorButton">
+    		<input type="button" id="divButton" value="divButton" >
+    		<form action="/streaming/live" method="post">
+    			<button>방송시작</button>
+    		</form>
+    	</div>
+    	<!-- <div id="capture_container">
+    		<img id="webcam_capture"></img>
+    		<img id="monitor_capture"></img>
+    	</div> -->
+    	<!-- <img id="container_capture"></img> -->
+    	<img id="css_capture"></img>
+    </body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script th:inline="javascript">
+        	/*<![CDATA[*/
+        		//html 요소들의 변수 생성
+        		var webcam_video = document.getElementById('webcam_video');
+        		var monitor_video = document.getElementById('monitor_video');
+        		var btn = document.getElementById('btn');
+        		var monitorButton = document.getElementById('monitorButton');
+        		var webcam_capture = document.getElementById('webcam_capture');
+        		var monitor_capture = document.getElementById('monitor_capture');
+        		
+        		
+        		if(navigator.mediaDevices.getUserMedia){
+        			navigator.mediaDevices.getUserMedia({video: true})
+        				.then(function(stream){
+        					webcam_video.srcObject = stream;
+        				})
+        				.catch(function(error){ // 처음부터 연결이 안될 시 실행됨
+        					webcam_video.remove();
+        					console.log('캠이 연결이 안되어있음')
+        				})
+        		}
+        		if(navigator.mediaDevices.getDisplayMedia){
+        			navigator.mediaDevices.getDisplayMedia({video: true})
+        				.then(function(stream){
+        					monitor_video.srcObject = stream;
+        				})
+        				.catch(function(error){ // 처음부터 연결이 안될 시 실행됨
+        					monitor_video.remove();
+        					console.log('모니터가 연결이 안되어있음')
+        				})
+        		}
+        		var css_capture = document.getElementById('css_capture')
+        		
+        		var frame_count = 0;
+        		var btn = document.getElementById('btn')
+        		/*
+        		btn.onclick=function(){
+        			//console.log(url);
+        			var canvas = document.createElement('canvas')
+        			canvas.width = 1280;
+        			canvas.height = 720;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, 1280, 720);
+        			context.drawImage(webcam_video, 0, 0, 320, 180);
+        			var url = canvas.toDataURL('image/png');
+        			css_capture.src = url;
+        			$.ajax({
+        				url: '/ajax/frame_send',
+        				type: 'POST',
+        				data: {
+        					'frame_count': frame_count,
+        					'frame_url': url
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					console.log(data);
+        					frame_count = frame_count + 1;
+        					console.log(frame_count);
+        				}
+        			})
+        		}
+        		*/
+        		var testcode = "1234";
+        		var sockJs = new SockJS('/stomp/streaming');
+    			var stomp = Stomp.over(sockJs);
+    			
+    			var monitorButton = document.getElementById('monitorButton');
+    			
+    			
+        		var loop = setInterval(function(){
+        			var canvas = document.createElement('canvas');
+        			canvas.width = 1280;
+        			canvas.height = 720;
+        			var context = canvas.getContext('2d');
+        			context.drawImage(monitor_video, 0, 0, 1280, 720);
+        			context.drawImage(webcam_video, 0, 0, 320, 180);
+        			var url = canvas.toDataURL('image/png');
+        			css_capture.src = url;
+        			console.log(url);
+        			$.ajax({
+        				url: '/ajax/frame_send',
+        				type: 'POST',
+        				data: {
+        					'frame_count': frame_count,
+        					'frame_url': url
+        				},
+        				dataType: 'json',
+        				success: function(data){
+        					frame_count = frame_count + 1;
+        					console.log(frame_count);
+        	    			stomp.send('/pub/streaming/message', {}, JSON.stringify({code: testcode, url: url}));
+        				}
+        			})
+        		}, 66);
+        		btn.onclick=function(){
+        			clearInterval(loop);
+        		}
+        		
+        	/*]]*/
+    </script>
+</html>

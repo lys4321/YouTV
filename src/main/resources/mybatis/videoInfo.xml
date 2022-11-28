@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.videoInfoMapper">
+	<insert id="addVInfo" parameterType="com.example.demo.DTO.videoInfoDTO">
+		insert 
+			into videoInfo ( video_code
+				,streamer_id
+				,title 
+				,profile_url
+				,session 
+				,liveDate)
+		values(
+				#{video_code}
+				,#{streamer_id}
+				,#{title}
+				,#{profile}
+				,#{session}
+				,#{liveDate}
+				)
+	</insert>
+	<delete id="deleteInfo" parameterType="string">
+		delete
+		from videoInfo
+		where video_code = #{video_code}
+	</delete>
+	<select id="selectVideoInfo" resultType="com.example.demo.DTO.videoInfoDTO" parameterType="String">
+		select *
+		from videoInfo
+		where video_code = #{video_code}
+	</select>
+	<select id="allLiveList" resultType="com.example.demo.DTO.videoInfoDTO">
+		select *
+		from videoInfo
+		order by liveDate DESC
+	</select>
+	<select id="liveList" resultType="com.example.demo.DTO.videoInfoDTO">
+		select *
+		from videoInfo
+		order by liveDate DESC
+		limit 5
+	</select>
+</mapper>

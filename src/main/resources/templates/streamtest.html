@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <style>
+    	#canvas{
+    		width: 1280px;
+    		height: 720px;
+    		border: 5px solid orange;
+    	}
+    </style>
+<body>
+
+</body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script th:inline="javascript">
+    	/*<![CDATA[*/
+    		$(document).ready(function(){
+    			var img = new Image();
+    			
+    			var canvas = document.createElement('canvas');
+    			document.body.appendChild(canvas);
+    			var ctx = canvas.getContext('2d');
+    			canvas.id = 'canvas';
+    			canvas.width = 1280;
+    			canvas.height = 720;
+    			var roomCode = "1212";
+    			
+
+    			var sockJs = new SockJS("/stomp/streaming");
+    			var stomp = Stomp.over(sockJs);
+    			stomp.connect({}, function(){
+    				console.log("이미지송출테스트시작");
+    				
+    				stomp.subscribe("/sub/streaming/live/" + roomCode, function(data){
+    					var content = JSON.parse(data.body);
+    					var img_url = content.url;
+    					console.log('1번');
+    					img.src = "data:image/png;base64,"+img_url;
+    					ctx.drawImage(img, 0, 0, 1280, 720);
+    				})
+    			});
+    		});
+    	/*]]*/
+    </script>
+    
+</html>

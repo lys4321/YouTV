@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+        
+    </head>
+    <body>
+    	<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="ScreenBody">
+    		<div class="LeftSide" id="Flist">
+    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    		</div>
+    		<div class="RightSide">
+    			<h2>팔로우한 스트리머</h2>	
+    				<div class="listBoard">
+    					<div class="followlive">
+    				
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>생방송 중인 스트리머</h2>	
+    				<div class="listBoard">
+    					<div class="livePlayList" id="LiveList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>다시보기</h2>	
+    				<div class="listBoard">
+    					<div class="rePlayList" id="RecordList">
+    					
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    			<h2>최신 클립</h2>	
+    				<div class="listBoard">
+    					<div class="latestClipList">
+    				
+    					</div>
+    				</div>
+    				<a href="">더 보기</a>
+    		</div>
+    	</div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script th:inline="javascript">
+        	/*<![CDATA[*/
+        		//로그인 상태에 따라 팔로우 상태창 활성화/비활성화
+        		var Flist = document.getElementById("Flist");
+        		if(sessionStorage.getItem("using_id") != null || sessionStorage.getItem("using_pw") != null){
+            		Flist.style.display = 'block';
+            		var borderline = document.getElementById('borderline');
+            		var logoutBtn = document.createElement("input");
+            		logoutBtn.setAttribute('type', 'button');
+            		logoutBtn.setAttribute('value', '로그아웃');
+            		logoutBtn.setAttribute('id', 'logoutbutton');
+            		borderline.appendChild(logoutBtn);
+        		}else{
+            		Flist.style.display = 'none';
+            		var borderline = document.getElementById('borderline');
+            		var loginBtn = document.createElement("input");
+            		loginBtn.setAttribute('type', 'button');
+            		loginBtn.setAttribute('value', '로그인');
+            		loginBtn.setAttribute('id', 'loginbutton');
+            		borderline.appendChild(loginBtn);
+        		}
+        		
+        		// 방송 기본 정보 받아오기
+        		var a = /*[[${livelist}]]*/ "live";
+        		var b = /*[[${recordlist}]]*/ "record";
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(생방중인 사람의 프로필 사진)
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(생방, 녹방)
+        		$.ajax({
+        			url: '/ajax/main_livelist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("LiveList");
+                		var obj = JSON.parse(data);
+                		for(var i=0;i<a.length;i++){
+                			var livelist = document.createElement("div");
+                			
+                			livelist.setAttribute('class', 'video')
+            				livelist.innerHTML=
+            					'<a href="/Guest_Mode?video_code='+ a[i]["video_code"] +'"><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["title"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
+                    		target.appendChild(livelist);
+                		}
+        			}
+        		});
+        		
+        		$.ajax({
+        			url: '/ajax/main_recordlist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("RecordList");
+                		var obj = JSON.parse(data);
+                		for(var i=0;i<b.length;i++){
+                			var recordlist = document.createElement("div");
+                			
+                			recordlist.setAttribute('class', 'video')
+            				recordlist.innerHTML=
+            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + b[i]["video_code"] + '</div><div class="SuserId">' + b[i]["streamer_id"] + '</div></a>';
+                    		target.appendChild(recordlist);
+                		}
+        			}
+        		});
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(클립)
+
+        		
+        		document.getElementById("mainButton").onclick = function(){
+        			window.location.href = "/YouTV/MainScreen";
+        		}
+        		
+        		if(document.getElementById("loginbutton") != null){
+        			document.getElementById("loginbutton").onclick = function(){
+            			window.location.href = "/YouTV/LoginScreen";
+            		}
+        		}
+        		
+        		if(document.getElementById("logoutbutton") != null){
+        			document.getElementById("logoutbutton").onclick = function(){
+            			sessionStorage.clear();
+            			window.location.href = "/YouTV/MainScreen";
+            		}
+        		}
+        	/*]]*/
+        </script>
+</html>

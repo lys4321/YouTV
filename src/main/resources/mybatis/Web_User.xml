@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.web_user_mapper">
+	<select id="AllUserList" resultType="com.example.demo.DTO.web_userDTO">
+		select *
+		from web_user
+	</select>
+	<select id="SearchUser" resultType="String">
+		select user_id
+		from web_user
+		where user_id = #{uuid}
+	</select>
+	<select id="reSearchUser" resultType="com.example.demo.DTO.web_userDTO">
+		select *
+		from web_user
+		where user_name = #{name} and user_pnum = #{pnum}
+	</select>
+	<select id="UserLogin" resultType="com.example.demo.DTO.web_userDTO">
+		select * 
+		from web_user
+		where user_id = #{uuid} and user_pw = #{uupw}
+	</select>
+	<update id="UserUpdate" parameterType="com.example.demo.DTO.web_userDTO">
+		update web_user
+		set user_pw = #{user_pw},
+		user_name = #{user_name},
+		user_pnum = #{user_pnum},
+		image_url = #{image_url} 
+		where user_id = #{user_id}
+	</update>
+	<delete id="UserDelete" parameterType="com.example.demo.DTO.web_userDTO">
+		delete 
+		from web_user
+		where user_id = #{user_id}
+	</delete>
+	<insert id="UserCreate" parameterType="com.example.demo.DTO.web_userDTO">
+		insert into web_user 
+		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, #{image_url})
+	</insert>
+</mapper>

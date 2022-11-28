@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.ScreenBody{
+	width: 99%;
+	height: 100%;
+    position: relative;
+	margin-bottom: 20px;
+	padding: 3px;
+	border: 5px solid white;
+}
+
+.RightSide{
+	display: inline-block;
+	position: relative;
+	left: 27%;
+	width: 70%;
+	height: 500px;
+	background-color: orange;
+	margin-bottom: 20px;
+	border-radius: 15px;
+	padding: 10px;
+	border: solid 2px white;
+}

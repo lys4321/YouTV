@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/LeftBarCSS.css">
+    </head>
+<body>
+	<th:block th:replace="parts/MenuBar :: MenuBar"></th:block>
+	<th:block th:replace="parts/HeaderBar :: HeaderBar"></th:block>
+	<div class="MainSector">
+		<main class="">
+			<section class="py-1">
+			<div>
+			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+			</div>
+            <div class="container px-5 px-lg-5 mt-5" style = "background-color: #dee2e6" id="mainS">
+            	<h2>생방송 목록</h2>
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center" id="Realtime" style = "background-color: #198754">
+                </div>
+                <h2>다시보기 목록</h2>
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-5 justify-content-center" id="Record">
+                </div>
+            </div>
+        </section>
+		</main>
+	</div>
+</body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:inline="javascript">
+        	/*<![CDATA[*/
+        		//AJAX를 이용하여 썸네일 가져오기(생방중인 사람의 프로필 사진)
+        		
+        		//AJAX를 이용하여 썸네일 가져오기(생방, 녹방)
+        		$.ajax({
+        			url: '/ajax/main_livelist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("Realtime");
+        				var obj = JSON.parse(data);
+                		var livelist = obj['LiveList'];
+                		var LiveThumbnail = obj['LiveThumbnail'];
+                		for(var i=0;i<livelist.length;i++){
+                			$('#Realtime').append(
+                				'<div class="col mb-5">'+
+                        		'<div class="card h-100">'+
+                        		'<a href="/YouTV/VideoScreen?video_code='+livelist[i]["video_code"] +'">'+
+                            	'<img class="card-img-top" src="data:image/png;base64,'+ LiveThumbnail[i] +'" alt="..."></a>'+
+                            	'<div class="card-body p-4">'+
+                                '<div class="text-center">'+
+                                '<h5 class="fw-bolder"><a href=#>'+ livelist[i]['title'] +'</a></h5><a href=#>'+ livelist[i]['streamer_id'] +
+                                '</a></div><a href="#">'+
+                                '<img src="data:image/png;base64,'+ LiveThumbnail[i] +'"></a>'+
+                            	'</div>'+
+                        		'</div>'+
+                    			'</div>'
+                			);
+                		}
+        			}
+        		});
+        	
+        		$.ajax({
+        			url: '/ajax/main_recordlist',
+        			type: 'GET',
+        			dataType: 'text',
+        			success: function(data){
+        				var target = document.getElementById("Record");
+        				var obj = JSON.parse(data);
+                		var recordlist = obj['RecordList'];
+                		var RecordThumbnail = obj['RecordThumbnail'];
+                		for(var i=0;i<recordlist.length;i++){
+                			$('#Record').append(
+                				'<a href=#>'+
+                				'<div class="col mb-5">'+
+                        		'<div class="card h-100">'+
+                            	'<img class="card-img-top" src="data:image/png;base64,'+ RecordThumbnail[i] +'" alt="...">'+
+                            	'<div class="card-body p-4">'+
+                                '<div class="text-center">'+
+                                '<h5 class="fw-bolder">'+ recordlist[i]['title'] +'</h5>'+ recordlist[i]['streamer_id'] +
+                                '</div>'+
+                            	'</div>'+
+                        		'</div>'+
+                    			'</div>'
+                			);
+                		}
+        			}
+        		});
+        		//
+        		
+        	/*]]*/
+        </script>
+</html>

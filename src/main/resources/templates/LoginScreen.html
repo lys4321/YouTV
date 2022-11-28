@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="UTF-8">
+    <link th:href="@{/css/testCSS.css}" rel="stylesheet">
+        
+</head>
+<body>
+	<div class="Head">
+    	<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    </div>
+    <div id="insertSector">
+    	<form action="" accept-charset="utf-8" id="login_info" method="POST">
+    		<br><br>
+    		<a id="blank">ID  </a><input type="text" id="id" name="inid"><br><br>
+    		<a id="blank">PW  </a><input type="password" id="password" name="inpassword" maxlength="15" autocomplete="on"><br><br>
+    		<input id="submitButton" type="button" value="로그인">
+    	</form>
+    </div>
+    <div id="guitar">
+    	<a id="createAccount" href="/YouTV/AccountCreateScreen">계정이 없으신가요?</a>
+    	<br>
+    	<a id="searchAccount" href="/YouTV/AccountSearchScreen">계정을 잊으셨나요?</a>
+    </div>
+    <div class="Foot">
+        <th:block th:replace="parts/underBar :: UnderBar"></th:block>
+    </div>
+</body>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			document.getElementById("submitButton").onclick = function(){
+				var formData = $("#login_info").serialize();
+				console.log(formData);
+				$.ajax({
+					url: '/ajax/AccountExistCheck',
+					type: 'POST',
+					data: formData,
+					dataType: 'json',
+					success: function(data){
+						if(data == true){
+							var id = document.getElementById("id").value;
+							var pw = document.getElementById("password").value;
+							sessionStorage.setItem("using_id", id);
+							sessionStorage.setItem("using_pw", pw);
+							window.location.href="/YouTV/MainScreen"
+							
+						}else{
+							alert("존재하지 않는 계정이거나 입력된 정보가 잘못되었습니다.")
+						}
+					}
+				});
+			}
+		
+			document.getElementById("mainButton").onclick = function(){
+    			window.location.href = "/YouTV/MainScreen";
+    		}
+			
+		/*]]*/
+	</script>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Janus WebRTC Server: Screen Sharing Demo</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="js/janus.js" ></script>
+<script type="text/javascript" src="js/Guest_Test.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="css/demo.css" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"/>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+</nav>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>방송의 제목(DB에서 가져오기)
+				</h1>
+			</div>
+			<div class="container" id="details">
+				<div class="row">
+					<div class="col-md-12">
+					</div>
+				</div>
+			</div>
+			<div class="container hide" id="screenmenu">
+				<div class="row">
+				</div>
+				<div class="divider col-md-12">
+				</div>
+				<div class="row">
+					<div class="input-group margin-bottom-md hide" id="joinnow">
+						<!-- <span class="input-group-addon"><i class="fa fa-play-circle-o fa-1"></i></span> -->
+						<input class="form-control" type="text" placeholder="방송코드를 입력 시 해당 방송으로 이동 시켜야 한다" autocomplete="off" id="roomid" onkeypress="return checkEnterJoin(this, event);" />
+						<span class="input-group-btn">
+							<button class="btn btn-success" autocomplete="off" id="join">방송보기</button>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="container hide" id="room">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Screen Capture <span class="label label-info" id="title"></span> <span class="label label-success" id="session"></span></h3>
+							</div>
+							<div class="panel-body" id="screencapture"></div>
+						</div>
+						
+						
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="container">
+            <div class="col-6">
+                <h1>1111</h1>
+            </div>
+            <div>
+                <div id="msgArea" class="col"></div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <input type="text" id="msg" class="form-control">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+            
+        </div>
+		</div>
+	</div>
+</div>
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    //var session = /*[[${catch_session}]]*/;
+    var session = '${catch_session}]]';
+    var chatting_room = '${chatting_room}';
+    $(document).ready(function(){
+    	console.log("["+ session +"]"+"["+ chatting_room +"]")
+    	$('#roomid').val(session);  	 
+    });
+    /*]]>*/
+</script>
+</html>

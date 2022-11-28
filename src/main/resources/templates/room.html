@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div class="container">
+            <div class="col-6">
+                <h1>[[${room.code}]]</h1>
+            </div>
+            <div>
+                <div id="msgArea" class="col"></div>
+                <div class="col-6">
+                    <div class="input-group mb-3">
+                        <input type="text" id="msg" class="form-control">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+        </div>
+
+
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+		<script th:inline="javascript">
+            $(document).ready(function(){
+                var roomCode = [[${room.code}]];
+                var userId = "now user";/////////////////////////////////////////////////////////////////////////////현재 접속한 당사자
+                
+                
+
+                var sockJs = new SockJS("/stomp/chat");
+                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                var stomp = Stomp.over(sockJs);
+
+                //2. connection이 맺어지면 실행
+                stomp.connect({}, function (){
+                   console.log("STOMP Connection")
+
+                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   stomp.subscribe("/sub/chat/room/" + roomCode, function (chat) {
+                       var content = JSON.parse(chat.body);
+
+                       var writer = content.user_id;
+                       var chatting = content.chat;
+                       var str = '';
+
+                       if(writer === userId){
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-secondary'>";
+                           str += "<b>" + writer + " : " + chatting + "</b>";
+                           str += "</div></div>";
+                           $("#msgArea").append(str);
+                       }
+                       else{
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-warning'>";
+                           str += "<b>" + writer + " : " + chatting + "</b>";
+                           str += "</div></div>";
+                           $("#msgArea").append(str);
+                       }
+                   });
+
+                });
+
+                $("#button-send").on("click", function(e){
+                    var msg = document.getElementById("msg");
+                    if(msg.value === ''){
+                    	alert("입력이 필요")
+                    }else{
+                    	console.log(userId + ":" + msg.value);
+                        stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: roomCode, chat: msg.value, user_id: userId, chat_status: true}));
+                        msg.value = '';
+                    }
+                });
+            });
+        </script>
+</html>

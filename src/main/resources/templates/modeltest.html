@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+    	<div id="testimage">
+    		aa
+    	</div>
+    </body>
+    
+    
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    
+    <script>
+    /*<![CDATA[*/
+    	
+    	
+   		(function ($) {
+	  // jQuery code using $
+	  		aa();
+		})(jQuery);
+    	
+    	
+    	/*$(document).ready(function(){
+    		aa();
+    		//alert('test');
+    		console.log('as');
+    	});*/
+    
+    	function aa(){
+    		
+    		$.ajax({
+    			url: '/ajax/ajax',
+    			type: 'GET',
+    			dataType: 'text',
+    			success: function(data){
+    				var obj = JSON.parse(data);
+    				var div = document.getElementById("testimage");
+    				for (var i=0; i<obj.length; i++) {
+    					var img = document.createElement('img');
+    					img.setAttribute('src', "data:image/png;base64,"+obj[i]);
+    					div.appendChild(img);
+    				}
+    			},
+    			error: function(request, status, error){
+    				alert(request.status +"/"+request.reponseText+"/"+error);
+    			}
+    		});
+    	}
+		
+    /*]]*/
+    </script>
+</html>

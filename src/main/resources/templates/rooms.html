@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" 
+	xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<div class="container">>
+            <div>
+                <ul th:each="room : ${list}">
+                    <li><a th:href="@{room(code=${room.code})}">[[${room.code}]]</a></li>
+                </ul>
+            </div>
+        </div>
+        <form action="/chat/room" method="post">
+            <input type="text" name="code" class="form-control">
+            <button>개서어어어어얼</button>
+        </form>
+        
+        <form action="/chat/droom" method="post">
+            <input type="text" name="del" class="delete">
+            <button>삭제</button>
+        </form>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <script th:inline="javascript">
+			/*<![CDATA[*/
+				var text=/*[[${list}]]*/ 'list';
+				console.log(text);
+				
+				
+            /*]]>*/
+        </script>
+</html>

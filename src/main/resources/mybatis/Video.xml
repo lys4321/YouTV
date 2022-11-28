@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.video_mapper">
+	<select id="allRecordList" resultType="com.example.demo.DTO.videoDTO">
+		select *
+		from video
+		order by video_date DESC
+	</select>
+	<select id="recordList" resultType="com.example.demo.DTO.videoDTO">
+		select *
+		from video
+		order by video_date DESC
+		limit 5
+	</select>
+	<select id="selectVideo" resultType="com.example.demo.DTO.videoDTO" parameterType="String">
+		select *
+		from video
+		where video_code = #{video_code}
+	</select>
+	<insert id="addvideo" parameterType="com.example.demo.DTO.videoDTO">
+		insert into video
+		values(#{video_code}, #{streamer_id}, #{title}, #{video_date}, #{saveUrl}, #{thumbnail})
+	</insert>
+</mapper>

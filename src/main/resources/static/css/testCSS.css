@@ -1,8 +1,11 @@
 @charset "UTF-8";
 
+html{
+	height: 100%;
+}
+
 body{
 	background-color: #E1E1E1;
-	width: 100%;
 	height: 100%;
 }
 
@@ -11,6 +14,7 @@ body{
 }
 
 .Borderline{
+	border: 2px solid white;
 	width: 100%;
 	height: 100px;
 	background-color: orange;
@@ -19,8 +23,7 @@ body{
 
 .ScreenBody{
 	width: 100%;
-	overflow: auto;
-	margin-bottom: 20px;
+	height: 100%;
 }
 
 .followList{
@@ -56,16 +59,16 @@ body{
 
 .RightSide{
 	position: relative;
-	left: 27%;
+	left: 26.5%;
 	width: 70%;
-	height: 500px;
+	height: 100vh;
 	background-color: orange;
 	margin-bottom: 20px;
 	border-radius: 15px;
 	padding: 10px;
+	border: solid 2px white;
 }
 
-.RightSide h2{}
 
 .underbar{
 	width: 95%;
@@ -74,4 +77,86 @@ body{
 	border-radius: 5px;
 	position: absolute;
 	left: 2.5%;
+}
+
+
+
+.StreamSide{
+	position: relative;
+	width: 1400px;
+	height: 720px;
+	left: 25.5%;
+	border: solid 2px orange;
+}
+
+.streamSector{
+	position: absolute;
+	width: 1080px;
+	height: 720px;
+}
+
+.streamChat{
+	position: absolute;
+	width: 320px;
+	height: 720px;
+	border-left: solid 1px white;
+	left: 1079px;
+}
+
+.chatList{
+	width: 320px;
+	height: 599px;
+	border-bottom: solid 1px white;
+}
+
+.chatForm{
+	width: 320px;
+	height: 119px;
+	border-top: solid 1px white;
+}
+
+.listBoard{
+	border: solid 2px white;
+	width: 100%;
+	height: 35%;
+	float: left;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+
+}
+
+
+.video{
+	width: 15%;
+	height: 80%;
+	margin-top: 0.5%;
+	margin-right: 0.5%;
+	display: inline-block;
+	text-align: center;
+}
+
+.Thumnail{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	position: static;
+	width: 80%;
+	height: 90px;
+	border: solid 1px white;
+}
+
+.SuserId{
+	position: static;
+	border: solid 1px white;
+}
+
+.STitle{
+	position: static;
+	border: solid 1px white;
+}
+
+.livePlayList{
+	
 }
