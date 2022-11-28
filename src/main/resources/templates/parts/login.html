@@ -1,0 +1,31 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="setLogin(login)">
+    <body>
+    <div class="member_login">
+    	<a><i id="exitmark" class="fa-solid fa-xmark"></i></a>
+    	<span id="title" class="card-title">로그인</span>
+        <form id="loginform" class="row g-3 needs-validation" th:action="@{#}" th:method="POST">
+            <div class="member_login_input">
+            	<input id="id" class="form-control" type="text" name="id" placeholder="아이디" >
+            </div>
+
+            <div class="member_login_input">
+                <input id="password" class="form-control" type="password" name="password" placeholder="비밀번호">
+            </div>
+
+            <div class="member_login_btn">
+
+                <input type="button" class="btn btn-secondary" id="btn-login" value="로그인">
+
+                <input type="button" class="btn btn-secondary" id=btn-create-login value="회원가입">
+
+            </div>
+
+            <div class="find_password">
+                <a href="">아이디 또는 비밀번호를 잊으셨나요?</a>
+            </div>
+        </form>
+    </div>
+    </body>
+</th:block>

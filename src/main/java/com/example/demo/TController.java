@@ -16,10 +16,35 @@ public class TController {
 	@Autowired
 	video_mapper vm;
 	
-	@RequestMapping(value="/livetest", method= {RequestMethod.POST, RequestMethod.GET})
-	public String test2() {
-		return "livetest";
+	@RequestMapping(value="/hest/Test", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test5() {
+		return "mmerge";
 	}
+	
+	@RequestMapping(value="/hest", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test2(@RequestParam(value="sessionId", required=false, defaultValue="not_exist") String sessionId, @RequestParam(value="video_code", required=false, defaultValue="not_exist") String video_code, @RequestParam(value="title", required=false, defaultValue="not_exist") String title, Model model) {
+		model.addAttribute("test", "Test");
+		return "rerecordpplay";
+	}
+	
+	
+	
+	@RequestMapping(value="/test", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test3() {
+		return "allLists";
+	}
+	
+	@RequestMapping(value="/streamtest", method= {RequestMethod.POST, RequestMethod.GET})
+	public String test2_1_1() {
+		return "streamtest";
+	}
+	
+	@RequestMapping(value="/LayoutTest", method= {RequestMethod.GET})
+	public String LayoutTest() {
+		return "LayoutTest";
+	}
+	
+	
 	
 	
 	

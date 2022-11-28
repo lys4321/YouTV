@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DTO.videoDTO;
@@ -17,18 +18,6 @@ public class Video_Service {
 		return vmap.addvideo(video);
 	}
 	
-	int changeStatus(videoDTO video) {
-		return vmap.changeStatus(video);		
-	}
-	
-	ArrayList<videoDTO> allLiveList(){
-		return vmap.allLiveList();
-	}
-	
-	ArrayList<videoDTO> liveList(){
-		return vmap.liveList();
-	}
-	
 	ArrayList<videoDTO> allRecordList(){
 		return vmap.allRecordList();
 	}
@@ -39,5 +28,9 @@ public class Video_Service {
 	
 	videoDTO selectVideo(String video_code) {
 		return vmap.selectVideo(video_code);
+	}
+	
+	ArrayList<videoDTO> searchVideoBySearch(String str) {
+		return vmap.searchVideoBySearch(str);
 	}
 }

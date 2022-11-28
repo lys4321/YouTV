@@ -1,0 +1,51 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="updatingAccount(UA)">
+    <body>
+    <div class="member_login">
+    	<a><i id="exitmark_update" class="fa-solid fa-xmark"></i></a>
+    	<span id="title" class="card-title">계정수정</span>
+    	<pre>
+    	 
+    	</pre>
+    	<div id="check">
+    		<span>인증을 위한 비밀번호를 입력하세요</span>
+    		<input id="checkpassword" class="form-control" type="password" name="checkpassword" placeholder="비밀번호">
+    		<div class="member_login_btn">
+	            <input type="button" class="btn btn-secondary" id="btn-check" value="인증">
+		    </div>
+    	</div>
+    	<div id="setting" style="display: none;">
+	    	<label for="profile-file" id="btnlabel" class="">
+	        	<img id="img-profile" class="rounded-circle-img">
+	        </label>
+	    	
+	    	<pre>
+	    	</pre>
+	    	 <form id="fileform" class="row g-3 needs-validation" enctype="multipart/form-data">
+	        <!-- <form id="fileform" class="row g-3 needs-validation" th:method="POST" > -->
+	        	<input class="form-control" id="filename" placeholder="첨부파일">
+	        	<input type="file" id="profile-file" accept="image/*" name="img_file">
+	        	<div class="member_login_btn">
+	        		<input type="button" class="btn btn-secondary" id="btn-profile" value="변경">
+	        	</div>
+	        </form>
+	        <form id="updateform" class="row g-3 needs-validation" th:action="@{#}" th:method="POST">
+	            <div class="member_login_input">
+	            </div>
+	            <div class="member_login_input">
+	                <input id="upassword" class="form-control" type="password" name="password" placeholder="비밀번호">
+	            </div>
+	            <div id="inlinebtn">
+	            	<div class="member_login_btn">
+	            		<input type="button" class="btn btn-secondary" id="btn-update" value="변경">
+		            </div>
+	            </div>
+	        </form>
+	        <div class="member_login_btn">
+	            <a id="deleteIcon" class="mainIcon" href="#"><i class="fa-solid fa-user-xmark"></i> 계정삭제를 원하신가요?</a>
+	        </div>
+	    	</div>
+    </div>
+    </body>
+</th:block>

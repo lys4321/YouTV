@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html 
+	lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <!-- xmlns="http://www.w3.org/1999/xhtml" -->
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Janus WebRTC Server: Screen Sharing Demo</title>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="/js/janus.js"></script>
+ <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/myjs.js" ></script>
+<script type="text/javascript" src="/js/guestStream.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<!-- <link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css"
+	type="text/css" /> -->
+<link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+<link th:href="@{/css/mycss.css}" rel="stylesheet">
+<link th:href="@{/css/chatting.css}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="css/chatting.css" type="text/css" /> -->
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	type="text/css" />
+</head>
+<body>
+		<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="Aside">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div>
+    	
+    	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>  
+    	</div>
+    	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				
+				<div class="container" id="details">
+					<div class="row">
+						<div class="col-md-12"></div>
+					</div>
+				</div>
+				<div class="container hide" id="screenmenu">
+					<div class="row"></div>
+					<div class="divider col-md-12"></div>
+					<div class="row">
+						<div class="input-group margin-bottom-md hide" id="joinnow">
+							<!-- <span class="input-group-addon"><i class="fa fa-play-circle-o fa-1"></i></span> -->
+							<input class="form-control" type="text" placeholder="방송코드를 입력 시 해당 방송으로 이동 시켜야 한다" autocomplete="off" id="roomid" onkeypress="return checkEnterJoin(this, event);" />
+							<span class="input-group-btn">
+								<button class="btn btn-success" autocomplete="off" id="join">방송보기</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="main" id="main">
+					<div class="page-header">
+					<h1>
+						<span id="VideoTitle"></span>
+						<button class="btn btn-default" autocomplete="off" id="start">방송
+							입장</button>
+					</h1>
+					</div>
+					<div class="videoBody">
+		    				<th:block th:replace="parts/videoBody :: videoBody"></th:block>
+		    			</div>
+					<div class="chattingBody">
+	    				<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
+    				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var session = /*[[${catch_session}]]*/;
+    var chatting_room = /*[[${chatting_room}]]*/;
+    var video_code = /*[[${video_code}]]*/;
+    var videoTitle = /*[[${videoTitle}]]*/;
+    
+    const startBtn = document.getElementById('start');
+    const inputBar = document.getElementById('roomid');
+    const joinBtn = document.getElementById('join');
+    
+    var sid = video_code.slice(0,-14);
+    
+    var sockJs = null;
+    var stomp = null;
+    
+    var checking = 0;
+    
+    
+    var userid = sessionStorage.getItem("using_id");
+    console.log(userid);
+    
+    var date = null;
+    var year = null;
+    var month = null;
+    var day = null;
+    var time = null;
+    var hour = null;
+    var minute = null;
+    var second = null;
+    
+    var mval = null;
+    
+    function createDate(){
+    	//코드, 아이디, 제목, 날짜, 상태 , --, --
+    	year = now_date.getFullYear();
+    	month = now_date.getMonth() + 1;
+    	day = now_date.getDate();
+    	hour = now_date.getHours();
+    	minute = now_date.getMinutes();
+    	second = now_date.getSeconds();
+    	
+    	month = month >= 10 ? month : '0' + month;
+        day = day >= 10 ? day : '0' + day;
+        hour = hour >= 10 ? hour : '0' + hour;
+        minute = minute >= 10 ? minute : '0' + minute;
+        second = second >= 10 ? second : '0' + second;
+        
+        date = year+"-"+month+"-"+day;
+        time = hour+":"+minute+":"+second;
+        var result = date+" "+time;
+        
+        return result;
+    }
+
+    function followbtn(){
+    	if(checking === 0){
+    		$.ajax({
+        		url: '/ajax/addFavorites',
+        		type: 'POST',
+        		data: {
+        			'sid': sid,
+        			'uid': userid
+        		},
+        		success: function(data){
+        			if(data === true){
+        				checking = 1;
+        				$('#VideoTitle').empty();
+        		    	$('#VideoTitle').text(videoTitle);
+        		    	$('#VideoTitle').append('<span>&emsp;</span>'+
+        				'<i id="followIcon" class="fa-solid fa-heart" onclick="followbtn()">팔로우하기</i>');
+						
+        			}else{
+        				console.log("즐겨찾기 추가 실패");
+        			}
+        		},
+        		error: function(error){
+        		}
+        	});
+    	}else{
+    		$.ajax({
+        		url: '/ajax/cancelFavorites',
+        		type: 'POST',
+        		data: {
+        			'sid': sid,
+        			'uid': userid
+        		},
+        		success: function(data){
+					if(data === true){
+						checking = 0;
+						$('#VideoTitle').empty();
+        		    	$('#VideoTitle').text(videoTitle);
+        		    	$('#VideoTitle').append(
+        		    			'<span>&emsp;</span>'+
+    		    				'<i id="followIcon" class="fa-regular fa-heart" onclick="followbtn()">팔로우하기</i>');
+						
+        			}else{
+        				console.log("즐겨찾기 삭제 실패");
+        			}
+        		},
+        		error: function(error){
+        		}
+        	});
+    	}
+    }
+
+    $(document).ready(function(){
+    	startBtn.style.display = 'none';
+    	inputBar.style.display = 'none';
+    	joinBtn.style.display = 'none';
+    	
+    	console.log("["+ session +"]"+"["+ JSON.stringify(chatting_room) +"]")
+    	$('#roomid').val(session);
+    	$('#start').click();
+    	
+    	$('#VideoTitle').empty();
+    	$('#VideoTitle').text(videoTitle);
+    	
+    	$.ajax({
+    		url: '/ajax/checkFavorite',
+    		type: 'GET',
+    		data: {
+    			"streamerid": sid,
+    			"uid": userid
+    		},
+    		success: function(data){
+    			if(data === true){
+    				checking = 1;
+    				if(checking === 0){
+    		    		$('#VideoTitle').append('<span>&emsp;</span>'+
+    		    				'<i id="followIcon" class="fa-regular fa-heart" onclick="followbtn()">팔로우하기</i>');
+    		        }else{
+    		        	$('#VideoTitle').append('<span>&emsp;</span>'+
+    					'<i id="followIcon" class="fa-solid fa-heart" onclick="followbtn()">팔로우하기</i>');
+    		        }
+    			}else{
+    				console.log("[2]");
+    				if(checking === 0){
+    		    		$('#VideoTitle').append('<span>&emsp;</span>'+
+    		    				'<i id="followIcon" class="fa-regular fa-heart" onclick="followbtn()">팔로우하기</i>');
+    		        }else{
+    		        	$('#VideoTitle').append('<span>&emsp;</span>'+
+    					'<i id="followIcon" class="fa-solid fa-heart" onclick="followbtn()">팔로우하기</i>');
+    		        }
+    			}
+    		},
+    		error: function(error){
+    		}
+    	});
+    	
+    	
+    	
+    	
+    	$('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+    	
+    	sockJs = new SockJS("/stomp/chat");
+        //1. SockJS를 내부에 들고있는 stomp를 내어줌
+        stomp = Stomp.over(sockJs);
+
+        //2. connection이 맺어지면 실행
+        stomp.connect({}, function (){
+           console.log("STOMP Connection")
+           
+           $.ajax({
+        	   url: '/ajax/inRoom',
+        	   type: 'POST',
+        	   data: {
+        		   "Vcode": video_code,
+        		   "Id": userid
+        	   },
+           });
+
+           //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+           stomp.subscribe("/sub/chat/room/" + video_code, function (chat) {
+               var content = JSON.parse(chat.body);
+
+               var writer = content.user_id;
+               var chatting = content.chat;
+               var str = '';
+               
+               console.log("확인????");
+
+               if(writer === userid){
+                   str = "<div class='activity-item d-flex'>";
+                   str += "<b class=activite-label>" + writer + " : " + "</b>";
+                   str += "<b class=activity-content>" + chatting + "</b>";
+                   str += "</div></div>";
+                   $("#msgArea").append(str);
+                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+               }
+               else{
+            	   str = "<div class='activity-item d-flex'>";
+                   str += "<b class=activite-label>" + writer + " : " + "</b>";
+                   str += "<b class=activity-content>" + chatting + "</b>";
+                   str += "</div></div>";
+                   $("#msgArea").append(str);
+                   $('#msgArea').stop().animate({scrollTop: $('#msgArea')[0].scrollHeight}, 1000);
+               }
+           });
+        });
+        
+        
+        console.log("sid : " + sid);
+        
+        $.ajax({
+        	url: '/ajax/checkBan',
+        	type: 'GET',
+        	data:{
+        		"streamer_id": sid,
+        		"myid": userid
+        	},
+        	success: function(data){
+        		if(data === false){
+        			$('#button-send').css('display', 'none');
+        		}else{
+        			$('#button-send').css('display', 'inline-block');
+        		}
+        	},
+        	error: function(error){
+        		console.log(error);
+        	}
+        });
+        
+        
+        $('#button-send').on("click", function chatsendButton(){
+        	//var sockJs = new SockJS("/stomp/chat");
+        	//var stomp = Stomp.over(sockJs);
+            var msg = $('#msg')
+            console.log(msg);
+            if(!msg.val()){
+             	alert("입력이 필요")
+             }else{
+                 stomp.send('/pub/chat/message', {}, JSON.stringify({video_code: video_code, chat: msg.val(), user_id: userid, chat_status: false}));
+                 console.log()
+                 mval = msg.val();
+                 msg.val('');
+             }
+            
+            var today = new Date();
+            console.log(today);
+            
+            $.ajax({
+            	url: '/ajax/addChat',
+            	type: 'GET',
+				data: {
+					"userid": userid,
+					"video_code": video_code,
+					"chat": mval,
+					"chat_status": "false",
+					"chatDate": createDate
+				}
+            });
+            
+             console.log(msg.value);
+         });
+        
+        
+    });
+    /*]]>*/
+</script>
+</html>

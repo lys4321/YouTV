@@ -41,21 +41,31 @@ public class UserContoller {
 		return "modeltest";
 	}
 	
-	@RequestMapping(value="/userUpdate", method = {RequestMethod.POST, RequestMethod.GET})
-	public String userUpdate(web_userDTO uuser, Model model) {
-		int check = userService.UserUpdate(uuser);
-		if(check == 1) { model.addAttribute("check", true); }
-		else { model.addAttribute("check", false); }
-		return "modeltest";
-	}
 	
-	@RequestMapping(value="/userDelete", method = {RequestMethod.POST, RequestMethod.GET})
-	public String userDelete(web_userDTO duser, Model model) {
-		int check = userService.UserUpdate(duser);
-		if(check == 1) { model.addAttribute("check", true); }
-		else { model.addAttribute("check", false); }
-		return "modeltest";
+	 @RequestMapping(value="/userUpdate", method = {RequestMethod.POST,
+	 RequestMethod.GET}) 
+	 public String userUpdate(web_userDTO uuser, Model model){ 
+		 int check = userService.UserUpdate(uuser); 
+		 if(check == 1) {
+			 model.addAttribute("check", true); 
+		 } else { 
+			 model.addAttribute("check", false); 
+		 } 
+		 return "modeltest"; 
 	}
+	 
+	 @RequestMapping(value="/userDelete", method = {RequestMethod.POST,
+	 RequestMethod.GET}) 
+	 public String userDelete(web_userDTO duser, Model model)
+	 { 
+		 int check = userService.UserUpdate(duser); 
+		 if(check == 1) {
+			 model.addAttribute("check", true); 
+	 } else { 
+		 model.addAttribute("check", false); } 
+		 return "modeltest"; 
+		}
+	
 	
 	@RequestMapping(value="/UserList", method = {RequestMethod.POST, RequestMethod.GET})
 	public String UserList(Model model){

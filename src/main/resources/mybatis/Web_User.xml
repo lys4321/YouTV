@@ -10,6 +10,12 @@
 		from web_user
 		where user_id = #{uuid}
 	</select>
+	<select id="SearchUserProfile" resultType="String">
+		select image_url
+		from web_user
+		where user_id = #{uuid}
+	</select>
+	
 	<select id="reSearchUser" resultType="com.example.demo.DTO.web_userDTO">
 		select *
 		from web_user
@@ -22,10 +28,12 @@
 	</select>
 	<update id="UserUpdate" parameterType="com.example.demo.DTO.web_userDTO">
 		update web_user
-		set user_pw = #{user_pw},
-		user_name = #{user_name},
-		user_pnum = #{user_pnum},
-		image_url = #{image_url} 
+		set image_url = #{image_url}
+		where user_id = #{user_id}
+	</update>
+	<update id="UserUpdateimg" parameterType="com.example.demo.DTO.web_userDTO">
+		update web_user
+		set image_url = #{image_url}
 		where user_id = #{user_id}
 	</update>
 	<delete id="UserDelete" parameterType="com.example.demo.DTO.web_userDTO">
@@ -35,6 +43,11 @@
 	</delete>
 	<insert id="UserCreate" parameterType="com.example.demo.DTO.web_userDTO">
 		insert into web_user 
-		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, #{image_url})
+		values(#{user_id}, #{user_pw}, #{user_name}, #{user_pnum}, "C:\\YTVrepo\\profile\\standard.png")
 	</insert>
+	<select id="searchUserBySearch" resultType="com.example.demo.DTO.web_userDTO">
+		select *
+		from web_user
+		where user_id like concat('%', #{search}, '%')
+	</select>
 </mapper>

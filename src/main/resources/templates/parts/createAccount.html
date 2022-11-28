@@ -1,0 +1,46 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="createAccount(create)">
+    <body>
+    <div class="member_login">
+    	<a><i id="exitmark_create" class="fa-solid fa-xmark"></i></a>
+    	<span id="title" class="card-title">회원가입</span>
+    	<pre>
+    		<br>
+    	</pre>
+        <form action="" accept-charset="utf-8" id="createform" method="POST">
+            <div class="member_login_input">
+            	<input id="cid" class="form-control" type="text" name="inid" placeholder="생성할 아이디" >
+            	<input id="dupCheck" type="button" class="btn btn-secondary" value="중복검사" onclick="location.href='#'">
+            </div>
+
+            <div class="member_login_input">
+                <input id="cpw" class="form-control" type="password" name="inpassword" placeholder="생성할 비밀번호">
+            </div>
+          	<div class="member_login_input">
+                <input id="compare" class="form-control" type="password" name="compassword" placeholder="확인할 비밀번호"  >
+            	<br>
+            	  	<span>비교결과 : </span><span id="comresult" style="color: blue">비밀번호를 입력해 주세요</span>
+            	<br>
+            	<br>
+            </div>
+			
+			<div class="member_login_input">
+                <input id="cnm" class="form-control" type="text" name="inname" placeholder="이름">
+            </div>
+            
+            <div class="member_login_input">
+                <input id="cpn" class="form-control" type="text" name="inpnum" placeholder="전화번호">
+            </div>
+            
+            <div class="member_login_btn">
+                <input type="button" class="btn btn-secondary" id="btn-create" value="생성하기">
+            </div>
+
+            <div class="find_password">
+                <a href="">아이디 또는 비밀번호를 잊으셨나요?</a>
+            </div>
+        </form>
+    </div>
+    </body>
+</th:block>
