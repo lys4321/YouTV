@@ -4,239 +4,21 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+        <link th:href="@{/css/mycss.css}" rel="stylesheet">
         <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
-        <style>
-        	.main{ 
-        		width:80%;
-        		height:100%; 
-        	}
-        	
-        	.items{
-        		display: inline-block;  
-        		margin-left: 50px;
-        		margin-right: 50px;
-        		margin-top: 20px;
-        		margin-bottom: 20px;
-        		text-align:center;
-        		border-radius: 25px;  
-        		padding: 10px;
-        	}
-        	
-        	#followList #liveList #recordList #clipList{
-        		text-align: center; 
-        		margin: 0 auto;
-        	}
-        	
-        	.buttons{
-        	  background: #4154f1;
-			  width: 100px;
-			  height: 40px;
-			  border-radius: 4px;
-			  border-style: none;
-			  font-family: "Noto Sans KR", sans-serif;
-			  font-size: 1rem;
-			  font-weight: 400;
-			  text-align: center;
-			  text-decoration: none;
-        	}
-        	
-        	.buttons:hover {
-  				color: #4154f1;
-  				background: #415440;
-			}	 
-			
-			#loginIcon{
-				margin-right: 10px;
-			}
-			
-			#createAccount{
-				margin-right: 10px;
-			}
-			
-			.mainIcon{
-				margin-right: 20px;
-				font-size: 20px;
-			}
-			
-			#home{
-				font-size: 45px;
-			}
-			
-			#header{
-				display: block;
-				margin-left: auto;
-				margin-right: auto;
-			}
-			
-			#barSearch{
-				width: 300px;
-			}
-			
-			
-			
-			.search-bar{
-				display: inline-block;
-				display: table;
-    			margin-left: auto;
-    			margin-right: auto;
-    			position: absolute;
-			    top: 3.5%;
-			    left: 50%;
-			    transform: translate(-50%, -50%);
-			}
-			
-			#icons{
-				display: inline-block;
-				display: table;
-    			margin-left: auto;
-    			margin-right: auto;
-    			position: absolute;
-			    top: 3.5%;
-			    left: 80%;
-			    transform: translate(-50%, -50%);
-			    position: absolute;
-			}
-			
-			.homeBtn{
-				width: 60px;
-			}
-			
-			#logo{
-				width: 60px; 
-				height: 60px;
-				border-radius: 50%;
-			}
-			
-			#menuList{
-				display: inline-block;
-				display: table;
-    			margin-left: auto;
-    			margin-right: auto;
-    			position: absolute;
-			    top: 3.5%;
-			    left: 20%;
-			    transform: translate(-50%, -50%);
-			    position: absolute;
-			}
-			
-			#menuList .lists{
-				display: none;
-			}
-			
-			.lists li a:hover{
-				background-color: #eee;
-			}
-			
-			#menuList:hover .lists{
-				display: block;
-				z-index: 1;
-			} 
-			
-			.modal{
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				display: none;
-				background-color: rgba(0, 0, 0, 0.4);
-			}
-			
-			.modal.show {
-			  display: block;
-			}
+        
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+		<script type="text/javascript" src="/js/janus.js" ></script>
+		<script type="text/javascript" src="/js/replaymake.js"></script>
 
-			.modal_body {
-			  position: absolute;
-			  top: 50%;
-			  left: 50%;
-			
-			  width: 400px;
-			  height: 600px;
-			
-			  padding: 40px;
-			
-			  text-align: center;
-			
-			  background-color: rgb(255, 255, 255);
-			  border-radius: 10px;
-			  box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-			
-			  transform: translateX(-50%) translateY(-50%);
-			}
-			
-			.member_login{
-				padding-top: 50px;
-			}
-			
-			#title{
-				font-size: 40px;
-			}
-			
-			#exitmark{
-				position: absolute;
-				right: 5%;
-				top: 2.5%;
-				font-size: 40px;
-			}
-			
-			#exitmark_create{
-				position: absolute;
-				right: 5%;
-				top: 2.5%;
-				font-size: 40px;
-			}
-			
-			#loginform{
-				margin-top:100px;
-			}
-			
-			.form-control{
-				border-radius: 10px;
-				width:250px;
-				line-height: 30px;
-				margin-bottom: 10px;
-				font-size: 20px;
-			}
-			
-			.member_login_btn input{
-				border-radius: 10px;
-				width: 100px;
-				font-size: 20px;
-				margin-bottom: 10px;
-			}
-			
-			.modal_create{
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				display: none;
-				background-color: rgba(0, 0, 0, 0.4);
-			}
-			
-			#dupCheck{
-				position: absolute;
-				right: 10;
-				font-size: 20px;
-				margin-left: 5px;
-				border-radius: 10px;
-			}
-			
-			.lists{
-				width: 200px;
-				position: absolute;
-				top: 0;
-				right: 30;
-			}
-			
-			#follist{
-				font-size: 30px;
-			}
-			
-        </style>
     </head>
     <body>
     	<div class="Head">
@@ -246,113 +28,50 @@
     		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
     	</div>
     	
-    	<div class="modal">
-      		 <div class="modal_body">
-     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
-     		</div>
-    	</div>
-    	
-    	<div class="modal_create">
-      		 <div class="modal_body">
-     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
-     		</div>
+    	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>  
+	    	<div class="modal_del">
+	     			 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/delete.html :: delete(~{this::del} )}"></th:block>
+	     			 </div>
+	     	</div>
     	</div>
     	
     	<div class="main" id="main">
     		<div class="broadList">
     			<div id="FL">
     			<h2>즐겨찾기한 스트리머의 생방송</h2>	
-    			<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="followList"> 
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
+    				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="followList"> 
+    				
     				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    			</div>
-    				<a href="">더 보기</a>
+    				<a href="/YouTV/AllList?type=Follow">더 보기</a>
     			</div>
     			<h2>생방송 중인 스트리머</h2>	
     				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="liveList">
-    					<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
     				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				</div>
-    				<a href="">더 보기</a>
+    				<a href="/YouTV/AllList?type=Live">더 보기</a>
     			<h2>최신 다시보기</h2>	
     				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="recordList">
     				</div>
-    				<a href="">더 보기</a>
+    				<a href="/YouTV/AllList?type=Record">더 보기</a>
     			<h2>최신 클립</h2>	
     				<div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="clipList">
-    					<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
     				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				<div class="items cardWhite">
-    					<img src="/img/userimg.jpg" width=50px alt="Profile" class="rounded-circle">
-    					<h2>Kevin Anderson</h2>
-    					<h3>Web Designer</h3>
-    				</div>
-    				</div>
-    				<a href="">더 보기</a>
+    				<a href="/YouTV/AllList?type=Clip">더 보기</a>
     		</div>
     	</div>
     </body>
@@ -362,15 +81,31 @@
         		$(document).ready(function(){
         			const modal = document.querySelector('.modal');
         			const modal_create = document.querySelector('.modal_create')
+        			const modal_update = document.querySelector('.modal_update')
+        			const modal_del = document.querySelector('.modal_del')
         			const leftvalue = $('.sidebar').offset().left;
-        			
-        			//sessionStorage.clear();
-        			
         			var useid = sessionStorage.getItem("using_id");
-        			
-        			console.log("유저 상태 : "+ useid);
-        			
-        			if(useid == null){
+        			$.ajax({
+            			url: '/ajax/getMainClip',
+            			type: 'GET',
+            			dataType: 'json',
+            			success: function(data){
+                    		for(var i=0;i<5;i++){
+                    			$('#clipList').append(
+                						'<div class="items cardWhite">'+
+                        				'<a href="/YouTV/Clip?clip_code=' + data["cliplist"][i]["clip_code"] + '&title=' + data["cliplist"][i]["clip_title"] + '">'+
+	                    				'<img src="data:image/png;base64,' + data["clipimg"][i] + '" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+	                    				'<h2>' + data["cliplist"][i]["clip_title"] + '</h2>'+
+	                    				'<h3>' + data["cliplist"][i]["user_id"] + '</h3>'+
+	                    				'</a></div>'
+                        		); 
+                    		}
+            			},
+            			error: function(){
+            				console.log("error");
+            			}
+            		});
+        			if(!useid){
         				$('#icons2').append(
         						'<a id="loginIcon" class="mainIcon" href="#">'+
         						'<i class="fa-solid fa-right-to-bracket"></i>로그인</a>'+	
@@ -380,45 +115,97 @@
         				$('.sidebar').css("left", -300);
         				$('#FL').hide();
         			}else{
+        				$('#streamMenu2').append(
+        						'<a id="streamIcon" class="mainIcon" href="/Owner_Mode">'+
+        						'<i class="fa-solid fa-signal-stream"></i>방송하기</a>'+	
+        						'<a id="clipIcon" class="mainIcon" href="/YouTV/AllList?type=Record">'+
+        						'<i class="fa-solid fa-paperclip"></i>클립제작</a>'
+        				);
+        				$.ajax({
+        					url: '/ajax/main_follows',
+        					type: 'GET',
+        					data: {
+        						"userid": sessionStorage.getItem("using_id")
+        					},
+        					dataType: 'text',
+        					success: function(data){
+                        		var obj = JSON.parse(data);
+                        		var thum = obj["FollowThumbnail"];
+                        		var ulist = obj["follows"];
+                        		var len = ulist.length
+                        		for(var i=0;i<len;i++){
+                        			if(obj["FollowThumbnail"][i] === null){
+                        					$('#sidebar-nav').append(
+                    	        				'<li class="nav-item">'+
+                    	        				'<a class="nav-link" href="/Guest_Mode?video_code=' + ulist[i]["video_code"]  + '&guestid='+ useid +  '">'+
+                    	        				'<img src="" width="50px" height="50px" style="border-radius:50%;" alt="Profile" class="rounded-circle">'+
+                    	        				ulist[i]["streamer_id"] +'</a></li>' 
+                    	        			);
+                        			}else{
+                        				$('#sidebar-nav').append(
+                    	        				'<li class="nav-item">'+
+                    	        				'<a class="nav-link" href="/Guest_Mode?video_code=' + ulist[i]["video_code"]  + '&guestid='+ useid +  '">'+
+                    	        				'<img src="data:image/png;base64,' + thum[i] + '" width="50px" height="50px" style="border-radius:50%;" alt="Profile" class="rounded-circle">'+
+                    	        				ulist[i]["streamer_id"] +'</a></li>' 
+                    	        		);
+                        			}
+                        		}
+                			},
+                			error: function(){
+                				console.log("error");
+                			}
+        				});
+        				$.ajax({
+                			url: '/ajax/main_followlist',
+                			type: 'GET',
+                			data: {
+                				"userid": sessionStorage.getItem("using_id")
+                			},
+                			dataType: 'text',
+                			success: function(data){
+                        		var obj = JSON.parse(data);
+                        		var thum = obj["FollowThumbnail"];
+                        		var ulist = obj["FollowList"];
+                        		var len = ulist.length
+                        		console.log(ulist.length);
+                        		for(var i=0;i<len;i++){
+                        			if(obj["FollowThumbnail"][i] === null){
+                        				$('#followList').append(
+                                				'<div class="items cardWhite">'+
+                                				'<a href="/Guest_Mode?video_code=' + ulist[i]["video_code"]  + '&guestid='+ useid +  '">'+
+        	                    				'<img src="" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+        	                    				'<h2>' + ulist[i]["title"] + '</h2>'+
+        	                    				'<h3>' + ulist[i]["streamer_id"] + '</h3>'+
+        	                    				'</a></div>'
+                                		); 
+                        				console.log("!!!!!!!!!!!!!!")
+                        			}else{
+                        				$('#followList').append(
+                        						'<div class="items cardWhite">'+
+                                				'<a href="/Guest_Mode?video_code=' + ulist[i]["video_code"]  + '&guestid='+ useid +  '">'+
+        	                    				'<img src="data:image/png;base64,' + thum[i] + '" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+        	                    				'<h2>' + ulist[i]["title"] + '</h2>'+
+        	                    				'<h3>' + ulist[i]["streamer_id"] + '</h3>'+
+        	                    				'</a></div>'
+                                		); 
+                        			}
+                        		}
+                			},
+                			error: function(){
+                				console.log("error");
+                			}
+                		});
         				$('#icons2').append(
         						'<a id="logoutIcon" class="mainIcon" href="/YouTV/MainScreen">'+
         						'<i class="fa-solid fa-right-from-bracket"></i>로그아웃</a>'+	
         						'<a id="updateIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'+
-        						'<a id="deleteIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-user-xmark"></i>계정삭제</a>'+
-        						//여기는 나중에 팔로우 기능 제작 시 그대로 가져가 사용하기
-        						'<a id="followIcon" class="mainIcon" href="#">'+
-        						'<i class="fa-solid fa-heart"></i></a>'
+        						'<i class="fa-solid fa-wrench"></i>정보수정</a>'
         				);
-        				
         				$('#sidebar-nav').append(
         					'<li class="nav-item">'+
         					'<a class="nav-link" id="follist">'+
         					'<i style="font-size: 30px;" class="fa-solid fa-star"></i>&ensp;즐겨찾기 목록</a></li>'
         				);
-        				
-        				//팔로우 목록 추가
-        				$.ajax({
-        					url: '',
-        					type: 'GET',
-        					data: {
-        						
-        					},
-        					dataType: '',
-        					success: function(data){
-        						var obj = JSON.parse(data);
-                        		console.log(obj);
-        						$('#sidebar-nav').append(
-        	        				'<li class="nav-item">'+
-        	        				'<a class="nav-link" href="">'+
-        	        				'<img src="data:image/png;base64,' + obj["여기에 프로필 사진 입력"][i] + 
-        	        				'" width=50px></a>'+ '여기에 즐찾한 스트리머 아이디 입력' +'</li>'
-        	        			);
-        					}
-        				});
-        				
-        				//팔로ㅓ우 방송 추가
         			}
         			
         			
@@ -435,6 +222,11 @@
         		      
         		      $('#createAccount').click(function(){
         		    	  modal_create.style.display='block';
+        		    	  $('.sidebar').css("left", -300);
+        		      });
+        		      
+        		      $('#updateIcon').click(function(){
+        		    	  modal_update.style.display='block';
         		    	  $('.sidebar').css("left", -300);
         		      });
         		      
@@ -457,10 +249,70 @@
          		    	  }
         		      });
         		      
+        		      $('#exitmark_update').click(function(){
+        		    	  modal_update.style.display = 'none';
+        		    	  $('#createform').each(function(){
+        		    		  this.reset();
+        		    	  });
+        		    	  if(useid != null){
+         		    		 $('.sidebar').css("left", leftvalue);
+         		    	  }
+        		      });
+        		      
         		      $('#logoutIcon').click(function(){
         		    	 sessionStorage.clear(); 
         		      });
         		      
+        		      $('#deleteIcon').click(function(){
+							modal_del.style.display = 'block';
+      		      	  });
+        		      $('#del_exitmark').click(function(){
+        		    	  modal_del.style.display = 'none';
+      		          });
+        		      
+        		      $('#yesbtn').click(function(){
+        		    	  $.ajax({
+        		    		 url: '/ajax/AccountDelete',
+        		    		 type: 'POST',
+        		    		 data: {
+        		    			 'userid': sessionStorage.getItem("using_id")
+        		    		 },
+        		    		 success: function(){
+        		    			sessionStorage.clear();
+                       			window.location.href = "/YouTV/MainScreen";
+                       			alert("계정 삭제 완료");
+        		    		 }
+        		    	  });
+        		      });
+        		      
+					  $('#nobtn').click(function(){
+						  modal_del.style.display = 'none';
+        		      });
+					  
+					  $('#btn-check').click(function(){
+						  if(sessionStorage.getItem("using_pw") === $('#checkpassword').val()){
+							  $('#check').css('display', 'none');
+							  $('#setting').css('display', 'block');
+						  }else{
+							  alert("인증실패");
+						  }
+					  });
+					  
+					  $('#btn-update').click(function(){
+						  $.ajax({
+	        		    		 url: '/ajax/AccountUpdate',
+	        		    		 type: 'POST',
+	        		    		 data: {
+	        		    			 'inid': sessionStorage.getItem("using_id"),
+	        		    			 'newpassword': $('#upassword').val()
+	        		    		 },
+	        		    		 success: function(){
+	        		    			 sessionStorage.setItem("using_pw", $('#upassword').val());
+	                       			window.location.href = "/YouTV/MainScreen";
+	                       			alert("계정 수정 완료");
+	        		    		 }
+	        		    	  });
+					  });
               		
               		if(document.getElementById("") != null){
               			document.getElementById("").onclick = function(){
@@ -468,15 +320,9 @@
                   			window.location.href = "/YouTV/MainScreen";
                   		}
               		}
-          		
-            		//
-            		$('#followIcon').click(function(){
-            			
-            		});
-            		
-            		//
-            		
-            		// 방송 기본 정보 받아오기
+              		
+              		
+              		
             		var a = /*[[${livelist}]]*/ "live";
             		var b = /*[[${recordlist}]]*/ "record";
             		
@@ -496,10 +342,8 @@
         							sessionStorage.setItem("using_id", id);
         							sessionStorage.setItem("using_pw", pw);
         							window.location.href="/YouTV/MainScreen"
-        							
         						}else{
-        							alert("존재하지 않는 계정이거나 입력된 정보가 잘못되었습니다.")
-        							
+        							alert("존재하지 않는 계정이거나 입력된 정보가 잘못되었습니다.");
         						}
         					}
         				});
@@ -535,7 +379,45 @@
             				});
         				}
             		});
+            		$('#profile-file').on('change', function(){
+            			var filename = $('#profile-file').val();
+            			$('#filename').val(filename);
+            		});
             		
+            		$('#profile-file').on('change', function(){
+            			if(this.files && this.files[0]){
+            				var reader = new FileReader();
+            				reader.onload = function(e){
+            					$('#img-profile').attr('src', e.target.result);
+            				}
+            				reader.readAsDataURL(this.files[0]);
+            				//console.log(this.files[0])
+            			}
+            			
+            		});
+            		$('#btn-profile').on('click', function(){
+            			var formData = new FormData();
+            			$('#profile-file').attr("name", sessionStorage.getItem("using_id"));
+            			console.log($('#profile-file')[0].files[0])
+            			formData.append(sessionStorage.getItem("using_id"), $('#profile-file')[0].files[0]);
+            			
+            			
+            			$.ajax({
+            				url: '/ajax/AccountUpdateImg',
+            				processData: false,
+            				contentType: false,
+            				type: 'POST',
+            				data: formData,
+            				success: function(data){
+            					console.log(data);
+            					//sessionStorage.setItem("profile", data);
+            					//window.location.href = "/YouTV/MainScreen";
+            				},
+            			error: function(e){
+            				console.log(e)
+            			}
+            			});
+            		});
             		var comcheck = 0;
             		$('#cpw').keyup(function(){
             			var reg = "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
@@ -619,72 +501,52 @@
             				}
             			}
             		});
-            		
-            		//AJAX를 이용하여 썸네일 가져오기(생방중인 사람의 프로필 사진)
-            		
             		//AJAX를 이용하여 썸네일 가져오기(생방, 녹방)
-            		/* $.ajax({
+            		$.ajax({
             			url: '/ajax/main_livelist',
             			type: 'GET',
             			dataType: 'text',
             			success: function(data){
-            				var target = document.getElementById("LiveList");
+            				var target = $('#liveList');
                     		var obj = JSON.parse(data);
                     		for(var i=0;i<a.length;i++){
                     			var livelist = document.createElement("div");
-                    			
-                    			livelist.setAttribute('class', 'video')
-                				livelist.innerHTML=
-                					'<a href="/Guest_Mode?video_code='+ a[i]["video_code"] +'"><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["title"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
-                        		target.appendChild(livelist);
+                    			var guestid=useid;
+                    			if(guestid==null){
+                    				guestid = "NoNameUser";
+                    			}
+                    			if(obj["LiveThumbnail"][i] === null){
+                    				target.append(
+                            				'<div class="items cardWhite">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&guestid='+ useid + '">'+
+    	                    				'<img src="" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+    	                    				'<h2>' + a[i]["title"] + '</h2>'+
+    	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+
+    	                    				'</a></div>'
+                            		); 
+                    			}else{
+                    				console.log("보세요 : "+ obj["LiveThumbnail"][i]);
+                    				target.append(
+                            				'<div class="items cardWhite">'+
+                            				'<a href="/Guest_Mode?video_code=' + a[i]["video_code"] + '&guestid='+ guestid + '">'+
+    	                    				'<img src= "data:image/png;base64,'+ obj["LiveThumbnail"][i] +'" width="150px" height="150px" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
+    	                    				'<h2>' + a[i]["title"] + '</h2>'+
+    	                    				'<h3>' + a[i]["streamer_id"] + '</h3>'+
+    	                    				'</a></div>'
+                            		); 
+                    			}
                     		}
             			}
             		});
-            		*/
-            		$.ajax({
-            			url: '/ajax/main_recordlist',
-            			type: 'GET',
-            			dataType: 'text',
-            			success: function(data){
-            				var target = /*document.getElementById("liveList");*/ $('#recordList');
-                    		var obj = JSON.parse(data);
-                    		console.log(obj);
-                    		for(var i=0;i<b.length;i++){
-                				target.append(
-                        				'<div class="items cardWhite">'+
-                        				'<a href="">'+
-	                    				'<img src= "data:image/png;base64,'+ obj["RecordThumbnail"][i] +'" style="border-radius:25px;" alt="Profile" class="rounded-circle">'+
-	                    				'<h2>' + b[i]["title"] + '</h2>'+
-	                    				'<h3>' + b[i]["streamer_id"] + '</h3>'+
-	                    				'</div>'
-                        		);
-                    		}
+            		
+            		$('#SearBtn').on('click', function(){
+            			var str = $('#barSearch').val();
+            			if(str.length>0){
+            				window.location.href = "/YouTV/SearchScreen?search=" + str;
             			}
             		});
             		
-            		//AJAX를 이용하여 썸네일 가져오기(클립)
-
-            		
-            		/* document.getElementById("mainButton").onclick = function(){
-            			window.location.href = "/YouTV/MainScreen";
-            		}
-            		
-            		if(document.getElementById("loginbutton") != null){
-            			document.getElementById("loginbutton").onclick = function(){
-                			window.location.href = "/YouTV/LoginScreen";
-                		}
-            		}
-            		
-            		if(document.getElementById("logoutbutton") != null){
-            			document.getElementById("logoutbutton").onclick = function(){
-                			sessionStorage.clear();
-                			window.location.href = "/YouTV/MainScreen";
-                		}
-            		}*/
-        		}); 
-        		
+        		});
         	/*]]*/
-        	
-        	
         </script>
 </html>

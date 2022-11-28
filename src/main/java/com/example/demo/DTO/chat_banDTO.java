@@ -12,6 +12,6 @@ import lombok.ToString;
 public class chat_banDTO {
 	private String streamer_id;
 	private String viewer_id;
-	private Date ban_date;
+	private String ban_date;
 	private String ban_reason;
 }

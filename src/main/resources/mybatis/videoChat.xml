@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.chattingMapper">
+	<insert id="addChatting" parameterType="com.example.demo.DTO.video_chatDTO">
+		insert into videochat(user_id, video_code, chat, chat_status, chatDate) 
+		values(#{user_id}, #{video_code}, #{chat}, #{chat_status}, #{chatDate})
+	</insert>
+	<select id="searchByCode" parameterType="String" resultType="com.example.demo.DTO.video_chatDTO">
+		select *
+		from videochat
+		where video_code=#{code}
+	</select>
+	<select id="searchById" parameterType="String" resultType="com.example.demo.DTO.video_chatDTO">
+		select *
+		from videochat
+		where user_id=#{userid}
+	</select>
+	<select id="searchByIdCode" resultType="com.example.demo.DTO.video_chatDTO">
+		select *
+		from videochat
+		where video_code=#{param1} and user_id=#{param2}
+	</select>
+</mapper>

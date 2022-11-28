@@ -1,101 +1,84 @@
 <!DOCTYPE html>
-<html lang="ko" 
-    xmlns:th="http://www.thymeleaf.org"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <meta charset="UTF-8">
-        <link th:href="@{/css/testCSS.css}" rel="stylesheet">
-        
-    </head>
-    <body>
-    	<div class="Head">
-    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
-    	</div>
-    	<div class="ScreenBody">
-    		<div class="LeftSide">
-    			<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
-    		</div>
-    		<div class="RightSide">
-    			<h2>팔로우한 스트리머</h2>	
-    				<div class="listBoard">
-    					<div class="followlive">
-    				
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>생방송 중인 스트리머</h2>	
-    				<div class="listBoard">
-    					<div class="livePlayList" id="LiveList">
-    					
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>다시보기</h2>	
-    				<div class="listBoard">
-    					<div class="rePlayList" id="RecordList">
-    					
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    			<h2>최신 클립</h2>	
-    				<div class="listBoard">
-    					<div class="latestClipList">
-    				
-    					</div>
-    				</div>
-    				<a href="">더 보기</a>
-    		</div>
-    	</div>
-    </body>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script th:inline="javascript">
-        	/*<![CDATA[*/
-        		// 방송 기본 정보 받아오기
-        		
-        		var a = /*[[${livelist}]]*/ "live";
-        		var b = /*[[${recordlist}]]*/ "record";
-        		
-        		/*
-        		
-        		//AJAX를 이용하여 썸네일 가져오기
-        		$.ajax({
-        			url: '/ajax/main_livelist',
-        			type: 'GET',
-        			dataType: 'text',
-        			success: function(data){
-        				var target = document.getElementById("LiveList");
-                		var obj = JSON.parse(data);
-                		for(var i=0;i<a.length;i++){
-                			var livelist = document.createElement("div");
-                			
-                			livelist.setAttribute('class', 'video')
-            				livelist.innerHTML=
-            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + a[i]["video_code"] + '</div><div class="SuserId">' + a[i]["streamer_id"] + '</div></a>';
-                    		target.appendChild(livelist);
-                		}
-        			}
-        		});
-        		
-        		$.ajax({
-        			url: '/ajax/main_recordlist',
-        			type: 'GET',
-        			dataType: 'text',
-        			success: function(data){
-        				var target = document.getElementById("RecordList");
-                		var obj = JSON.parse(data);
-                		for(var i=0;i<b.length;i++){
-                			var recordlist = document.createElement("div");
-                			
-                			recordlist.setAttribute('class', 'video')
-            				recordlist.innerHTML=
-            					'<a href=""><img src=data:image/png;base64,'+ obj[i] +' class="Thumnail">'+''+'</div><div class="STitle">' + b[i]["video_code"] + '</div><div class="SuserId">' + b[i]["streamer_id"] + '</div></a>';
-                    		target.appendChild(recordlist);
-                		}
-        			}
-        		});
-        		
-        		*/
-        		
-        	/*]]*/
-        </script>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Janus WebRTC Server: Recorder/Playout Demo</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script type="text/javascript" src="/js/janus.js" ></script>
+<script type="text/javascript" src="/js/recordplaytest.js"></script>
+<script>
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="css/demo.css" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"/>
+	<style>
+		
+	</style>
+</head>
+<body>
+
+<a href="https://github.com/meetecho/janus-gateway"><img style="position: absolute; top: 0; left: 0; border: 0; z-index: 1001;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+<nav class="navbar navbar-default navbar-static-top">
+</nav>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>Plugin Demo: Recorder/Playout
+					<button class="btn btn-default" autocomplete="off" id="start">Start</button>
+				</h1>
+			</div>
+			
+			<div class="container hide" id="recordplay">
+				<div id="demo">
+					<div class="col-md-6" id="controls">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Recorder/Playout</h3>
+							</div>
+							<div class="panel-body">
+								<div class="btn-group btn-group-sm">
+									<button class="btn btn-danger" disabled autocomplete="off" id="record">Record</button>
+									<button class="btn btn-success" disabled autocomplete="off" id="play">Play</button>
+									<button class="btn btn-primary" disabled autocomplete="off" id="list">Update <i id="update-list" class="fa fa-refresh"></i></button>
+								</div>
+								<br/>
+								<div class="btn-group btn-group-sm" style="width: 100%">
+									<div class="btn-group btn-group-sm open" style="width: 100%">
+										<button autocomplete="off" id="recset" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 100%" aria-expanded="true">
+											Recordings list<span class="caret"></span>
+										</button>
+										<ul id="recslist" class="dropdown-menu" role="menu" style="max-height: 300px; overflow: auto;">
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body" id="videobox"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+	<div class="footer">
+	</div>
+</div>
+</body>
+<script>
+	
+$(document).ready(function(){
+	$('#start').click();		
+});
+</script>
 </html>

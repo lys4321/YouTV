@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.clipMapper">
+	<select id="allClip" resultType="com.example.demo.DTO.clipDTO">
+	select *
+	from clip
+	</select>
+	
+	<select id="listClip" resultType="com.example.demo.DTO.clipDTO">
+	select *
+	from clip
+	limit 5
+	</select>
+	
+	<select id="selectClip" parameterType="String" resultType="com.example.demo.DTO.clipDTO">
+	select *
+	from clip
+	where clip_code=#{clip_code}
+	</select>
+	
+	<insert id="addClip" parameterType="com.example.demo.DTO.clipDTO">
+	insert into clip values
+	(#{clip_code}, #{origin_video}, #{user_id}, #{clip_date}, #{clip_title}, #{clip_url})
+	</insert>
+	
+	<select id="searchClipBySearch" parameterType="String" resultType="com.example.demo.DTO.clipDTO">
+	select *
+	from clip
+	where user_id like concat('%', #{search}, '%')
+	</select>
+</mapper>

@@ -8,7 +8,8 @@
 				,title 
 				,profile_url
 				,session 
-				,liveDate)
+				,liveDate
+				,create_session)
 		values(
 				#{video_code}
 				,#{streamer_id}
@@ -16,12 +17,12 @@
 				,#{profile}
 				,#{session}
 				,#{liveDate}
-				)
+				,#{create_session})
 	</insert>
 	<delete id="deleteInfo" parameterType="string">
 		delete
 		from videoInfo
-		where video_code = #{video_code}
+		where video_code = #{code}
 	</delete>
 	<select id="selectVideoInfo" resultType="com.example.demo.DTO.videoInfoDTO" parameterType="String">
 		select *
@@ -31,12 +32,22 @@
 	<select id="allLiveList" resultType="com.example.demo.DTO.videoInfoDTO">
 		select *
 		from videoInfo
-		order by liveDate DESC
+		order by liveDate
 	</select>
 	<select id="liveList" resultType="com.example.demo.DTO.videoInfoDTO">
 		select *
 		from videoInfo
-		order by liveDate DESC
+		order by liveDate
 		limit 5
+	</select>
+	<select id="selectById" parameterType="string" resultType="com.example.demo.DTO.videoInfoDTO">
+		select *
+		from videoInfo
+		where streamer_id = #{streamer_id}
+	</select>
+	<select id="searchLiveBySearch" parameterType="string" resultType="com.example.demo.DTO.videoInfoDTO">
+		select *
+		from videoInfo
+		where streamer_id like concat('%', #{search}, '%')
 	</select>
 </mapper>

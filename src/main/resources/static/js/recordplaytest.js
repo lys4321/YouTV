@@ -1,54 +1,4 @@
-// We make use of this 'server' variable to provide the address of the
-// REST Janus API. By default, in this example we assume that Janus is
-// co-located with the web server hosting the HTML pages but listening
-// on a different port (8088, the default for HTTP in Janus), which is
-// why we make use of the 'window.location.hostname' base address. Since
-// Janus can also do HTTPS, and considering we don't really want to make
-// use of HTTP for Janus if your demos are served on HTTPS, we also rely
-// on the 'window.location.protocol' prefix to build the variable, in
-// particular to also change the port used to contact Janus (8088 for
-// HTTP and 8089 for HTTPS, if enabled).
-// In case you place Janus behind an Apache frontend (as we did on the
-// online demos at http://janus.conf.meetecho.com) you can just use a
-// relative path for the variable, e.g.:
-//
-// 		var server = "/janus";
-//
-// which will take care of this on its own.
-//
-//
-// If you want to use the WebSockets frontend to Janus, instead, you'll
-// have to pass a different kind of address, e.g.:
-//
-// 		var server = "ws://" + window.location.hostname + ":8188";
-//
-// Of course this assumes that support for WebSockets has been built in
-// when compiling the server. WebSockets support has not been tested
-// as much as the REST API, so handle with care!
-//
-//
-// If you have multiple options available, and want to let the library
-// autodetect the best way to contact your server (or pool of servers),
-// you can also pass an array of servers, e.g., to provide alternative
-// means of access (e.g., try WebSockets first and, if that fails, fall
-// back to plain HTTP) or just have failover servers:
-//
-//		var server = [
-//			"ws://" + window.location.hostname + ":8188",
-//			"/janus"
-//		];
-//
-// This will tell the library to try connecting to each of the servers
-// in the presented order. The first working server will be used for
-// the whole session.
-//
-//var server = null;
 var server = "http://192.168.0.141:8088/janus";
-//if(window.location.protocol === 'http:')
-//	server = "http://" + window.location.hostname + ":8088/janus";
-//else
-//	server = "https://" + window.location.hostname + ":8089/janus";
-
 var janus = null;
 var recordplay = null;
 var opaqueId = "recordplaytest-"+Janus.randomString(12);
@@ -69,8 +19,18 @@ var vprofile = (getQueryStringValue("vprofile") !== "" ? getQueryStringValue("vp
 var doSimulcast = (getQueryStringValue("simulcast") === "yes" || getQueryStringValue("simulcast") === "true");
 var doSimulcast2 = (getQueryStringValue("simulcast2") === "yes" || getQueryStringValue("simulcast2") === "true");
 
+var date = new Date();
+var dateall = date.getFullYear()+""+(date.getMonth()+1)+""+date.getDate()+""+date.getHours()+""+date.getMinutes()+""+date.getSeconds();
+
+var startCheck = 0;
+var stopCheck = 0;
+
+var urlParams = new URL(location.href).searchParams;
+var video_code = urlParams.get('video_code');
 
 $(document).ready(function() {
+	var msg = "${test}";
+	console.log(msg);
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
 		// Use a button to start the demo
@@ -81,17 +41,21 @@ $(document).ready(function() {
 				bootbox.alert("No WebRTC support... ");
 				return;
 			}
+			
 			// Create session
 			janus = new Janus(
 				{
 					server: server,
 					success: function() {
 						// Attach to Record&Play plugin
+						
+						////////////////////////////
 						janus.attach(
 							{
 								plugin: "janus.plugin.recordplay",
 								opaqueId: opaqueId,
 								success: function(pluginHandle) {
+									console.log("플러그인 핸들 : "+JSON.stringify(pluginHandle));
 									$('#details').remove();
 									recordplay = pluginHandle;
 									Janus.log("Plugin attached! (" + recordplay.getPlugin() + ", id=" + recordplay.getId() + ")");
@@ -193,7 +157,7 @@ $(document).ready(function() {
 														Janus.warn("Not a stop to our recording?");
 														return;
 													}
-													bootbox.alert("Recording completed! Check the list of recordings to replay it.");
+													bootbox.alert("녹화 완료!");
 												}
 												if(selectedRecording) {
 													if(selectedRecording !== id) {
@@ -214,8 +178,11 @@ $(document).ready(function() {
 												$('#recset').removeAttr('disabled');
 												$('#recslist').removeAttr('disabled');
 												updateRecsList();
+												$('#play').click();
+												
 											}
 										}
+										console.log("00000000000000000");
 									} else {
 										// FIXME Error?
 										var error = msg["error"];
@@ -235,15 +202,20 @@ $(document).ready(function() {
 									}
 								},
 								onlocalstream: function(stream) {
+									
 									if(playing === true)
 										return;
+									console.log(stream)
 									Janus.debug(" ::: Got a local stream :::", stream);
 									$('#videotitle').html("Recording...");
 									$('#stop').unbind('click').click(stop);
 									$('#video').removeClass('hide').show();
 									if($('#thevideo').length === 0)
 										$('#videobox').append('<video class="rounded centered" id="thevideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
+									
 									Janus.attachMediaStream($('#thevideo').get(0), stream);
+									
+									
 									$("#thevideo").get(0).muted = "muted";
 									if(recordplay.webrtcStuff.pc.iceConnectionState !== "completed" &&
 											recordplay.webrtcStuff.pc.iceConnectionState !== "connected") {
@@ -271,13 +243,20 @@ $(document).ready(function() {
 										$('#videobox .no-video-container').remove();
 										$('#thevideo').removeClass('hide').show();
 									}
+									
 								},
 								onremotestream: function(stream) {
+									
 									if(playing === false)
 										return;
 									Janus.debug(" ::: Got a remote stream :::", stream);
 									if($('#thevideo').length === 0) {
-										$('#videotitle').html(selectedRecordingInfo);
+										var query = window.location.search;
+										var param = new URLSearchParams(query);
+										var title = param.get('title'); 
+									
+										console.log(title);   
+										$('#videotitle').html(title);
 										$('#stop').unbind('click').click(stop);
 										$('#video').removeClass('hide').show();
 										$('#videobox').append('<video class="rounded centered hide" id="thevideo" width="100%" height="100%" autoplay playsinline/>');
@@ -299,6 +278,97 @@ $(document).ready(function() {
 										});
 									}
 									Janus.attachMediaStream($('#thevideo').get(0), stream);
+									
+									
+									var mediaStream = document.getElementById("thevideo").captureStream();
+									console.log(stream);
+									var mediaRecorder = new MediaRecorder(mediaStream, {
+									      mimeType: "video/webm; codecs=vp9"
+									    });
+									var arrVideoData = [];
+									var icheck=0;
+									$('#capstartbtn').on('click', function(){
+										capstartbtn.disabled = true
+    									capstopbtn.disabled = false
+    									
+    									
+    									mediaRecorder.ondataavailable = (event)=>{
+										 console.log("들어감");
+										 arrVideoData.push(event.data);
+										}
+										mediaRecorder.start();
+										startCheck++;
+									});
+									
+									
+									$('#capstopbtn').on('click', function(){
+										capstartbtn.disabled = true
+    									capstopbtn.disabled = true
+    									mediaRecorder.onstop = (event)=>{
+											console.log("이벤트1");
+								            // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
+								            var blob = new Blob(arrVideoData, {type:"video/webm"});
+								
+								            // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
+								            var blobURL = window.URL.createObjectURL(blob);
+								
+											console.log("이벤트2");
+								            // 다운로드 구현
+								            
+											console.log(video_code);
+											console.log(dateall);
+											
+								            var makerId = sessionStorage.getItem("using_id");
+								            console.log(makerId+dateall+video_code);
+								            var $anchor = document.createElement("a"); // 앵커 태그 생성
+								            document.body.appendChild($anchor);
+								            $anchor.style.display = "none";
+								            $anchor.href = blobURL; // 다운로드 경로 설정
+								            $anchor.download = makerId + dateall + video_code + ".webm"; // 파일명 설정
+								            $anchor.click(); // 앵커 클릭
+								            console.log("이벤트3");
+								            // 배열 초기화
+								            arrVideoData.splice(0);
+								        }
+								        mediaRecorder.stop();
+								        stopCheck++;
+									});
+									
+									/*
+									var mediaStream = document.getElementById("thevideo").captureStream();
+									var mediaRecorder = new MediaRecorder(mediaStream);
+									var arrVideoData = [];
+									mediaRecorder.ondataavailable = (event)=>{
+										 arrVideoData.push(event.data);
+									}
+									mediaRecorder.onstop = (event)=>{
+											console.log("이벤트1");
+								            // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
+								            var blob = new Blob(arrVideoData);
+								
+								            // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
+								            var blobURL = window.URL.createObjectURL(blob);
+								
+											console.log("이벤트2");
+								            // 다운로드 구현
+								            var $anchor = document.createElement("a"); // 앵커 태그 생성
+								            document.body.appendChild($anchor);
+								            $anchor.style.display = "none";
+								            $anchor.href = blobURL; // 다운로드 경로 설정
+								            $anchor.download = "test1.webm"; // 파일명 설정
+								            $anchor.click(); // 앵커 클릭
+								            console.log("이벤트3");
+								            // 배열 초기화
+								            arrVideoData.splice(0);
+								        }
+								
+								        // 녹화 시작
+								        mediaRecorder.start(); 
+								        $('#downbtn').on('click', function(){
+											mediaRecorder.stop(); 
+										});*/
+									
+									
 									var videoTracks = stream.getVideoTracks();
 									if(!videoTracks || videoTracks.length === 0) {
 										// No remote video
@@ -314,6 +384,7 @@ $(document).ready(function() {
 										$('#videobox .no-video-container').remove();
 										$('#thevideo').removeClass('hide').show();
 									}
+									
 								},
 								oncleanup: function() {
 									Janus.log(" ::: Got a cleanup notification :::");
@@ -334,7 +405,7 @@ $(document).ready(function() {
 									$('#recslist').removeAttr('disabled');
 									updateRecsList();
 								}
-							});
+							});		
 					},
 					error: function(error) {
 						Janus.error(error);
@@ -348,6 +419,43 @@ $(document).ready(function() {
 				});
 		});
 	}});
+	
+	
+	
+	$('#btn-Clip').on('click', function(){
+		if((startCheck>0) && (stopCheck>0)){
+			var formData = new FormData();
+			var filetitle = $('#filetitle').val();
+			formData.append("makerid", sessionStorage.getItem("using_id"));
+			formData.append("video_code", video_code);
+			formData.append("filetitle", filetitle);
+			formData.append("clipCode", sessionStorage.getItem("using_id")+""+dateall+""+video_code);
+			formData.append(sessionStorage.getItem("using_id")+""+dateall+""+video_code, $('#clipFile')[0].files[0]);
+			console.log(formData);
+			
+			$.ajax({
+				url: '/ajax/uploadClip',
+				processData: false,
+	            contentType: false,
+	            type: 'POST',
+	            data: formData,
+	            success: function(data){
+	            	if(data === true){
+						window.location.href = "/YouTV/MainScreen";
+					}else{
+						alert("클립 업로드 실패");
+					}
+	            	//sessionStorage.setItem("profile", data);
+	            	//window.location.href = "/YouTV/MainScreen";
+	            },
+	            error: function(e){
+	            	console.log(e)
+	            }
+			});
+		}else{
+			alert("클립을 녹화하고 저장해야 합니다.")
+		}
+	});
 });
 
 function checkEnter(field, event) {
@@ -382,17 +490,44 @@ function updateRecsList() {
 			var list = result["list"];
 			list.sort(function(a, b) {return (a["date"] < b["date"]) ? 1 : ((b["date"] < a["date"]) ? -1 : 0);} );
 			Janus.debug("Got a list of available recordings:", list);
-			for(var mp in list) {
-				Janus.debug("  >> [" + list[mp]["id"] + "] " + list[mp]["name"] + " (" + list[mp]["date"] + ")");
-				$('#recslist').append("<li><a href='#' id='" + list[mp]["id"] + "'>" + list[mp]["name"] + " [" + list[mp]["date"] + "]" + "</a></li>");
-			}
-			$('#recslist a').unbind('click').click(function() {
+			var query = window.location.search;
+			var param = new URLSearchParams(query);
+			var title = param.get('title'); 
+			$('#recslist').append("<li><a href='#' id='" + list[0]["id"] + "'>" + title + " [" + list[0]["date"] + "]" + "</a></li>");
+			
+			$('#recset').click();
+			$('#recslist a').bind('click').click(function() {
 				selectedRecording = $(this).attr("id");
 				selectedRecordingInfo = $(this).text();
 				$('#recset').html($(this).html()).parent().removeClass('open');
 				$('#play').removeAttr('disabled').click(startPlayout);
+				$('#play').click();
+				$.ajax({
+				url: '/ajax/recordChat',
+				type: 'GET',
+				data:{
+					"video_code": video_code
+				},
+				success: function(data){
+					var i = 0;
+					setInterval(function(){
+						str = "<div class='col-6'>";
+                        str += "<div class='alert alert-warning'>";
+                        str += "<b>" + data[i]["user_id"] + " : " + data[i]["chat"] + "</b>";
+                        str += "</div></div>";
+                        $('#msgSector').css('visibility', 'visible');
+						$("#msgArea").append(str);
+						i++;
+					}, 1000);
+				},
+				error: function(error){
+					
+				}
+			});
+				
 				return false;
 			});
+			
 		}
 	}});
 }
@@ -403,12 +538,7 @@ function startRecording() {
 	// Start a recording
 	recording = true;
 	playing = false;
-	bootbox.prompt("Insert a name for the recording (e.g., John Smith says hello)", function(result) {
-		if(!result) {
-			recording = false;
-			return;
-		}
-		myname = result;
+	myname = "코드 동영상";////////////sessionStorage.getItem("코드")
 		$('#record').unbind('click').attr('disabled', true);
 		$('#play').unbind('click').attr('disabled', true);
 		$('#list').unbind('click').attr('disabled', true);
@@ -453,7 +583,6 @@ function startRecording() {
 					recordplay.hangup();
 				}
 			});
-	});
 }
 
 function startPlayout() {
@@ -471,9 +600,19 @@ function startPlayout() {
 	$('#list').unbind('click').attr('disabled', true);
 	$('#recset').attr('disabled', true);
 	$('#recslist').attr('disabled', true);
-	var play = { request: "play", id: parseInt(selectedRecording) };
+	
+	var query = window.location.search;
+	var param = new URLSearchParams(query);
+	var id = param.get('sessionId'); 
+
+	console.log(id);   
+	
+	var play = { request: "play", id: parseInt(id) };
 	recordplay.send({ message: play });
+	
+	
 }
+
 
 function stop() {
 	// Stop a recording/playout

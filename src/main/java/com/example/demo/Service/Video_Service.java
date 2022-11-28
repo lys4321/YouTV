@@ -29,4 +29,8 @@ public class Video_Service {
 	videoDTO selectVideo(String video_code) {
 		return vmap.selectVideo(video_code);
 	}
+	
+	ArrayList<videoDTO> searchVideoBySearch(String str) {
+		return vmap.searchVideoBySearch(str);
+	}
 }

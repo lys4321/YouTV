@@ -68,6 +68,8 @@ function randomString(len, charSet) {
 
 
 $(document).ready(function() {
+	
+	
 	// Initialize the library (all console debuggers enabled)
 	Janus.init({debug: "all", callback: function() {
 		// Use a button to start the demo
@@ -161,7 +163,8 @@ $(document).ready(function() {
 									
 									Janus.debug(" ::: Got a message (publisher) :::", msg);
 									var event = msg["videoroom"];
-									Janus.debug("Event: " + event);
+									Janus.debug("Event: " + msg);
+									console.log("Event: " + JSON.stringify(msg));
 									if(event) {
 										if(event === "joined") {
 											myid = sessionStorage.getItem("userid"); 
@@ -202,11 +205,13 @@ $(document).ready(function() {
 											// Any feed to attach to?
 											if(role === "listener" && msg["publishers"]) {
 												var list = msg["publishers"];
+												console.log("[이벤트] : "+ list);
 												Janus.debug("Got a list of available publishers/feeds:", list);
 												for(var f in list) {
 													var id = list[f]["id"];
 													var display = list[f]["display"];
 													Janus.debug("  >> [" + id + "] " + display);
+													
 													newRemoteFeed(id, display)
 												}
 											} else if(msg["leaving"]) {
@@ -234,8 +239,8 @@ $(document).ready(function() {
 									$('#room').removeClass('hide').show();
 									if($('#screenvideo').length === 0) {
 										
-										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline muted="muted"/>');
-										
+										$('#screencapture').append('<video class="rounded centered" id="screenvideo" width="100%" height="100%" autoplay playsinline/>');
+										$('#loding').empty();
 									}
 									Janus.attachMediaStream($('#screenvideo').get(0), stream);
 									if(screentest.webrtcStuff.pc.iceConnectionState !== "completed" &&
@@ -249,6 +254,7 @@ $(document).ready(function() {
 											}
 										});
 									}
+									
 								},
 								onremotestream: function(stream) {
 									// The publisher stream is sendonly, we don't expect anything here
@@ -305,6 +311,7 @@ function joinScreen() {//방에 들어갈 때
 	$('#roomid').attr('disabled', true);
 	$('#join').attr('disabled', true).unbind('click');
 	var roomid = $('#roomid').val();
+	console.log("[영상방] : "+ roomid);
 	if(isNaN(roomid)) {
 		bootbox.alert("Session identifiers are numeric only");
 		$('#desc').removeAttr('disabled', true);
@@ -315,8 +322,7 @@ function joinScreen() {//방에 들어갈 때
 	}
 	var result=null;
 	
-	room = parseInt(roomid);//result;//여기가 방 들어오는 세션 생성하는 부분(나중에 방송코드로 변경)
-	role = "listener";
+	room = parseInt(roomid);//result;
 	myusername = randomString(12);
 	var register = {
 		request: "join",
@@ -326,7 +332,7 @@ function joinScreen() {//방에 들어갈 때
 	};
 	screentest.send({ message: register });
 		console.log('로딩화면 내리기');
-	$('#loding').empty();
+	
 }
 
 function newRemoteFeed(id, display) {
@@ -397,9 +403,11 @@ function newRemoteFeed(id, display) {
 				// The subscriber stream is recvonly, we don't expect anything here
 			},
 			onremotestream: function(stream) {
+				console.log("[체크 1번]");
 				if($('#screenvideo').length === 0) {
 					// No remote video yet
 					$('#screencapture').append('<video class="rounded centered" id="waitingvideo" width="100%" height="100%" />');
+					console.log("[체크 2번]");
 					$('#screencapture').append('<video class="rounded centered hide" id="screenvideo" width="100%" height="100%" autoplay playsinline/>');
 					// Show the video, hide the spinner and show the resolution when we get a playing event
 					$("#screenvideo").bind("playing", function () {
@@ -409,6 +417,7 @@ function newRemoteFeed(id, display) {
 							spinner.stop();
 						spinner = null;
 					});
+					console.log("[체크 3번]");
 				}
 				Janus.attachMediaStream($('#screenvideo').get(0), stream);
 			},

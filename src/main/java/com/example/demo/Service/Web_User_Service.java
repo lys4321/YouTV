@@ -21,7 +21,15 @@ public class Web_User_Service {
 	}
 	
 	String SearchUser(@Param("_uuid") String uuid) {
-		return userMapper.SearchUser(uuid);
+		return userMapper.SearchUser(uuid); 
+	}
+	
+	String SearchUserProfile(String uuid) {
+		return userMapper.SearchUserProfile(uuid); 
+	}
+	
+	int UserUpdateimg(web_userDTO user) {
+		return userMapper.UserUpdateimg(user);
 	}
 	
 	web_userDTO reSearchUser(@Param("name") String name, @Param("pnum") String pnum){
@@ -42,5 +50,9 @@ public class Web_User_Service {
 	
 	int UserCreate(web_userDTO user) {
 		return userMapper.UserCreate(user);
+	}
+	
+	ArrayList<web_userDTO> searchUserBySearch(@Param("search") String search) {
+		return userMapper.searchUserBySearch(search);
 	}
 }

@@ -4,12 +4,11 @@
 	<select id="allRecordList" resultType="com.example.demo.DTO.videoDTO">
 		select *
 		from video
-		order by video_date DESC
+		order by video_date
 	</select>
 	<select id="recordList" resultType="com.example.demo.DTO.videoDTO">
 		select *
 		from video
-		order by video_date DESC
 		limit 5
 	</select>
 	<select id="selectVideo" resultType="com.example.demo.DTO.videoDTO" parameterType="String">
@@ -19,6 +18,11 @@
 	</select>
 	<insert id="addvideo" parameterType="com.example.demo.DTO.videoDTO">
 		insert into video
-		values(#{video_code}, #{streamer_id}, #{title}, #{video_date}, #{saveUrl}, #{thumbnail})
+		values(#{video_code}, #{streamer_id}, #{title}, #{video_date}, #{thumbnail})
 	</insert>
+	<select id="searchVideoBySearch" resultType="com.example.demo.DTO.videoDTO" parameterType="String">
+		select *
+		from video
+		where streamer_id like concat('%', #{search}, '%')
+	</select>
 </mapper>

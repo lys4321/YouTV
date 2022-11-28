@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.chatBanMapper">
+	<insert id="addBanUser" parameterType="com.example.demo.DTO.chat_banDTO">
+		insert into chat_ban(streamer_id, viewer_id, ban_date, ban_reason)
+		values(#{streamer_id}, #{viewer_id}, #{ban_date}, #{ban_reason})
+	</insert>
+	<delete id="cancelBan" parameterType="com.example.demo.DTO.chat_banDTO">
+		delete 
+		from chat_ban
+		where streamer_id=#{param1} and viewer_id=#{param2}
+	</delete>
+	<select id="allBanbyId" resultType="com.example.demo.DTO.chat_banDTO">
+		select *
+		from chat_ban
+		where streamer_id=#{streamerId}
+	</select>
+</mapper>

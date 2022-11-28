@@ -1,90 +1,132 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html
+	lang="ko" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<!--  xmlns="http://www.w3.org/1999/xhtml" -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>방송주인 화면 (제목 고치기)</title>
+<title>Owner Mode</title>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.4.0/adapter.min.js" ></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" ></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
-<script type="text/javascript" src="js/janus.js" ></script>
-<script type="text/javascript" src="js/screensharingtest.js"></script>
+<script type="text/javascript" src="/js/janus.js" ></script>
+<script type="text/javascript" src="/js/janus2.js" ></script>
+<script type="text/javascript" src="/js/myjs.js" ></script>
+ <script src="https://kit.fontawesome.com/0776e0d493.js" crossorigin="anonymous"></script>
+ 
+<script type="text/javascript" src="/js/shareAndRecord.js"></script>
+<!-- <script type="text/javascript" src="/js/screensharingtest.js"></script> -->
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+        
+        
+<link th:href="@{/css/testyoutube.css}" rel="stylesheet">
+<link th:href="@{/css/mycss.css}" rel="stylesheet">
+<link th:href="@{/css/chatting.css}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="css/chatting.css" type="text/css" /> -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" type="text/css"/>
-<link rel="stylesheet" href="css/demo.css" type="text/css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"/>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+	type="text/css" />
+
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top">
-</nav>
-
+		<div class="Head">
+    		<th:block th:replace="parts/topMenuBar :: TopBar"></th:block>
+    	</div>
+    	<div class="Aside">
+    		<th:block th:replace="parts/leftActionBar :: LeftSide"></th:block>
+    	</div>
+		
+		
+		
 	<div class="container">
-	<div class="row">
-		<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="container hide" id="screenmenu">
+					<div class="row"></div>
+				</div>
+				<!-- <div class="container hide" id="room">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="panel panel-default">
+								<div class="panel-body" id="screencapture"></div>
+									<p id="spChat">시험용</p>
+							</div>
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	
+		<div class="panel-heading">
+			<span class="label label-success" id="session"></span>
+		</div>
+		
+		<div class="main" id="main">
 			<div class="page-header">
-				<h1>생방송 준비 설정</h1>
+				<h1 id="mainTitle">생방송 준비 설정</h1>
 			</div>
 			<div class="container" id="details">
-				<input type="text" id="title">
-				<button class="btn btn-default" autocomplete="off" id="start"></button>
-			</div>
-			<div class="container hide" id="screenmenu">
-				<div class="row">
-					<!-- <div class="input-group margin-bottom-md hide" id="createnow">
-						<span class="input-group-addon"><i class="fa fa-users fa-1"></i></span>
-						<input class="form-control" type="text" placeholder="Insert a title for the session" autocomplete="off" id="desc" onkeypress="return checkEnterShare(this, event);" />		
-						<span class="input-group-btn">
-							<button class="btn btn-success" autocomplete="off" id="create">해당 화면으로 이동하기</button>
-						</span> 
-					</div> -->
-				</div>
-				<!-- <div class="divider col-md-12">
-					<hr class="pull-left"/>or<hr class="pull-right"/>
-				</div> -->		
-			</div>
-			<div class="container hide" id="room">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="panel panel-default">
-							<div class="panel-body" id="screencapture"></div>
+						<div class="rorow">
+							<input type="text" id="tititle" class="textf">
+							<button class="btn btn-secondary sizing" autocomplete="off" id="start">제목 입력</button>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="videoBody">
+		   			<th:block th:replace="parts/videoBody :: videoBody"></th:block>
+		   		</div>
+			<div class="chattingBody" id="ownerchat">
+	    		<th:block th:replace="parts/chattingBody :: chattingBody"></th:block>
+    		</div>
+    		<div class="chatControls">
+    			<button class="btn btn-secondary sizing" id="listUser">유저 목록</button>
+    		</div>
 		</div>
 	</div>
-	
-	<div class="panel-heading">
-		<span class="label label-success" id="session"></span>
-	</div>
-	
-	<div class="container">
-           <!--  <div class="col-6">
-                <h1>-채팅창 구분용-</h1>
-            </div> -->
-            <div>
-                <div id="msgArea" class="col"></div>
-                <div class="col-6">
-                    <div class="input-group mb-3" id="chatting_area">
-                        <!-- <input type="text" id="msg" class="form-control">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-6"></div>
-            
-        
-</div>
-
+	<div id="modals">
+    		 <div class="modal">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/login.html :: setLogin(~{this::login} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_create">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/createAccount :: createAccount(~{this::create} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_update">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/accountUpdate :: updatingAccount(~{this::UA} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_listUser">
+	      		 <div class="modal_body">
+	      		 	<th:block th:replace="~{/parts/listUser :: userList(~{this::LU} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<div class="modal_History">
+	      		 <div class="modal_body">
+	      		 	<th:block th:replace="~{/parts/chatHistory :: historyChat(~{this::HC} )}"></th:block>
+	     		</div>
+	    	</div>
+	    	<!-- <div class="modal_banUser">
+	      		 <div class="modal_body">
+	     			 <th:block th:replace="~{/parts/listUser ::  )}"></th:block>
+	     		</div>
+	    	</div>  -->     
+    	</div>
 </body>
 <script>
 

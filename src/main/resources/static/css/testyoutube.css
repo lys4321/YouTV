@@ -881,10 +881,11 @@ h6 {
 .header {
   transition: all 0.5s;
   z-index: 997;
-  height: 60px;
+  height: 80px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
   padding-left: 20px;
+  padding-top: 15px;
   /* Toggle Sidebar Button */
   /* Search Bar */
 }
@@ -1101,7 +1102,7 @@ h6 {
 --------------------------------------------------------------*/
 .sidebar {
   position: fixed;
-  top: 88px;
+  top: 150px;
   left: 0;
   bottom: 0;
   width: 280px;
@@ -1113,6 +1114,7 @@ h6 {
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
+  border-radius: 0 25px 25px 0;
 }
 
 @media (max-width: 1199px) {

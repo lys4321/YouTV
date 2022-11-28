@@ -13,7 +13,6 @@ public class videoDTO {
 	private String video_code;
 	private String streamer_id;
 	private String title;
-	private Date video_date;
-	private String saveUrl;
+	private String video_date;
 	private String thumbnail;
 }
